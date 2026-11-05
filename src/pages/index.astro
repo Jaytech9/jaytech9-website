@@ -637,12 +637,6 @@ const tiles = [
     position: relative;
     overflow: hidden;
   }
-  .work-card__cover:before {
-    content: '';
-    background: repeating-radial-gradient(circle at 100% 0, #0000 0 18px, #ffffff14 18px 20px);
-    position: absolute;
-    inset: 0;
-  }
   .work-card__shot {
     pointer-events: none;
     position: absolute;
@@ -862,7 +856,7 @@ const tiles = [
   .app-home__band:after {
     content: '';
     pointer-events: none;
-    background: repeating-radial-gradient(circle at 100% 0, #0000 0 26px, #ffffff12 26px 28px);
+    background: radial-gradient(closest-side, #ffffff21, transparent);
     border-radius: 50%;
     width: 26rem;
     height: 26rem;

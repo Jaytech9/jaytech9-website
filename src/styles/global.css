@@ -253,7 +253,8 @@ a:hover {
 .page-head:after {
   content: '';
   pointer-events: none;
-  background: repeating-radial-gradient(circle at 0 100%, #0000 0 22px, #ffffff17 22px 24px);
+  /* Soft light glow, no lines. */
+  background: radial-gradient(closest-side, #ffffff24, transparent);
   border-radius: 50%;
   width: 22rem;
   height: 22rem;
