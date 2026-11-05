@@ -4,6 +4,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BottomNav from '../components/BottomNav.astro';
+import HelpWidget from '../components/HelpWidget.astro';
 import { site } from '../data/site';
 
 interface Props {
@@ -81,6 +82,7 @@ const org = {
     </main>
     <Footer />
     <BottomNav />
+    <HelpWidget />
     <script is:inline>
       // Fade sections and cards in as they scroll into view.
       if (document.documentElement.classList.contains('motion')) {

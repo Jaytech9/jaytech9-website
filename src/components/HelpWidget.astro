@@ -1,0 +1,176 @@
+---
+import { helpSuggestions } from '../data/help';
+import { site } from '../data/site';
+import '../help/help-widget.css';
+
+// The floating help button, its menu and the chat screen, moved from jt9-help/help-widget.php.
+const options = [
+  { icon: 'whatsapp', label: 'Chat on WhatsApp', note: 'Talk to us now', href: site.whatsapp, newTab: true },
+  { icon: 'phone', label: 'Call us', note: site.phoneDisplay, href: `tel:${site.phone}` },
+  { icon: 'mail', label: 'Send an enquiry', note: 'We reply within one working day', href: '/contact/' },
+  { icon: 'bot', label: 'Ask our assistant', note: 'Instant answers', chat: true },
+];
+
+const glyphs: Record<string, string> = {
+  phone:
+    '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+  mail: '<path d="M4 4h16v16H4z"/><path d="m4 6 8 7 8-7"/>',
+  bot: '<rect x="4" y="8" width="16" height="12" rx="4"/><path d="M12 4v4M9 14h.01M15 14h.01"/>',
+};
+const whatsapp =
+  'M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3.1s.8-2.2 1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.2.1.8-.1 1.4z';
+
+const glyph = (name: string) =>
+  name === 'whatsapp'
+    ? `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" fill-rule="evenodd" aria-hidden="true"><path d="${whatsapp}"/></svg>`
+    : `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${glyphs[name]}</svg>`;
+
+// The signature icon: the J mark wearing a support headset, in a chat bubble. `id` keeps each copy's gradients separate.
+const helpIcon = (size: number, id: string) =>
+  `<svg class="jt9-help-icon" viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true" focusable="false">` +
+  `<defs><linearGradient id="hk${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5FD6FF"/><stop offset="1" stop-color="#1F86DA"/></linearGradient>` +
+  `<linearGradient id="st${id}" x1=".6" y1="0" x2=".2" y2="1"><stop offset="0" stop-color="#9BF04A"/><stop offset=".45" stop-color="#3CC64A"/><stop offset=".75" stop-color="#2AA7E0"/><stop offset="1" stop-color="#1A74CF"/></linearGradient>` +
+  `<linearGradient id="wg${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A6F24F"/><stop offset="1" stop-color="#2DB33E"/></linearGradient></defs>` +
+  `<g class="jt9-hi-float">` +
+  `<path d="M26 8h48a18 18 0 0 1 18 18v40a18 18 0 0 1-18 18H38L18 96l5-13A18 18 0 0 1 8 66V26A18 18 0 0 1 26 8z" fill="#0E1C27" stroke="#2C4558" stroke-width="1.6"/>` +
+  `<g transform="translate(50 50) scale(.62) translate(-50 -51)">` +
+  `<path d="M33 23H58Q71 23 71 36V41" fill="none" stroke="url(#hk${id})" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>` +
+  `<path d="M57 34V61Q57 79 42 79Q28 79 28 65V61" fill="none" stroke="url(#st${id})" stroke-width="10" stroke-linecap="round"/>` +
+  `<g fill="none" stroke="url(#wg${id})" stroke-linecap="round" stroke-width="4.5"><path class="jt9-hi-wv" d="M65.5 60.6A7 7 0 0 1 65.5 71.4"/><path class="jt9-hi-wv jt9-hi-wv2" d="M69.4 56A13 13 0 0 1 69.4 76"/><path class="jt9-hi-wv jt9-hi-wv3" d="M73.2 51.4A19 19 0 0 1 73.2 80.6"/></g></g>` +
+  `<path d="M22 50a28 28 0 0 1 56 0" fill="none" stroke="#FDB71D" stroke-width="5.5" stroke-linecap="round"/>` +
+  `<rect x="16" y="44" width="11" height="20" rx="5.5" fill="#FDB71D"/><rect x="73" y="44" width="11" height="20" rx="5.5" fill="#FDB71D"/>` +
+  `<path d="M21.5 63c0 8 5 12 13 12h4" fill="none" stroke="#FDB71D" stroke-width="3" stroke-linecap="round"/>` +
+  `<circle class="jt9-hi-mic" cx="40" cy="75" r="3.6" fill="none" stroke="#E8590C" stroke-width="1.4"/><circle cx="40" cy="75" r="3.6" fill="#E8590C"/>` +
+  `<circle class="jt9-hi-live" cx="84" cy="15" r="6" fill="#3DDC6A" stroke="#0E1C27" stroke-width="2.5"/>` +
+  `</g></svg>`;
+---
+
+<div class="jt9-help" id="jt9-help">
+  <p class="jt9-help-hello" id="jt9-help-hello" hidden>
+    Hi, how can we help? <span aria-hidden="true">👋</span>
+    <button type="button" class="jt9-help-hello-x" aria-label="Hide message">
+      ×
+    </button>
+  </p>
+  <div class="jt9-help-panel" id="jt9-help-panel" role="dialog" aria-label={`${site.name} Help`} hidden>
+    <div class="jt9-help-head">
+      <Fragment set:html={helpIcon(42, 'a')} />
+      <div>
+        <strong>{site.name} Help</strong>
+        <small>Fast, Reliable Support</small>
+      </div>
+    </div>
+    <div class="jt9-help-body">
+      <p>Choose how you’d like to reach us.</p>
+      {options.map((o) => {
+        const inner = (
+          <Fragment>
+            <span class={`jt9-help-ic jt9-hi-${o.icon}`} set:html={glyph(o.icon)} />
+            <span>
+              {o.label}
+              <small>{o.note}</small>
+            </span>
+          </Fragment>
+        );
+        return o.chat ? (
+          <button type="button" class="jt9-help-opt" data-jt9-chat>
+            {inner}
+          </button>
+        ) : (
+          <a
+            class="jt9-help-opt"
+            href={o.href}
+            target={o.newTab ? '_blank' : undefined}
+            rel={o.newTab ? 'noopener' : undefined}
+          >
+            {inner}
+          </a>
+        );
+      })}
+    </div>
+    <div class="jt9-chat" id="jt9-chat" data-welcome="Hi! What would you like to know?" hidden>
+      <button type="button" class="jt9-chat-back">
+        ← Back to menu
+      </button>
+      <div
+        class="jt9-chat-log"
+        id="jt9-chat-log"
+        role="log"
+        aria-live="polite"
+        aria-label="Chat messages"
+      ></div>
+      <div class="jt9-chat-chips" id="jt9-chat-chips">
+        {helpSuggestions.map((q) => (
+          <button type="button" class="jt9-chat-chip">
+            {q}
+          </button>
+        ))}
+      </div>
+      <form class="jt9-chat-form" id="jt9-chat-form">
+        <input
+          type="text"
+          id="jt9-chat-input"
+          maxlength="500"
+          autocomplete="off"
+          placeholder="Type your question…"
+          aria-label="Type your question"
+        />
+        <button type="submit" aria-label="Send message">
+          <svg
+            viewBox="0 0 24 24"
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M5 12h14M13 6l6 6-6 6"></path>
+          </svg>
+        </button>
+      </form>
+      <p class="jt9-chat-note">
+        Automated assistant. Questions it can’t answer are saved to help it improve, so please don’t share
+        private details.
+      </p>
+    </div>
+    <p class="jt9-help-foot">Assistant by Jay Tech 9</p>
+  </div>
+  <button
+    class="jt9-help-btn"
+    id="jt9-help-btn"
+    type="button"
+    aria-expanded="false"
+    aria-controls="jt9-help-panel"
+    aria-label="Open help menu"
+  >
+    <span class="jt9-help-ping" aria-hidden="true"></span>
+    <span class="jt9-help-mark" set:html={helpIcon(72, 'b')} />
+    <span class="jt9-help-x" aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        width="24"
+        height="24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.4"
+        stroke-linecap="round"
+      >
+        <path d="M6 6l12 12M18 6 6 18"></path>
+      </svg>
+    </span>
+  </button>
+</div>
+
+<!-- Netlify reads this hidden form at build time. It's how unanswered questions reach the Forms page. -->
+<form name="help-questions" data-netlify="true" netlify-honeypot="company-website" hidden>
+  <input name="company-website" />
+  <input name="question" />
+  <input name="page" />
+</form>
+
+<script>
+  import '../help/help-widget.js';
+</script>

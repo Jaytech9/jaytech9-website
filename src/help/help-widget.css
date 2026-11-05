@@ -1,0 +1,82 @@
+/* Jay Tech 9 help widget. Every class starts with jt9- so it cannot clash with a host site. */
+.jt9-help, .jt9-help * { box-sizing: border-box; }
+.jt9-help { position: fixed; right: calc(18px + env(safe-area-inset-right, 0px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 80; }
+.jt9-help-btn { position: relative; display: block; width: 76px; height: 76px; padding: 0; border: 0; background: none; cursor: pointer; filter: drop-shadow(0 12px 22px rgba(8,20,30,.35)); transition: transform .25s; }
+.jt9-help-btn:hover { transform: translateY(-3px); }
+.jt9-help-btn:focus-visible { outline: 3px solid #2A9BE8; outline-offset: 4px; border-radius: 22px; }
+.jt9-help-mark, .jt9-help-x { position: absolute; inset: 2px; display: grid; place-items: center; transition: opacity .25s, transform .25s; }
+.jt9-help-x { inset: 10px; border-radius: 50%; background: #0E1C27; color: #fff; opacity: 0; transform: rotate(-90deg) scale(.6); }
+.jt9-help-btn[aria-expanded="true"] .jt9-help-mark { opacity: 0; transform: scale(.6); }
+.jt9-help-btn[aria-expanded="true"] .jt9-help-x { opacity: 1; transform: none; }
+.jt9-help-ping { position: absolute; inset: 8px; border-radius: 22px; border: 2px solid #2A9BE8; opacity: 0; animation: jt9HelpPing 3.4s ease-out infinite; }
+.jt9-help-btn[aria-expanded="true"] .jt9-help-ping { display: none; }
+.jt9-hi-float { animation: jt9HiFloat 4.5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.jt9-hi-wv { animation: jt9HiWave 1.8s ease-in-out infinite; }
+.jt9-hi-wv2 { animation-delay: .2s; } .jt9-hi-wv3 { animation-delay: .4s; }
+.jt9-hi-mic { transform-box: fill-box; transform-origin: center; animation: jt9HiMic 2.2s ease-out infinite; }
+.jt9-hi-live { animation: jt9HiLive 2s ease-in-out infinite; }
+@keyframes jt9HiFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes jt9HiWave { 0%, 100% { opacity: .35; } 35% { opacity: 1; } }
+@keyframes jt9HiMic { 0% { transform: scale(1); opacity: .9; } 100% { transform: scale(2.4); opacity: 0; } }
+@keyframes jt9HiLive { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+@keyframes jt9HelpPing { 0% { transform: scale(.92); opacity: .8; } 60%, 100% { transform: scale(1.3); opacity: 0; } }
+.jt9-help-hello { position: absolute; right: 90px; bottom: 20px; margin: 0; white-space: nowrap; background: #fff; color: #10201A; border-radius: 16px 16px 4px 16px; padding: 11px 34px 11px 16px; font-size: 14px; font-weight: 600; box-shadow: 0 12px 30px rgba(16,32,26,.2); animation: jt9HelloIn .35s ease-out; }
+.jt9-help-hello-x { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 22px; height: 22px; border: 0; border-radius: 50%; background: #EEF2F0; color: #44534C; font-size: 15px; line-height: 1; cursor: pointer; }
+@keyframes jt9HelloIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.jt9-help-panel { position: absolute; right: 0; bottom: 92px; width: min(350px, calc(100vw - 36px)); background: #fff; color: #10201A; border-radius: 20px; box-shadow: 0 26px 70px rgba(8,20,30,.3); overflow: hidden; transform-origin: 100% 100%; transition: opacity .22s, transform .22s, visibility .22s; }
+.jt9-help-panel[hidden] { display: block !important; opacity: 0; visibility: hidden; transform: translateY(10px) scale(.96); pointer-events: none; }
+.jt9-help-head { display: flex; gap: 12px; align-items: center; padding: 18px; background: linear-gradient(135deg, #12293A, #0B1620); color: #fff; }
+.jt9-help-head strong { display: block; font-size: 17px; }
+.jt9-help-head small { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: #A9C0CE; }
+.jt9-help-head small::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #3DDC6A; }
+.jt9-help-body { display: grid; gap: 8px; padding: 14px; }
+.jt9-help-body > p { margin: 2px 4px 6px; font-size: 14px; color: #44534C; }
+.jt9-help-opt { display: flex; gap: 12px; align-items: center; padding: 12px; border-radius: 14px; border: 1px solid #E3E9E6; color: #10201A !important; text-decoration: none; font-weight: 700; font-size: 14.5px; transition: border-color .2s, transform .2s; }
+.jt9-help-opt[hidden] { display: none; }
+.jt9-help-opt:hover { border-color: #2A9BE8; transform: translateX(2px); }
+.jt9-help-opt small { display: block; font-weight: 500; font-size: 12.5px; color: #6A7A73; }
+.jt9-help-opt.is-soon { opacity: .6; cursor: default; }
+.jt9-help-opt.is-soon:hover { transform: none; border-color: #E3E9E6; }
+.jt9-help-ic { flex: none; width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; }
+.jt9-hi-whatsapp { background: #E7F8EE; color: #1FA855; } .jt9-hi-mail { background: #E8F3FC; color: #2A9BE8; } .jt9-hi-faq { background: #EEF8E8; color: #3DA33A; } .jt9-hi-bot { background: #F1F3F5; color: #6A7A85; } .jt9-hi-phone { background: #FFF6E3; color: #C98A00; }
+.jt9-help-foot { margin: 0; padding: 4px 16px 14px; text-align: center; font-size: 11.5px; color: #7A8A83; }
+.jt9-hi-app { background: #FFF4DA; color: #B57F00; }
+button.jt9-help-opt { width: 100%; background: #fff; font: inherit; font-weight: 700; font-size: 14.5px; text-align: left; cursor: pointer; }
+@media (max-width: 560px) {
+  .jt9-help-btn { width: 58px; height: 58px; }
+  .jt9-help-panel { bottom: 72px; }
+  .jt9-help-hello { right: 66px; bottom: 10px; font-size: 13px; }
+}
+.jt9-help-body[hidden], .jt9-chat[hidden], .jt9-chat-chips[hidden] { display: none; }
+.jt9-chat { display: flex; flex-direction: column; gap: 8px; padding: 10px 14px 6px; }
+.jt9-chat-back { align-self: flex-start; padding: 2px 4px; border: 0; background: none; color: #44534C; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+.jt9-chat-back:hover { color: #1F86DA; }
+.jt9-chat-log { display: flex; flex-direction: column; gap: 8px; height: min(300px, 42vh); overflow-y: auto; overscroll-behavior: contain; padding: 2px; }
+.jt9-chat-msg { max-width: 86%; margin: 0; padding: 9px 12px; border-radius: 14px; font-size: 14px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
+.jt9-chat-bot { align-self: flex-start; background: #EEF2F0; color: #10201A; border-bottom-left-radius: 4px; }
+.jt9-chat-me { align-self: flex-end; background: #12293A; color: #fff; border-bottom-right-radius: 4px; }
+.jt9-chat-acts { display: flex; flex-wrap: wrap; gap: 6px; }
+.jt9-chat-acts a, .jt9-chat-chip { padding: 6px 11px; border: 1px solid #C9D6DE; border-radius: 999px; background: #fff; color: #10201A !important; font: inherit; font-size: 13px; font-weight: 600; line-height: 1.3; text-align: left; text-decoration: none; cursor: pointer; }
+.jt9-chat-acts a:hover, .jt9-chat-chip:hover { border-color: #2A9BE8; }
+.jt9-chat-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.jt9-chat-typing { display: flex; gap: 4px; align-items: center; height: 38px; }
+.jt9-chat-typing i { width: 7px; height: 7px; border-radius: 50%; background: #7A8A83; animation: jt9Typing 1.2s ease-in-out infinite; }
+.jt9-chat-typing i:nth-child(2) { animation-delay: .15s; } .jt9-chat-typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes jt9Typing { 0%, 100% { opacity: .3; } 40% { opacity: 1; } }
+.jt9-chat-form { display: flex; gap: 8px; }
+.jt9-chat-form input { flex: 1; min-width: 0; height: 44px; padding: 0 14px; border: 1px solid #C9D6DE; border-radius: 12px; background: #fff; color: #10201A; font: inherit; font-size: 16px; }
+.jt9-chat-form input:focus { outline: 2px solid #2A9BE8; outline-offset: 0; border-color: #2A9BE8; }
+.jt9-chat-form button { flex: none; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 12px; background: #1F86DA; color: #fff; cursor: pointer; }
+.jt9-chat-form button:disabled { opacity: .5; cursor: default; }
+.jt9-chat-note { margin: 0; font-size: 11.5px; color: #6A7A73; text-align: center; }
+@media (prefers-reduced-motion: reduce) { .jt9-hi-float, .jt9-hi-wv, .jt9-hi-mic, .jt9-hi-live, .jt9-help-ping, .jt9-help-hello, .jt9-chat-typing i { animation: none !important; } .jt9-hi-wv { opacity: 1; } }
+
+/* JayTech9 site: sit above the phone tab bar, keep the panel on screen, and step aside for the Menu sheet. */
+@media (width<64rem) {
+  .jt9-help { bottom: calc(4rem + 12px + env(safe-area-inset-bottom, 0px)); }
+}
+.jt9-help-panel { max-height: calc(100dvh - 12rem); overflow-y: auto; }
+body:has(.tabbar__more[open]) .jt9-help { display: none; }
+@media (height<44rem) {
+  .jt9-chat-log { height: min(300px, 32vh); }
+}

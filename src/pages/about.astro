@@ -1,249 +1,187 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { getCollection } from 'astro:content';
+import { visual } from '../lib/visuals';
+import { site } from '../data/site';
+
+// Facts shown in the strip under the header. Counts come from the site's own content, so they stay true.
+const productCount = (await getCollection('products')).length;
+const stats = [
+  { value: String(productCount), label: 'Products and projects' },
+  { value: '6', label: 'Services, one team' },
+  { value: '1', label: 'Accountable point of contact' },
+  { value: 'Worldwide', label: 'Clients in Ghana and abroad' },
+];
+
+const journey = [
+  { visual: 'art/agritech', icon: 'sprout', step: 'Where it started', title: 'Field work with farmers', text: 'Training smallholder farmers in sustainable agriculture and running cereal quality checks meant long days of paperwork: the same figures copied into forms, notebooks and reports.' },
+  { visual: 'art/systems', icon: 'sparkle', step: 'The turning point', title: 'Automating the paperwork', text: 'Automating that work showed how much time good, simple tools give back to the people doing the job.' },
+  { visual: 'screen/donation-management', icon: 'users', step: 'Building for others', title: 'Shops, nonprofits and field teams', text: 'The same problem was everywhere: stock tracked in exercise books, donations counted by hand, reports sent over WhatsApp. So we built tools to fix it.' },
+  { visual: 'screen/buildsmart', icon: 'rocket', step: 'Today', title: 'Websites, systems and BuildSmart', text: 'JayTech9 builds websites, business systems and data dashboards for clients in Ghana and abroad, and is developing BuildSmart, its own software for hardware and building material businesses.' },
+];
+
+const principles = [
+  { icon: 'search', title: 'Start with the real problem', text: 'We ask how the work is done today before suggesting any software. Sometimes the answer is a better spreadsheet, and we’ll say so.' },
+  { icon: 'globe', title: 'Built for real-world conditions', text: 'Fast on mobile data, mobile money and local taxes built in, and screens that make sense to staff who aren’t technical.' },
+  { icon: 'key', title: 'You own what you pay for', text: 'Your domain is in your name, your data stays yours, and you receive the code and logins at handover.' },
+  { icon: 'message', title: 'Plain answers', text: 'Clear quotes in your currency, honest timelines, no jargon. If something will cost more or take longer, you hear it from us first.' },
+];
+
+const skills = [
+  { icon: 'monitor', label: 'Web and software development' },
+  { icon: 'chart', label: 'Data analytics and reporting' },
+  { icon: 'cpu', label: 'AI and automation' },
+  { icon: 'lock', label: 'Networking and IT security' },
+  { icon: 'sprout', label: 'Sustainable and regenerative agriculture' },
+  { icon: 'brush', label: 'Brand and print design' },
+];
 ---
 
 <Base
   title="About | JayTech9"
   description="JayTech9 is an Accra-based technology company building websites, business systems, data dashboards and AgriTech tools for businesses, nonprofits and farmers in Ghana and around the world."
 >
-  <header class="page-head">
-    <div class="wrap">
-      <h1>Technology that fits how your business works</h1>
-      <p class="lede">
-        JayTech9 helps businesses, nonprofits and farmers work faster with simple, well-made software.
-      </p>
+  <!-- Hero: "From the field to the screen", with a line that grows from a seedling into a chart -->
+  <header class="page-head about-hero">
+    <div class="wrap about-hero__inner">
+      <div class="about-hero__text">
+        <p class="about-eyebrow"><span></span>About JayTech9</p>
+        <h1>From the field <em>to the screen.</em></h1>
+        <p class="lede">
+          We started out training farmers, buried in paperwork. Today we build the simple software we wished
+          we had then, for businesses, nonprofits and farmers worldwide.
+        </p>
+      </div>
+      <svg class="grow" viewBox="0 0 560 300" aria-hidden="true">
+        <defs>
+          <linearGradient id="grow-line" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0" stop-color="#6fd04a" />
+            <stop offset="0.45" stop-color="#6fd04a" />
+            <stop offset="1" stop-color="#8fd3ff" />
+          </linearGradient>
+        </defs>
+        <path class="grow__ground" d="M10 262 H550" />
+        <path class="grow__leaf" d="M70 200 C40 196 26 176 28 150 C54 152 72 170 70 200 Z" style="--d:0.45s" />
+        <path class="grow__leaf" d="M72 168 C96 160 112 138 108 112 C84 118 70 140 72 168 Z" style="--d:0.65s" />
+        <path class="grow__line" pathLength="1" d="M70 262 C70 230 70 210 70 190 C70 150 110 150 150 170 L230 132 L300 158 L380 92 L450 116 L530 40" />
+        <g class="grow__points">
+          <circle cx="230" cy="132" r="6" style="--d:1.2s" />
+          <circle cx="300" cy="158" r="6" style="--d:1.4s" />
+          <circle cx="380" cy="92" r="6" style="--d:1.6s" />
+          <circle cx="450" cy="116" r="6" style="--d:1.8s" />
+          <circle class="grow__end" cx="530" cy="40" r="9" style="--d:2s" />
+        </g>
+        <text class="grow__label" x="28" y="290" style="--d:0.3s">The field</text>
+        <text class="grow__label" x="532" y="290" text-anchor="end" style="--d:2s">The screen</text>
+      </svg>
     </div>
   </header>
-  <section class="section">
-    <div class="wrap story overlap sheet">
-      <div class="prose">
-        <h2>Our story</h2>
-        <p>
-          JayTech9 grew out of agricultural field work. Training smallholder farmers in sustainable
-          agriculture and running cereal quality checks meant long days of paperwork: the same figures copied
-          into forms, notebooks and reports, again and again.
-        </p>
-        <p>
-          Automating that work led to building tools for others with the same problem: shops tracking stock in
-          exercise books, nonprofits counting donations by hand, and field teams reporting over WhatsApp.
-        </p>
-        <p>
-          Today JayTech9 builds websites, business systems and data dashboards for clients in Ghana and
-          abroad, and is developing BuildSmart, its own software for hardware and building material
-          businesses.
-        </p>
-      </div>
-      <div class="story__art">
-        <svg class="contours" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
-          <circle cx="40" cy="560" r="18" class="contours__dot"></circle>
-          <path
-            d="M 110 560 A 70 70 0 0 0 40 490"
-            pathLength="1"
-            class="contours__arc contours__arc--green"
-            style="--delay:0ms"
-          ></path>
-          <path
-            d="M 158 560 A 118 118 0 0 0 40 442"
-            pathLength="1"
-            class="contours__arc contours__arc--blue"
-            style="--delay:70ms"
-          ></path>
-          <path
-            d="M 206 560 A 166 166 0 0 0 40 394"
-            pathLength="1"
-            class="contours__arc contours__arc--blue"
-            style="--delay:140ms"
-          ></path>
-          <path
-            d="M 254 560 A 214 214 0 0 0 40 346"
-            pathLength="1"
-            class="contours__arc contours__arc--green"
-            style="--delay:210ms"
-          ></path>
-          <path
-            d="M 302 560 A 262 262 0 0 0 40 298"
-            pathLength="1"
-            class="contours__arc contours__arc--blue"
-            style="--delay:280ms"
-          ></path>
-          <path
-            d="M 350 560 A 310 310 0 0 0 40 250"
-            pathLength="1"
-            class="contours__arc contours__arc--blue"
-            style="--delay:350ms"
-          ></path>
-          <path
-            d="M 398 560 A 358 358 0 0 0 40 202"
-            pathLength="1"
-            class="contours__arc contours__arc--green"
-            style="--delay:420ms"
-          ></path>
-          <path
-            d="M 446 560 A 406 406 0 0 0 40 154"
-            pathLength="1"
-            class="contours__arc contours__arc--blue"
-            style="--delay:490ms"
-          ></path>
-          <path
-            d="M 494 560 A 454 454 0 0 0 40 106"
-            pathLength="1"
-            class="contours__arc contours__arc--blue"
-            style="--delay:560ms"
-          ></path>
-        </svg>
-      </div>
+
+  <!-- Manifesto + facts, overlapping the header -->
+  <section class="section manifesto-section" aria-labelledby="manifesto-heading">
+    <div class="wrap overlap sheet manifesto">
+      <h2 id="manifesto-heading" class="visually-hidden">What we believe</h2>
+      <p class="manifesto__text">
+        We don’t start with software. We start with <mark>the people doing the work</mark>, how they do it
+        today, and what slows them down. Then we build <mark>the simplest tool</mark> that fixes it, and hand
+        you <mark>every key</mark>.
+      </p>
+      <ul class="about-stats">
+        {stats.map((s) => (
+          <li>
+            <span class="about-stats__value">{s.value}</span>
+            <span class="about-stats__label">{s.label}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
-  <section class="section section--band" aria-labelledby="principles-heading">
+
+  <!-- The story in four chapters, zig-zag -->
+  <section class="section chapters-section" aria-labelledby="story-heading">
     <div class="wrap">
-      <h2 id="principles-heading">How we work</h2>
-      <ul class="card-grid card-grid--2 principles">
-        <li class="card">
-          <span class="icon-badge">
-            <svg
-              class="icon"
-              width="24"
-              height="24"
-              aria-hidden="true"
-              focusable="false"
-              xmlns="http://www.w3.org/2000/svg"
-
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="m21 21-4.34-4.34" />
-              <circle cx="11" cy="11" r="8" />
-            </svg>
-          </span>
-          <h3>Start with the real problem</h3>
-          <p>
-            We ask how the work is done today before suggesting any software. Sometimes the answer is a better
-            spreadsheet, and we’ll say so.
-          </p>
-        </li>
-        <li class="card">
-          <span class="icon-badge">
-            <svg
-              class="icon"
-              width="24"
-              height="24"
-              aria-hidden="true"
-              focusable="false"
-              xmlns="http://www.w3.org/2000/svg"
-
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
-              <path d="M2 12h20" />
-            </svg>
-          </span>
-          <h3>Built for real-world conditions</h3>
-          <p>
-            Pages that load fast on mobile data, local payment methods such as mobile money, local taxes built
-            in, and screens that make sense to staff who aren’t technical.
-          </p>
-        </li>
-        <li class="card">
-          <span class="icon-badge">
-            <svg
-              class="icon"
-              width="24"
-              height="24"
-              aria-hidden="true"
-              focusable="false"
-              xmlns="http://www.w3.org/2000/svg"
-
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" />
-              <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" />
-            </svg>
-          </span>
-          <h3>You own what you pay for</h3>
-          <p>
-            Your domain is registered in your name, your data stays yours, and you receive the code and logins
-            at handover.
-          </p>
-        </li>
-        <li class="card">
-          <span class="icon-badge">
-            <svg
-              class="icon"
-              width="24"
-              height="24"
-              aria-hidden="true"
-              focusable="false"
-              xmlns="http://www.w3.org/2000/svg"
-
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
-            </svg>
-          </span>
-          <h3>Plain answers</h3>
-          <p>
-            Clear quotes in your currency, honest timelines, and no jargon. If something will cost more or
-            take longer, you hear it from us first.
-          </p>
-        </li>
-      </ul>
-    </div>
-  </section>
-  <section class="section" aria-labelledby="expertise-heading">
-    <div class="wrap facts">
-      <div>
-        <h2 id="expertise-heading">What we bring</h2>
-        <p class="muted">
-          Skills across software, data and agriculture, backed by training in ICT, data analytics, AI and
-          networking.
-        </p>
+      <div class="section-head">
+        <h2 id="story-heading">Our story in four chapters</h2>
       </div>
-      <ul class="expertise">
-        <li>Web and software development</li>
-        <li>Data analytics and reporting</li>
-        <li>AI and automation</li>
-        <li>Networking and IT security</li>
-        <li>Sustainable and regenerative agriculture</li>
-        <li>Brand and print design</li>
-      </ul>
-    </div>
-    <div class="wrap company">
-      <dl>
-        <div>
-          <dt>Registered name</dt>
-          <dd>Jay Tech 9 Enterprise</dd>
-        </div>
-        <div>
-          <dt>Based in</dt>
-          <dd>Accra, Ghana</dd>
-        </div>
-        <div>
-          <dt>Serving</dt>
-          <dd>Clients worldwide, online and on site</dd>
-        </div>
-      </dl>
+      <ol class="chapters">
+        {journey.map((j, i) => (
+          <li class="chapter">
+            <div class="chapter__art" set:html={visual(j.visual)} />
+            <div class="chapter__text">
+              <span class="chapter__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <p class="chapter__step"><Icon name={j.icon as any} size={16} />{j.step}</p>
+              <h3>{j.title}</h3>
+              <p>{j.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
     </div>
   </section>
+
+  <!-- Promises, on dark navy -->
+  <section class="promises" aria-labelledby="principles-heading">
+    <div class="wrap">
+      <div class="promises__head">
+        <p class="about-eyebrow"><span></span>How we work</p>
+        <h2 id="principles-heading">Four promises on every project</h2>
+      </div>
+      <ol class="promises__list">
+        {principles.map((pr, i) => (
+          <li>
+            <span class="promises__num">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <h3><Icon name={pr.icon as any} size={20} />{pr.title}</h3>
+              <p>{pr.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Skills ticker -->
+  <section class="ticker" aria-labelledby="expertise-heading">
+    <div class="wrap ticker__head">
+      <h2 id="expertise-heading">What we bring</h2>
+      <p class="muted">Skills across software, data and agriculture, backed by training in ICT, data analytics, AI and networking.</p>
+    </div>
+    <div class="ticker__band">
+      <div class="ticker__track">
+        {[0, 1].map((copy) => (
+          <ul class="ticker__list" aria-hidden={copy === 1 ? 'true' : undefined}>
+            {skills.map((k) => (
+              <li><Icon name={k.icon as any} size={20} />{k.label}</li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Company details -->
+  <section class="section company-section" aria-label="Company details">
+    <dl class="wrap card company-strip">
+      <div>
+        <dt>Registered name</dt>
+        <dd>{site.legalName}</dd>
+      </div>
+      <div>
+        <dt>Based in</dt>
+        <dd>{site.city}, {site.country}</dd>
+      </div>
+      <div>
+        <dt>Serving</dt>
+        <dd>Clients worldwide, online and on site</dd>
+      </div>
+      <div>
+        <dt>Talk to us</dt>
+        <dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
+      </div>
+    </dl>
+  </section>
+
   <section class="contact-band" aria-labelledby="contact-band-heading">
     <div class="wrap contact-band__inner">
       <div class="contact-band__text">
@@ -311,6 +249,8 @@ import Base from '../layouts/Base.astro';
 </Base>
 
 <style>
+
+
   .contours {
     width: 100%;
     overflow: visible;
@@ -406,109 +346,400 @@ import Base from '../layouts/Base.astro';
       display: block;
     }
   }
-  .story {
+
+
+  /* ---------- Hero ---------- */
+  .about-hero__inner {
     align-items: center;
-    gap: 2.5rem 5rem;
+    gap: 1.5rem 3rem;
     display: grid;
   }
-  .story__art {
-    display: none;
-  }
-  .principles {
-    margin-top: clamp(2rem, 4vw, 3rem);
-  }
-  .facts {
-    gap: 2rem 5rem;
-    display: grid;
-  }
-  .facts h2 {
+  .about-eyebrow {
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    align-items: center;
+    gap: 0.6rem;
     margin-bottom: 1rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    display: flex;
   }
-  .facts p {
-    max-width: 40ch;
+  .about-eyebrow span {
+    background: var(--accent);
+    border-radius: 2px;
+    width: 1.75rem;
+    height: 2px;
   }
-  .expertise {
-    border-top: 2px solid var(--ink);
+  .about-hero h1 {
+    max-width: 11ch;
+    font-size: clamp(2.5rem, 1.4rem + 4.4vw, 4.75rem);
+    line-height: 1;
+  }
+  .about-hero h1 em {
+    color: var(--accent);
+    font-style: normal;
+    display: block;
+  }
+  .about-hero .lede {
+    max-width: 42ch;
+  }
+  .grow {
+    width: 100%;
+    max-width: 36rem;
+    overflow: visible;
+  }
+  .grow__ground {
+    stroke: #ffffff40;
+    stroke-width: 2;
+    stroke-dasharray: 4 8;
+    fill: none;
+  }
+  .grow__line {
+    fill: none;
+    stroke: url(#grow-line);
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+  .grow__leaf {
+    fill: #6fd04a;
+    transform-box: fill-box;
+    transform-origin: 100% 100%;
+  }
+  .grow__points circle {
+    fill: #fff;
+    stroke: #8fd3ff;
+    stroke-width: 3;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .grow__points .grow__end {
+    fill: #6fd04a;
+    stroke: #fff;
+  }
+  .grow__label {
+    fill: #cfe4f2;
+    font: 600 14px var(--font-body);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .grow__line {
+      stroke-dashoffset: 1;
+      animation: grow-draw 2.2s cubic-bezier(0.45, 0, 0.2, 1) 0.2s forwards;
+    }
+    .grow__leaf,
+    .grow__points circle,
+    .grow__label {
+      opacity: 0;
+      animation: grow-pop 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.3) var(--d) forwards;
+    }
+    .grow__end {
+      animation:
+        grow-pop 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.3) var(--d) forwards,
+        grow-pulse 2.4s ease-in-out 2.6s infinite;
+    }
+  }
+  @keyframes grow-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes grow-pop {
+    from {
+      opacity: 0;
+      scale: 0.4;
+    }
+    to {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+  @keyframes grow-pulse {
+    50% {
+      scale: 1.25;
+    }
+  }
+  @media (width>=60rem) {
+    .about-hero__inner {
+      grid-template-columns: 1fr 1.1fr;
+    }
+  }
+  /* ---------- Manifesto ---------- */
+  .manifesto-section {
+    padding-bottom: 0;
+  }
+  .manifesto__text {
+    font-family: var(--font-display);
+    color: var(--ink);
+    letter-spacing: -0.025em;
+    max-width: 30ch;
+    font-size: clamp(1.5rem, 1rem + 2.2vw, 2.6rem);
+    font-weight: 600;
+    line-height: 1.22;
+  }
+  .manifesto__text mark {
+    color: inherit;
+    background: linear-gradient(transparent 62%, #6fd04a66 62%);
+    padding: 0 0.1em;
+  }
+  .about-stats {
+    border-top: 1px solid var(--line);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem 1.5rem;
+    margin: clamp(1.75rem, 4vw, 2.75rem) 0 0;
+    padding: clamp(1.5rem, 3vw, 2rem) 0 0;
+    list-style: none;
+    display: grid;
+  }
+  .about-stats li {
+    flex-direction: column;
+    gap: 0.15rem;
+    display: flex;
+  }
+  .about-stats__value {
+    font-family: var(--font-display);
+    color: var(--brand);
+    letter-spacing: -0.03em;
+    font-size: clamp(1.5rem, 1rem + 2vw, 2.25rem);
+    font-weight: 700;
+    line-height: 1.1;
+  }
+  .about-stats__label {
+    color: var(--ink-soft);
+    font-size: 0.875rem;
+  }
+  @media (width>=48rem) {
+    .about-stats {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  /* ---------- Chapters ---------- */
+  .chapters {
+    gap: clamp(2.5rem, 6vw, 5rem);
     margin: 0;
     padding: 0;
     list-style: none;
-  }
-  .expertise li {
-    border-bottom: 1px solid var(--line);
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: var(--step-1);
-    padding-block: 0.9rem;
-  }
-  .company dl {
-    border-top: 1px solid var(--line);
-    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-    gap: 1.25rem 2rem;
-    margin: clamp(3rem, 6vw, 4.5rem) 0 0;
-    padding-top: 2rem;
     display: grid;
   }
-  .company dt {
-    font-size: var(--step--1);
+  .chapter {
+    align-items: center;
+    gap: 1.5rem 4rem;
+    display: grid;
+  }
+  .chapter__art {
+    border-radius: var(--card-radius);
+    background:
+      radial-gradient(70% 80% at 100% 0%, #2aa3e04d 0%, transparent 60%),
+      linear-gradient(140deg, #0d2233 0%, #123a56 55%, #0068a1 100%);
+    place-items: center;
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    display: grid;
+    box-shadow: 0 24px 48px -30px #10293a99;
+  }
+  .chapter:nth-child(1) .chapter__art {
+    background:
+      radial-gradient(70% 80% at 100% 0%, #6fd04a40 0%, transparent 60%),
+      linear-gradient(140deg, #0d2e24 0%, #15532f 55%, #1e7a3c 100%);
+  }
+  .chapter__art :global(svg) {
+    width: min(100%, 24rem);
+    filter: drop-shadow(0 16px 22px #0006);
+  }
+  .chapter__text {
+    position: relative;
+  }
+  .chapter__num {
+    font-family: var(--font-display);
+    letter-spacing: -0.05em;
+    -webkit-text-stroke: 2px var(--brand);
+    color: transparent;
+    opacity: 0.35;
+    font-size: clamp(4.5rem, 3rem + 6vw, 8rem);
+    font-weight: 800;
+    line-height: 0.8;
+    display: block;
+  }
+  .chapter__step {
+    color: var(--brand);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0.75rem 0 0.4rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    display: flex;
+  }
+  .chapter h3 {
+    font-size: var(--step-2);
+    margin-bottom: 0.65rem;
+  }
+  .chapter__text > p:last-child {
     color: var(--ink-soft);
+    max-width: 44ch;
   }
-  .company dd {
-    margin: 0.2rem 0 0;
-    font-weight: 600;
+  .chapter:last-child .chapter__num {
+    -webkit-text-stroke-color: var(--accent-deep);
+    opacity: 0.6;
   }
-  .team {
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
-    gap: 2.5rem 2rem;
-    margin: clamp(2rem, 4vw, 3rem) 0 0;
+  @media (width>=52rem) {
+    .chapter {
+      grid-template-columns: 1fr 1fr;
+    }
+    .chapter:nth-child(even) .chapter__art {
+      order: 2;
+    }
+  }
+  /* ---------- Promises (dark) ---------- */
+  .promises {
+    background:
+      radial-gradient(50% 70% at 100% 0%, #0068a155 0%, transparent 60%),
+      radial-gradient(40% 60% at 0% 100%, #6fd04a1f 0%, transparent 60%),
+      var(--ink);
+    color: var(--white);
+    padding-block: var(--space-section);
+  }
+  .promises__head {
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+  .promises__head h2 {
+    max-width: 18ch;
+    color: var(--white);
+  }
+  .promises__list {
+    gap: 0 3rem;
+    margin: 0;
     padding: 0;
     list-style: none;
     display: grid;
   }
-  .team__photo,
-  .team__initials {
-    aspect-ratio: 1;
-    border-radius: var(--radius);
-    width: 100%;
-    max-width: 100%;
-    margin-bottom: 1rem;
+  .promises__list li {
+    border-top: 1px solid #ffffff26;
+    gap: 1.25rem;
+    padding: 1.75rem 0;
+    display: flex;
   }
-  .team__photo {
-    object-fit: cover;
-  }
-  .team__initials {
-    background: var(--ink);
-    color: var(--paper);
+  .promises__num {
+    color: var(--accent);
     font-family: var(--font-display);
-    font-weight: 600;
-    font-size: var(--step-3);
-    letter-spacing: -0.03em;
-    place-items: center;
-    display: grid;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    padding-top: 0.2rem;
   }
-  .team__role {
-    color: var(--green-deep);
-    font-size: var(--step--1);
-    margin-top: 0.2rem;
+  .promises__list h3 {
+    color: var(--white);
+    font-size: var(--step-1);
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
+    display: flex;
   }
-  .team__bio {
-    color: var(--ink-soft);
-    font-size: var(--step--1);
-    margin-top: 0.6rem;
+  .promises__list h3 :global(svg) {
+    color: #8fd3ff;
+    flex: none;
   }
-  .team__join {
-    margin-top: 2.5rem;
+  .promises__list p {
+    color: #c3d3de;
+    max-width: 44ch;
   }
   @media (width>=52rem) {
-    .story {
-      grid-template-columns: 1.4fr 1fr;
-    }
-    .story__art {
-      justify-self: end;
-      max-width: 22rem;
-      display: block;
-    }
-    .facts {
+    .promises__list {
       grid-template-columns: 1fr 1fr;
     }
+  }
+  /* ---------- Skills ticker ---------- */
+  .ticker {
+    padding-top: var(--space-section);
+    overflow: hidden;
+  }
+  .ticker__head {
+    margin-bottom: 2rem;
+  }
+  .ticker__head h2 {
+    margin-bottom: 0.6rem;
+  }
+  .ticker__head p {
+    max-width: 52ch;
+  }
+  .ticker__band {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    padding-block: 0.5rem;
+  }
+  .ticker__track {
+    width: max-content;
+    display: flex;
+    animation: ticker 32s linear infinite;
+  }
+  .ticker__band:hover .ticker__track {
+    animation-play-state: paused;
+  }
+  @keyframes ticker {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  .ticker__list {
+    gap: 1rem;
+    margin: 0;
+    padding: 0 0.5rem;
+    list-style: none;
+    display: flex;
+  }
+  .ticker__list li {
+    background: var(--white);
+    border: var(--card-border);
+    color: var(--ink);
+    white-space: nowrap;
+    border-radius: 999px;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1.4rem 0.85rem 1.1rem;
+    font-size: clamp(1rem, 0.9rem + 0.4vw, 1.125rem);
+    font-weight: 600;
+    display: inline-flex;
+    box-shadow: var(--shadow-card);
+  }
+  .ticker__list li :global(svg) {
+    color: var(--brand);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ticker__band {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .ticker__track {
+      width: auto;
+      animation: none;
+    }
+    .ticker__list {
+      flex-wrap: wrap;
+      width: min(100% - 2 * var(--gutter), var(--wrap));
+      margin-inline: auto;
+      padding: 0;
+    }
+    .ticker__list[aria-hidden] {
+      display: none;
+    }
+  }
+  /* ---------- Company strip ---------- */
+  .company-strip {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    gap: 1.25rem 2rem;
+    margin: 0 auto;
+    display: grid;
+  }
+  .company-strip dt {
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  .company-strip dd {
+    margin: 0.15rem 0 0;
+    font-weight: 600;
+    overflow-wrap: anywhere;
   }
 </style>

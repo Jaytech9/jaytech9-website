@@ -22,6 +22,7 @@ npm run preview    # check the built site before going live
 | Page title, SEO, social sharing, PWA tags | `src/layouts/Base.astro` |
 | Logo in the header | `src/assets/logo.png` |
 | Icons, favicon, share image | `public/` |
+| Help button and assistant answers | `src/data/help.ts` (answers), `src/components/HelpWidget.astro` (menu), `src/help/` (behaviour and look) |
 | Installable app + offline support | `public/manifest.webmanifest`, `public/sw.js` |
 
 To add a page, copy an existing one in `src/pages/` and change its `title`, `description` and content. The file path becomes the web address (`src/pages/pricing.astro` → `/pricing/`).
@@ -51,5 +52,6 @@ Rebuild (or trigger a deploy hook from the CRM) to publish changes.
 ## Notes
 
 - **Contact form** uses Netlify Forms (`data-netlify="true"`). It only receives messages when the site is hosted on Netlify. If hosting moves elsewhere (e.g. Cloudflare Pages), switch the form to a service such as Formspree or Web3Forms.
+- **Teaching the help assistant:** questions it can't answer appear in Netlify under Forms → `help-questions`, with emails and phone numbers removed. Add the good ones to `src/data/help.ts` as a question and answer, then deploy. Only add facts that are true and on the website. The form shares Netlify's submission allowance with the contact form.
 - **Offline / app:** after a deploy that changes content, bump `VERSION` in `public/sw.js` so returning visitors get the update straight away.
 - **History:** this source was recovered on 5 Nov 2026 from the October 2026 build (the original source files were lost). `tools/convert.py` is the one-off script that did the recovery; it is kept for reference only.
