@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import { art } from '../data/promo-art';
+import { shots } from '../data/product-shots';
 
 // Why-us cards beside the featured product. Keep each line short.
 const features = [
@@ -104,6 +105,7 @@ const features = [
               </svg>
             </span>
             <span class="work-card__sector">Product</span>
+            <div class="work-card__shot" set:html={shots['buildsmart']} />
           </div>
           <div class="work-card__body">
             <div class="work-card__meta">
@@ -149,6 +151,7 @@ const features = [
               </svg>
             </span>
             <span class="work-card__sector">Nonprofit</span>
+            <div class="work-card__shot" set:html={shots['donation-management']} />
           </div>
           <div class="work-card__body">
             <div class="work-card__meta">
@@ -196,6 +199,7 @@ const features = [
               </svg>
             </span>
             <span class="work-card__sector">Finance</span>
+            <div class="work-card__shot" set:html={shots['field-reporting-dashboard']} />
           </div>
           <div class="work-card__body">
             <div class="work-card__meta">
@@ -243,6 +247,7 @@ const features = [
               </svg>
             </span>
             <span class="work-card__sector">Business</span>
+            <div class="work-card__shot" set:html={shots['agency-website-crm']} />
           </div>
           <div class="work-card__body">
             <div class="work-card__meta">
@@ -290,6 +295,7 @@ const features = [
               </svg>
             </span>
             <span class="work-card__sector">Business</span>
+            <div class="work-card__shot" set:html={shots['investment-website']} />
           </div>
           <div class="work-card__body">
             <div class="work-card__meta">
@@ -335,6 +341,7 @@ const features = [
               </svg>
             </span>
             <span class="work-card__sector">AgriTech</span>
+            <div class="work-card__shot" set:html={shots['carbon-credits']} />
           </div>
           <div class="work-card__body">
             <div class="work-card__meta">
@@ -379,6 +386,7 @@ const features = [
               </svg>
             </span>
             <span class="work-card__sector">Open source</span>
+            <div class="work-card__shot" set:html={shots['logalyzer']} />
           </div>
           <div class="work-card__body">
             <div class="work-card__meta">
@@ -789,42 +797,60 @@ const features = [
     padding: 0;
     overflow: hidden;
   }
+  /* Card top: product look-alike screen on a brand gradient, sliding in from the bottom edge. */
   .work-card__cover {
-    height: 8.5rem;
+    height: 11.5rem;
     color: var(--white);
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: flex-start;
     gap: 1rem;
-    padding: 1.1rem 1.25rem;
+    padding: 1rem 1.1rem;
     display: flex;
     position: relative;
     overflow: hidden;
   }
   .work-card__cover:before {
     content: '';
-    background: repeating-radial-gradient(circle at 100% 100%, #0000 0 18px, #ffffff29 18px 20px);
+    background: repeating-radial-gradient(circle at 100% 0, #0000 0 18px, #ffffff14 18px 20px);
     position: absolute;
     inset: 0;
   }
+  .work-card__shot {
+    pointer-events: none;
+    position: absolute;
+    top: 3.4rem;
+    left: 50%;
+    width: min(92%, 24rem);
+    transform: translateX(-50%);
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+    filter: drop-shadow(0 14px 22px #0006);
+  }
+  .work-card__shot :global(svg) {
+    width: 100%;
+  }
+  .work-card:hover .work-card__shot {
+    transform: translateX(-50%) translateY(-6px);
+  }
   .tone-ink {
-    background: var(--ink);
+    background: linear-gradient(135deg, #10293a, #1d4660);
   }
   .tone-teal {
-    background: var(--teal);
+    background: linear-gradient(135deg, #0a5556, #12857c);
   }
   .tone-blue {
-    background: var(--blue);
+    background: linear-gradient(135deg, #00507c, #0a7bb8);
   }
   .tone-blue-dark {
-    background: var(--blue-dark);
+    background: linear-gradient(135deg, #0b3d5c, #0068a1);
   }
   .tone-green {
-    background: var(--green-deep);
+    background: linear-gradient(135deg, #154f12, #2a8a1c);
   }
   .tone-ink-soft {
-    background: var(--ink-soft);
+    background: linear-gradient(135deg, #2b4252, #4a6577);
   }
   .work-card__icon {
+    z-index: 1;
     background: #ffffff2e;
     border-radius: 50%;
     place-items: center;
@@ -834,6 +860,7 @@ const features = [
     position: relative;
   }
   .work-card__sector {
+    z-index: 1;
     font-size: var(--step--1);
     background: #ffffff2e;
     border-radius: 999px;
@@ -880,7 +907,11 @@ const features = [
     }
     .work-card--wide .work-card__cover {
       height: auto;
-      min-height: 15rem;
+      min-height: 17rem;
+    }
+    .work-card--wide .work-card__shot {
+      top: 3.75rem;
+      width: min(90%, 26rem);
     }
     .work-card--wide .work-card__body {
       justify-content: center;
@@ -993,6 +1024,11 @@ const features = [
       max-width: 22rem;
       margin-bottom: -6rem;
       display: block;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .work-card:hover .work-card__shot {
+      transform: translateX(-50%);
     }
   }
 </style>
