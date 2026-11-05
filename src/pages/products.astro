@@ -1,22 +1,83 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { art } from '../data/promo-art';
+
+// Why-us cards beside the featured product. Keep each line short.
+const features = [
+  { icon: 'key', title: 'You own it', text: 'Code, data and logins handed over to you.' },
+  { icon: 'wallet', title: 'Local payments built in', text: 'Mobile money, cards, VAT and NHIL.' },
+  { icon: 'headset', title: 'Support after launch', text: 'Fixes and changes when you need them.' },
+] as const;
 ---
 
 <Base
-  title="Work | JayTech9"
-  description="Projects by JayTech9: business software, donation and reporting systems, websites, AgriTech and open-source tools."
+  title="Products | JayTech9"
+  description="Products and projects by JayTech9: business software, donation and reporting systems, websites, AgriTech and open-source tools."
 >
-  <header class="page-head">
+  <section class="prod-hero" aria-labelledby="prod-heading">
     <div class="wrap">
-      <h1>Work</h1>
-      <p class="lede">
-        Delivered projects, work in progress, and our own products. Some clients aren’t named here until
-        they’ve agreed to it.
-      </p>
+      <div class="prod-hero__card">
+        <div class="prod-hero__art" set:html={art.data} />
+        <div class="prod-hero__text">
+          <div class="prod-hero__lines" aria-hidden="true"><span></span><span></span></div>
+          <p class="prod-hero__eyebrow">Products</p>
+          <h1 id="prod-heading">Built for businesses that rely on their software.</h1>
+          <p class="prod-hero__sub">
+            Our own products and the systems we’ve delivered for clients, from hardware stores to nonprofits.
+          </p>
+        </div>
+        <a class="prod-hero__cta" href="/contact/">
+          Book a demo
+          <Icon name="arrow" size={16} />
+        </a>
+      </div>
     </div>
-  </header>
-  <section class="section work-section" aria-label="Projects">
+  </section>
+
+  <section class="section prod-why" aria-labelledby="why-heading">
     <div class="wrap">
+      <div class="prod-intro">
+        <h2 id="why-heading">Practical software, built and supported by one accountable team</h2>
+        <div class="prod-intro__side">
+          <p>Built for mobile data, local payments and the people who use it every day.</p>
+          <a class="prod-pill" href="/contact/">
+            Talk to us
+            <Icon name="arrow" size={15} />
+          </a>
+        </div>
+      </div>
+      <div class="prod-grid">
+        <ul class="prod-features">
+          {features.map((f) => (
+            <li class="prod-feature">
+              <span class="prod-feature__icon">
+                <Icon name={f.icon} size={18} />
+              </span>
+              <h3>{f.title}</h3>
+              <p>{f.text}</p>
+            </li>
+          ))}
+          <li class="prod-feature prod-feature--art" aria-hidden="true" set:html={art.systems} />
+        </ul>
+        <a class="prod-spotlight" href="/products/buildsmart/">
+          <span class="prod-spotlight__badge">
+            <span class="status" data-status="In development">In development</span>
+          </span>
+          <span class="prod-spotlight__art" set:html={art.websites} />
+          <span class="prod-spotlight__shadow" aria-hidden="true"></span>
+          <span class="prod-spotlight__name">BuildSmart</span>
+          <span class="prod-spotlight__text">Inventory, sales and accounting for hardware stores.</span>
+        </a>
+      </div>
+    </div>
+  </section>
+  <section class="section section--band work-section" aria-labelledby="all-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="all-heading">All products and projects</h2>
+        <p>Delivered client projects, work in progress and our own products. Some clients aren’t named until they’ve agreed to it.</p>
+      </div>
       <ul class="card-grid work-cards">
         <li class="card card--link work-card work-card--wide">
           <div class="work-card__cover tone-ink">
@@ -51,9 +112,9 @@ import Base from '../layouts/Base.astro';
                 In development
               </span>
             </div>
-            <h2 class="work-card__title">
-              <a href="/work/buildsmart/">BuildSmart</a>
-            </h2>
+            <h3 class="work-card__title">
+              <a href="/products/buildsmart/">BuildSmart</a>
+            </h3>
             <p>
               Inventory, sales and accounting software for hardware stores and building material suppliers in
               Ghana, with Ghana VAT, NHIL and GETFund built in.
@@ -96,9 +157,9 @@ import Base from '../layouts/Base.astro';
                 Delivered
               </span>
             </div>
-            <h2 class="work-card__title">
-              <a href="/work/donation-management/">Donation management system</a>
-            </h2>
+            <h3 class="work-card__title">
+              <a href="/products/donation-management/">Donation management system</a>
+            </h3>
             <p>
               Online giving through Paystack, with a private dashboard that shows who gave, how much and when.
             </p>
@@ -143,9 +204,9 @@ import Base from '../layouts/Base.astro';
                 In progress
               </span>
             </div>
-            <h2 class="work-card__title">
-              <a href="/work/field-reporting-dashboard/">Field reporting dashboard</a>
-            </h2>
+            <h3 class="work-card__title">
+              <a href="/products/field-reporting-dashboard/">Field reporting dashboard</a>
+            </h3>
             <p>
               Replacing daily WhatsApp reports from branch field officers with a live dashboard that managers
               can filter by branch and date.
@@ -190,9 +251,9 @@ import Base from '../layouts/Base.astro';
                 In progress
               </span>
             </div>
-            <h2 class="work-card__title">
-              <a href="/work/agency-website-crm/">Website and CRM</a>
-            </h2>
+            <h3 class="work-card__title">
+              <a href="/products/agency-website-crm/">Website and CRM</a>
+            </h3>
             <p>
               A portfolio website the team can update themselves, linked to a simple CRM for tracking
               enquiries, calls, emails and visits.
@@ -237,9 +298,9 @@ import Base from '../layouts/Base.astro';
                 In progress
               </span>
             </div>
-            <h2 class="work-card__title">
-              <a href="/work/investment-website/">Company website with CMS</a>
-            </h2>
+            <h3 class="work-card__title">
+              <a href="/products/investment-website/">Company website with CMS</a>
+            </h3>
             <p>
               A corporate website with its own content manager, so the team can publish news and update pages
               without touching code.
@@ -282,9 +343,9 @@ import Base from '../layouts/Base.astro';
                 In development
               </span>
             </div>
-            <h2 class="work-card__title">
-              <a href="/work/carbon-credits/">Carbon credits for smallholder farmers</a>
-            </h2>
+            <h3 class="work-card__title">
+              <a href="/products/carbon-credits/">Carbon credits for smallholder farmers</a>
+            </h3>
             <p>
               Helping smallholder farmers who use sustainable methods find out whether they qualify for carbon
               credits, and earn from it if they do.
@@ -326,9 +387,9 @@ import Base from '../layouts/Base.astro';
                 Live
               </span>
             </div>
-            <h2 class="work-card__title">
-              <a href="/work/logalyzer/">Logalyzer</a>
-            </h2>
+            <h3 class="work-card__title">
+              <a href="/products/logalyzer/">Logalyzer</a>
+            </h3>
             <p>
               A free browser tool that reads server log files and highlights errors, warnings and patterns in
               seconds.
@@ -410,6 +471,319 @@ import Base from '../layouts/Base.astro';
 </Base>
 
 <style>
+  /* ---------- Products hero: one large rounded card ---------- */
+  .prod-hero {
+    background: linear-gradient(var(--brand) 0 45%, var(--paper) 45%);
+    padding-top: clamp(0.5rem, 2vw, 1.5rem);
+  }
+  .prod-hero__card {
+    border-radius: clamp(22px, 3vw, 32px);
+    color: var(--white);
+    min-height: clamp(26rem, 52vw, 34rem);
+    box-shadow: 0 24px 50px -28px #10293ab3;
+    background:
+      radial-gradient(circle at 78% 30%, #2f9a4a66 0, transparent 55%),
+      linear-gradient(140deg, #0d2e24 0%, #15532f 55%, #1e7a3c 100%);
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 1.5rem;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    display: flex;
+    position: relative;
+    overflow: hidden;
+  }
+  .prod-hero__art {
+    opacity: 0.95;
+    width: min(78%, 34rem);
+    position: absolute;
+    top: clamp(-1rem, -2vw, 0rem);
+    right: clamp(-4rem, -3vw, -1rem);
+    transform: rotate(-6deg);
+    filter: drop-shadow(0 30px 40px #0008);
+  }
+  .prod-hero__art :global(svg) {
+    width: 100%;
+  }
+  .prod-hero__lines {
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    display: grid;
+  }
+  .prod-hero__lines span {
+    background: #ffffffb3;
+    border-radius: 2px;
+    width: 2.75rem;
+    height: 2px;
+    display: block;
+  }
+  .prod-hero__lines span + span {
+    width: 1.75rem;
+  }
+  .prod-hero__text {
+    z-index: 1;
+    max-width: 34rem;
+    position: relative;
+  }
+  .prod-hero__eyebrow {
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+  .prod-hero h1 {
+    font-size: clamp(2rem, 1.2rem + 3.4vw, 3.75rem);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+  }
+  .prod-hero__sub {
+    color: #d7e8dc;
+    max-width: 30rem;
+    margin-top: 0.9rem;
+    font-size: 0.9375rem;
+  }
+  .prod-hero__cta {
+    z-index: 1;
+    background: var(--white);
+    color: var(--ink);
+    border-radius: 999px;
+    align-self: flex-start;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    position: relative;
+  }
+  .prod-hero__cta:hover {
+    background: var(--accent);
+    color: var(--ink);
+  }
+  /* Dark fade behind the text so the headline always reads over the illustration. */
+  .prod-hero__card:after {
+    content: '';
+    pointer-events: none;
+    background: linear-gradient(to top, #0d2e24f2 0%, #0d2e24b3 40%, transparent 68%);
+    position: absolute;
+    inset: 0;
+  }
+  @media (width<48rem) {
+    .prod-hero__card {
+      min-height: 33rem;
+    }
+    .prod-hero__art {
+      width: 64%;
+      top: 0.75rem;
+      right: -1.5rem;
+    }
+    .prod-feature {
+      min-height: 8.75rem;
+    }
+    .prod-feature__icon {
+      margin-bottom: 1.5rem;
+    }
+  }
+  @media (width>=36rem) and (width<52rem) {
+    .prod-grid .prod-features {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (width>=48rem) and (width<80rem) {
+    .prod-hero__art {
+      width: 44%;
+      top: 1.5rem;
+      right: -1.5rem;
+    }
+    .prod-hero__text {
+      max-width: 26rem;
+    }
+  }
+  @media (width>=48rem) {
+    .prod-hero__card:after {
+      background: linear-gradient(to right, #0d2e24d9 0%, #0d2e2480 40%, transparent 62%);
+    }
+    .prod-hero__cta {
+      position: absolute;
+      bottom: clamp(1.5rem, 4vw, 3rem);
+      right: clamp(1.5rem, 4vw, 3rem);
+    }
+  }
+  /* ---------- Intro row + feature grid ---------- */
+  .prod-intro {
+    gap: 1.25rem 3rem;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+    display: grid;
+  }
+  .prod-intro h2 {
+    font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    max-width: 22ch;
+    line-height: 1.15;
+  }
+  .prod-intro__side {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    display: flex;
+  }
+  .prod-intro__side p {
+    color: var(--ink-soft);
+    max-width: 30ch;
+    font-size: 0.9375rem;
+  }
+  .prod-pill {
+    background: var(--ink);
+    color: var(--white);
+    border-radius: 999px;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.6rem 1.1rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+  }
+  .prod-pill:hover {
+    background: var(--brand);
+    color: var(--white);
+  }
+  .prod-grid {
+    gap: clamp(1rem, 2vw, 1.5rem);
+    display: grid;
+  }
+  .prod-features {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: clamp(1rem, 2vw, 1.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+  }
+  .prod-feature {
+    background: #e9eef2;
+    border-radius: var(--radius-lg);
+    min-height: 10.5rem;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.5rem;
+    display: flex;
+  }
+  .prod-feature__icon {
+    background: var(--white);
+    color: var(--brand);
+    border-radius: 10px;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin-bottom: auto;
+    display: grid;
+  }
+  .prod-feature h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+  .prod-feature p {
+    color: var(--ink-soft);
+    font-size: 0.875rem;
+  }
+  .prod-feature--art {
+    background: linear-gradient(160deg, #dfe8ee, #c9d8e2);
+    place-items: center;
+    padding: 1rem;
+    display: grid;
+    overflow: hidden;
+  }
+  .prod-feature--art :global(svg) {
+    width: min(100%, 13rem);
+    filter: drop-shadow(0 14px 18px #10293a33);
+  }
+  .prod-spotlight {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    color: var(--ink);
+    box-shadow: var(--shadow-card);
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 2rem 1.5rem 1.75rem;
+    text-decoration: none;
+    transition:
+      transform 0.2s,
+      box-shadow 0.2s;
+    display: flex;
+    position: relative;
+  }
+  .prod-spotlight:hover {
+    color: var(--ink);
+    box-shadow:
+      0 0 0 2px var(--brand),
+      var(--shadow-card-hover);
+    transform: translateY(-2px);
+  }
+  .prod-spotlight__badge {
+    position: absolute;
+    top: 1.1rem;
+    left: 1.25rem;
+  }
+  .prod-spotlight__art {
+    width: min(100%, 17rem);
+    margin-top: 1rem;
+    animation: float 5s ease-in-out infinite;
+    display: block;
+  }
+  .prod-spotlight__art :global(svg) {
+    width: 100%;
+  }
+  @keyframes float {
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+  .prod-spotlight__shadow {
+    background: radial-gradient(closest-side, #10293a40, transparent);
+    width: 60%;
+    height: 1rem;
+    margin: 0.25rem 0 0.75rem;
+    display: block;
+  }
+  .prod-spotlight__name {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .prod-spotlight__text {
+    color: var(--ink-soft);
+    max-width: 26ch;
+    font-size: 0.875rem;
+  }
+  @media (width>=52rem) {
+    .prod-intro {
+      grid-template-columns: 1.6fr 1fr;
+      align-items: end;
+    }
+    .prod-grid {
+      grid-template-columns: 2fr 1fr;
+    }
+    .prod-features {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .prod-spotlight__art {
+      animation: none;
+    }
+    .prod-spotlight:hover {
+      transform: none;
+    }
+  }
   .work-card {
     gap: 0;
     padding: 0;

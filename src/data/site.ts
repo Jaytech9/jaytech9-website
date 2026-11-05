@@ -22,7 +22,7 @@ export const site = {
 
 export const nav = [
   { label: 'Services', href: '/services/' },
-  { label: 'Work', href: '/work/' },
+  { label: 'Products', href: '/products/' },
   { label: 'About', href: '/about/' },
   { label: 'Blog', href: '/blog/' },
   { label: 'Careers', href: '/careers/' },
@@ -32,7 +32,7 @@ export const nav = [
 // Footer: keep each list to four items.
 export const footerLinks = [
   { label: 'About us', href: '/about/' },
-  { label: 'Our work', href: '/work/' },
+  { label: 'Our products', href: '/products/' },
   { label: 'Careers', href: '/careers/' },
   { label: 'Donate', href: '/donate/' },
 ];

@@ -1,7 +1,7 @@
 // JayTech9 service worker: makes the site installable and usable offline.
 // Bump VERSION whenever you deploy a change you want everyone to receive straight away.
-const VERSION = 'jt9-v3';
-const CORE = ['/', '/offline/', '/services/', '/work/', '/about/', '/contact/', '/manifest.webmanifest', '/icon-192.png'];
+const VERSION = 'jt9-v4';
+const CORE = ['/', '/offline/', '/services/', '/products/', '/about/', '/contact/', '/manifest.webmanifest', '/icon-192.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(VERSION).then((c) => c.addAll(CORE)).then(() => self.skipWaiting()));

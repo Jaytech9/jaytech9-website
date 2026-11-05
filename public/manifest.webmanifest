@@ -16,6 +16,6 @@
   ],
   "shortcuts": [
     { "name": "Start a project", "url": "/contact/" },
-    { "name": "Our work", "url": "/work/" }
+    { "name": "Our products", "url": "/products/" }
   ]
 }

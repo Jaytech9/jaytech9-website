@@ -3,31 +3,30 @@ import Base from '../../layouts/Base.astro';
 ---
 
 <Base
-  title="BuildSmart | JayTech9"
-  description="Inventory, sales and accounting software for hardware stores and building material suppliers in Ghana, with Ghana VAT, NHIL and GETFund built in."
+  title="Donation management system | JayTech9"
+  description="Online giving through Paystack, with a private dashboard that shows who gave, how much and when."
   ogType="article"
 >
   <article>
     <header class="page-head">
       <div class="wrap">
         <p class="crumb">
-          <a href="/work/">Work</a>
+          <a href="/products/">Products</a>
         </p>
-        <h1>BuildSmart</h1>
+        <h1>Donation management system</h1>
         <p class="lede">
-          Inventory, sales and accounting software for hardware stores and building material suppliers in
-          Ghana, with Ghana VAT, NHIL and GETFund built in.
+          Online giving through Paystack, with a private dashboard that shows who gave, how much and when.
         </p>
         <dl class="facts">
           <div>
             <dt>Client</dt>
-            <dd>Our own product</dd>
+            <dd>A Ghanaian nonprofit</dd>
           </div>
           <div>
             <dt>Status</dt>
             <dd>
-              <span class="status" data-status="In development">
-                In development
+              <span class="status" data-status="Delivered">
+                Delivered
               </span>
             </dd>
           </div>
@@ -37,7 +36,7 @@ import Base from '../../layouts/Base.astro';
           </div>
           <div>
             <dt>Built with</dt>
-            <dd>Node.js, Express, PostgreSQL, Docker</dd>
+            <dd>PHP, MySQL, Paystack, Chart.js</dd>
           </div>
         </dl>
       </div>
@@ -46,44 +45,34 @@ import Base from '../../layouts/Base.astro';
       <div class="prose">
         <h2 id="the-problem">The problem</h2>
         <p>
-          Hardware stores and building material suppliers in Ghana often run on paper books, a spreadsheet and
-          the owner’s memory. Stock goes missing without anyone noticing, quotations are rewritten by hand,
-          and preparing VAT returns takes days.
+          Donations arrived through mobile money, bank transfers and cash, and were tracked in a spreadsheet.
+          Thanking donors and reporting to the board meant hours of copying figures by hand.
         </p>
-        <h2 id="what-were-building">What we’re building</h2>
-        <p>
-          BuildSmart is a cloud system that each store signs into with its own private account. One codebase
-          serves many businesses, and every record is kept separate per business.
-        </p>
+        <h2 id="what-we-built">What we built</h2>
         <ul>
           <li>
-            <strong>Stock that can’t quietly change.</strong> Every movement in or out is recorded as a
-            permanent entry, so the stock count always has a history behind it.
+            <strong>A giving page</strong> where supporters pay with mobile money or card through Paystack.
           </li>
           <li>
-            <strong>Sales, purchases and supplier invoices</strong> in one place, with cancelled orders kept
-            out of the financial totals.
+            <strong>A secure admin dashboard</strong> with sign-in, showing totals, trends over time and top
+            donors as charts.
           </li>
           <li>
-            <strong>Ghana taxes by default.</strong> VAT, NHIL and GETFund are applied automatically. The GRA
-            tax report respects the date a business registered for VAT.
-          </li>
-          <li>
-            <strong>Four levels of access</strong>, so a cashier sees only what a cashier needs.
+            <strong>One-click CSV export</strong>, so the finance team can take the numbers straight into
+            their reports.
           </li>
         </ul>
-        <h2 id="where-it-stands">Where it stands</h2>
+        <h2 id="the-result">The result</h2>
         <p>
-          The core backend is built and covered by more than 370 automated tests. Next on the roadmap are
-          quotations, customer records, Paystack billing and the full web interface, ahead of pilots with
-          partner stores.
+          Staff now see every donation as it arrives, and preparing a donor report takes minutes instead of an
+          afternoon.
         </p>
       </div>
     </div>
   </article>
   <nav class="wrap next" aria-label="Next project">
     <p class="muted">Next project</p>
-    <a href="/work/donation-management/">Donation management system</a>
+    <a href="/products/field-reporting-dashboard/">Field reporting dashboard</a>
   </nav>
   <section class="contact-band" aria-labelledby="contact-band-heading">
     <div class="wrap contact-band__inner">

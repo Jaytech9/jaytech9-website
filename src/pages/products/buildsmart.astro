@@ -3,31 +3,31 @@ import Base from '../../layouts/Base.astro';
 ---
 
 <Base
-  title="Website and CRM | JayTech9"
-  description="A portfolio website the team can update themselves, linked to a simple CRM for tracking enquiries, calls, emails and visits."
+  title="BuildSmart | JayTech9"
+  description="Inventory, sales and accounting software for hardware stores and building material suppliers in Ghana, with Ghana VAT, NHIL and GETFund built in."
   ogType="article"
 >
   <article>
     <header class="page-head">
       <div class="wrap">
         <p class="crumb">
-          <a href="/work/">Work</a>
+          <a href="/products/">Products</a>
         </p>
-        <h1>Website and CRM</h1>
+        <h1>BuildSmart</h1>
         <p class="lede">
-          A portfolio website the team can update themselves, linked to a simple CRM for tracking enquiries,
-          calls, emails and visits.
+          Inventory, sales and accounting software for hardware stores and building material suppliers in
+          Ghana, with Ghana VAT, NHIL and GETFund built in.
         </p>
         <dl class="facts">
           <div>
             <dt>Client</dt>
-            <dd>A creative media agency in Accra</dd>
+            <dd>Our own product</dd>
           </div>
           <div>
             <dt>Status</dt>
             <dd>
-              <span class="status" data-status="In progress">
-                In progress
+              <span class="status" data-status="In development">
+                In development
               </span>
             </dd>
           </div>
@@ -37,7 +37,7 @@ import Base from '../../layouts/Base.astro';
           </div>
           <div>
             <dt>Built with</dt>
-            <dd>PHP, MySQL</dd>
+            <dd>Node.js, Express, PostgreSQL, Docker</dd>
           </div>
         </dl>
       </div>
@@ -46,29 +46,44 @@ import Base from '../../layouts/Base.astro';
       <div class="prose">
         <h2 id="the-problem">The problem</h2>
         <p>
-          Enquiries came in by phone, email, social media and walk-ins, and there was no single record of who
-          had been contacted or followed up.
+          Hardware stores and building material suppliers in Ghana often run on paper books, a spreadsheet and
+          the owner’s memory. Stock goes missing without anyone noticing, quotations are rewritten by hand,
+          and preparing VAT returns takes days.
         </p>
         <h2 id="what-were-building">What we’re building</h2>
+        <p>
+          BuildSmart is a cloud system that each store signs into with its own private account. One codebase
+          serves many businesses, and every record is kept separate per business.
+        </p>
         <ul>
           <li>
-            <strong>A public website</strong> showing the agency’s past work, with an enquiry form and social
-            links. Staff can add new projects without a developer.
+            <strong>Stock that can’t quietly change.</strong> Every movement in or out is recorded as a
+            permanent entry, so the stock count always has a history behind it.
           </li>
           <li>
-            <strong>A CRM</strong> where the secretary logs every new contact, and the manager can see calls,
-            emails and visits for each client and what needs following up.
+            <strong>Sales, purchases and supplier invoices</strong> in one place, with cancelled orders kept
+            out of the financial totals.
           </li>
           <li>
-            <strong>Hosting and maintenance</strong> handled by JayTech9 for the first year.
+            <strong>Ghana taxes by default.</strong> VAT, NHIL and GETFund are applied automatically. The GRA
+            tax report respects the date a business registered for VAT.
+          </li>
+          <li>
+            <strong>Four levels of access</strong>, so a cashier sees only what a cashier needs.
           </li>
         </ul>
+        <h2 id="where-it-stands">Where it stands</h2>
+        <p>
+          The core backend is built and covered by more than 370 automated tests. Next on the roadmap are
+          quotations, customer records, Paystack billing and the full web interface, ahead of pilots with
+          partner stores.
+        </p>
       </div>
     </div>
   </article>
   <nav class="wrap next" aria-label="Next project">
     <p class="muted">Next project</p>
-    <a href="/work/investment-website/">Company website with CMS</a>
+    <a href="/products/donation-management/">Donation management system</a>
   </nav>
   <section class="contact-band" aria-labelledby="contact-band-heading">
     <div class="wrap contact-band__inner">
