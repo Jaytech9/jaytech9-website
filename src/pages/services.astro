@@ -4,12 +4,12 @@ import Icon from '../components/Icon.astro';
 
 // Service cards that scroll across the page header. Each links to its section below.
 const services = [
-  { id: 'websites', title: 'Websites and web apps', text: 'Fast, mobile-friendly sites your team can update.', icon: 'monitor' },
-  { id: 'systems', title: 'Business systems', text: 'Replace paper books, spreadsheets and WhatsApp threads.', icon: 'layers' },
-  { id: 'data', title: 'Data dashboards and analysis', text: 'See your numbers clearly, without the wait.', icon: 'chart' },
-  { id: 'agritech', title: 'AgriTech and sustainability', text: 'Digital tools for farmers and cooperatives.', icon: 'sprout' },
-  { id: 'design', title: 'Brand and print design', text: 'Logos, flyers, banners and social graphics.', icon: 'brush' },
-  { id: 'care', title: 'Domains, hosting and care', text: 'Domain, email and hosting set up and kept running.', icon: 'shield' },
+  { id: 'websites', title: 'Websites & Apps', hint: 'Mobile-first builds', icon: 'monitor' },
+  { id: 'systems', title: 'Business Systems', hint: 'Replace paper books', icon: 'layers' },
+  { id: 'data', title: 'Data Dashboards', hint: 'Live numbers', icon: 'chart' },
+  { id: 'agritech', title: 'AgriTech', hint: 'Tools for farmers', icon: 'sprout' },
+  { id: 'design', title: 'Brand Design', hint: 'Logos and print', icon: 'brush' },
+  { id: 'care', title: 'Hosting & Care', hint: 'Domains and email', icon: 'shield' },
 ] as const;
 ---
 
@@ -30,14 +30,10 @@ const services = [
                 <li>
                   <a class="jump__card" href={`#${sv.id}`} tabindex={copy === 1 ? -1 : undefined}>
                     <span class="jump__icon">
-                      <Icon name={sv.icon} size={22} />
+                      <Icon name={sv.icon} size={34} strokeWidth={1.6} />
                     </span>
                     <span class="jump__title">{sv.title}</span>
-                    <span class="jump__text">{sv.text}</span>
-                    <span class="jump__more">
-                      View service
-                      <Icon name="arrow" size={15} />
-                    </span>
+                    <span class="jump__hint">{sv.hint}</span>
                   </a>
                 </li>
               ))}
@@ -514,7 +510,7 @@ const services = [
   .jump__track {
     width: max-content;
     display: flex;
-    animation: jump-scroll 45s linear infinite;
+    animation: jump-scroll 30s linear infinite;
   }
   .jump:hover .jump__track,
   .jump:focus-within .jump__track,
@@ -527,7 +523,7 @@ const services = [
     }
   }
   .jump__list {
-    gap: 1rem;
+    gap: clamp(0.75rem, 2vw, 1.25rem);
     margin: 0;
     padding: 0 0.5rem;
     list-style: none;
@@ -538,16 +534,19 @@ const services = [
   .page-head .jump__card:hover {
     color: var(--ink);
   }
+  /* Same look as the home page tiles: square, centred icon, name and one-line hint. */
   .jump__card {
     background: var(--white);
     border-radius: var(--radius-lg);
-    color: var(--ink);
-    width: clamp(15rem, 60vw, 18rem);
-    height: 100%;
-    box-shadow: 0 12px 26px -14px #0006;
+    text-align: center;
+    width: clamp(8.75rem, 30vw, 10.5rem);
+    min-height: clamp(8.75rem, 30vw, 10.5rem);
+    box-shadow: 0 12px 24px -14px #0006;
     flex-direction: column;
-    gap: 0.45rem;
-    padding: 1.25rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 1rem 0.6rem;
     text-decoration: none;
     transition:
       transform 0.2s,
@@ -555,45 +554,38 @@ const services = [
     display: flex;
   }
   .jump__card:hover {
-    color: var(--ink);
     transform: translateY(-4px);
-    box-shadow: 0 0 0 3px var(--accent), 0 18px 30px -14px #0007;
+    box-shadow:
+      0 0 0 3px var(--accent),
+      0 18px 30px -14px #0007;
   }
   .jump__card:focus-visible {
     outline-color: var(--accent);
   }
   .jump__icon {
-    background: #e3f0f8;
     color: var(--brand);
-    border-radius: 14px;
-    place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    margin-bottom: 0.25rem;
-    display: grid;
+    margin-bottom: 0.35rem;
+    position: relative;
+  }
+  .jump__icon:after {
+    content: '';
+    background: var(--accent);
+    border-radius: 50%;
+    width: 0.55rem;
+    height: 0.55rem;
+    position: absolute;
+    top: -2px;
+    right: -6px;
   }
   .jump__title {
-    font-family: var(--font-display);
-    letter-spacing: -0.015em;
-    font-size: 1.0625rem;
+    font-size: clamp(0.875rem, 0.8rem + 0.3vw, 1rem);
     font-weight: 600;
-    line-height: 1.25;
+    line-height: 1.2;
   }
-  .jump__text {
+  .jump__hint {
     color: var(--ink-soft);
-    font-size: 0.875rem;
-    line-height: 1.4;
-  }
-  .jump__more {
-    color: var(--brand);
-    border-top: 1px solid var(--line);
-    align-items: center;
-    gap: 0.3rem;
-    margin-top: auto;
-    padding-top: 0.75rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    display: flex;
+    font-size: 0.75rem;
+    line-height: 1.25;
   }
   .jump__pause {
     cursor: pointer;
