@@ -174,7 +174,8 @@ const more = [
   }
   .sheet__tile {
     background: var(--white);
-    border-radius: var(--radius-lg);
+    border: var(--card-border);
+    border-radius: var(--card-radius);
     box-shadow: var(--shadow-card);
     color: var(--ink);
     text-align: center;
@@ -193,10 +194,9 @@ const more = [
   .sheet__tile :global(svg) {
     color: var(--brand);
   }
-  .sheet__tile:hover,
   .sheet__tile[aria-current='page'] {
     color: var(--brand);
-    box-shadow: 0 0 0 2px var(--brand);
+    box-shadow: var(--card-ring);
   }
   .sheet__chat {
     background: var(--accent-deep);

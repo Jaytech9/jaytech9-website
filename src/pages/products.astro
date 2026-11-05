@@ -609,8 +609,10 @@ const features = [
     display: grid;
   }
   .prod-feature {
-    background: #e9eef2;
-    border-radius: var(--radius-lg);
+    background: var(--white);
+    border: var(--card-border);
+    box-shadow: var(--shadow-card);
+    border-radius: var(--card-radius);
     min-height: 10.5rem;
     flex-direction: column;
     gap: 0.35rem;
@@ -618,7 +620,7 @@ const features = [
     display: flex;
   }
   .prod-feature__icon {
-    background: var(--white);
+    background: #e3f0f8;
     color: var(--brand);
     border-radius: 10px;
     place-items: center;
@@ -658,18 +660,11 @@ const features = [
     gap: 0.35rem;
     padding: 2rem 1.5rem 1.75rem;
     text-decoration: none;
-    transition:
-      transform 0.2s,
-      box-shadow 0.2s;
     display: flex;
     position: relative;
   }
   .prod-spotlight:hover {
     color: var(--ink);
-    box-shadow:
-      0 0 0 2px var(--brand),
-      var(--shadow-card-hover);
-    transform: translateY(-2px);
   }
   .prod-spotlight__badge {
     position: absolute;
@@ -723,9 +718,6 @@ const features = [
   @media (prefers-reduced-motion: reduce) {
     .prod-spotlight__art {
       animation: none;
-    }
-    .prod-spotlight:hover {
-      transform: none;
     }
   }
   .contours {

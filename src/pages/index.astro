@@ -605,11 +605,11 @@ const tiles = [
   }
   .tile {
     background: var(--white);
-    border-radius: var(--radius-lg);
+    border-radius: var(--card-radius);
     box-shadow: var(--shadow-card);
     color: var(--ink);
     text-align: center;
-    border: 1px solid #e6ecf0;
+    border: var(--card-border);
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -618,17 +618,7 @@ const tiles = [
     min-height: 8.5rem;
     padding: 1rem 0.4rem;
     text-decoration: none;
-    transition:
-      transform 0.2s,
-      box-shadow 0.2s;
     display: flex;
-  }
-  .tile:hover {
-    color: var(--ink);
-    box-shadow:
-      0 0 0 2px var(--brand),
-      var(--shadow-card-hover);
-    transform: translateY(-2px);
   }
   .tile__icon {
     color: var(--brand);
@@ -679,9 +669,6 @@ const tiles = [
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .tile:hover {
-      transform: none;
-    }
   }
   .why__more {
     margin-top: 1.75rem;

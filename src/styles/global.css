@@ -28,12 +28,16 @@
   --teal-tint: #e2f0ee;
   --shadow-card: 0 1px 3px #10293a12, 0 10px 24px -14px #10293a33;
   --shadow-card-hover: 0 2px 6px #10293a1a, 0 20px 38px -18px #10293a52;
-  --font-display:
-    -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter Variable', 'Inter', 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, sans-serif;
-  --font-body:
-    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter Variable', 'Inter', 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, sans-serif;
+  /* One typeface everywhere: Inter (bundled with the site), so every device shows the same type.
+     System fonts are only a fallback while Inter loads. */
+  --font-display: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-body: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  /* Card system: every card uses these, so they look the same on every page. */
+  --card-radius: var(--radius-lg);
+  --card-border: 1px solid #e6ecf0;
+  --card-ring: 0 0 0 2px var(--brand);
+  --card-lift: translateY(-3px);
+  --card-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --step--1: 0.875rem;
   --step-0: 1.0625rem;
   --step-1: clamp(1.1875rem, 1.1rem + 0.4vw, 1.375rem);
@@ -343,10 +347,10 @@ a:hover {
 }
 .card {
   background: var(--white);
-  border-radius: var(--radius-lg);
+  border-radius: var(--card-radius);
   min-width: 0;
   box-shadow: var(--shadow-card);
-  border: 1px solid #e6ecf0;
+  border: var(--card-border);
   flex-direction: column;
   gap: 0.6rem;
   padding: clamp(1.25rem, 2.5vw, 1.75rem);
@@ -364,10 +368,7 @@ a:hover {
     box-shadow 0.2s,
     transform 0.2s;
 }
-.card--link:hover {
-  box-shadow: var(--shadow-card-hover);
-  transform: translateY(-2px);
-}
+
 .card--link h3 a,
 .card--link h2 a {
   color: var(--ink);
@@ -442,7 +443,6 @@ a:hover {
   max-width: 46ch;
 }
 @media (prefers-reduced-motion: reduce) {
-  .card--link:hover,
   .card--link:hover .card__more:after,
   .button:hover {
     transform: none;
@@ -495,4 +495,44 @@ a:hover {
     0 2px 6px #10293a0f,
     0 24px 48px -30px #10293a66;
   padding: clamp(1.25rem, 3vw, 1.75rem) clamp(1.25rem, 3vw, 2rem);
+}
+
+/* ---------- One interaction for every clickable card ----------
+   Same effect as the home page tiles: lifts slightly, gains a blue outline and a deeper shadow,
+   presses down when tapped, and shows a clear focus ring for keyboard users.
+   Cards that are information only (not links) stay still, so visitors can tell what is clickable. */
+/* Buttons and form fields use the site font too (browsers default them to Arial). */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  letter-spacing: inherit;
+}
+:is(.card--link, .tile, .sheet__tile, .work-card, .prod-spotlight) {
+  transition:
+    transform 0.22s var(--card-ease),
+    box-shadow 0.22s var(--card-ease);
+  -webkit-tap-highlight-color: transparent;
+}
+@media (hover: hover) {
+  html :is(.card--link, .tile, .sheet__tile, .work-card, .prod-spotlight):hover {
+    transform: var(--card-lift);
+    box-shadow: var(--card-ring), var(--shadow-card-hover);
+  }
+}
+html :is(.card--link, .tile, .sheet__tile, .work-card, .prod-spotlight):active {
+  transform: translateY(-1px) scale(0.985);
+  box-shadow: var(--card-ring), var(--shadow-card);
+  transition-duration: 0.08s;
+}
+:is(.tile, .sheet__tile, .prod-spotlight):focus-visible,
+:is(.card--link, .work-card):has(a:focus-visible) {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  html :is(.card--link, .tile, .sheet__tile, .work-card, .prod-spotlight):is(:hover, :active) {
+    transform: none;
+  }
 }
