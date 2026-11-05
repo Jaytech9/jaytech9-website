@@ -16,7 +16,18 @@ import Base from '../layouts/Base.astro';
     </div>
   </header>
   <section class="section openings-section" aria-labelledby="openings-heading">
-    <div class="wrap overlap sheet">
+    <div class="wrap overlap sheet careers-sheet">
+      <img
+        class="careers-person"
+        src="/images/careers-person-560.webp"
+        srcset="/images/careers-person-560.webp 344w, /images/careers-person-900.webp 557w"
+        sizes="(width >= 48rem) 18rem, 8rem"
+        width="344"
+        height="560"
+        alt=""
+        loading="eager"
+        decoding="async"
+      />
       <h2 id="openings-heading">Open roles</h2>
       <div class="card empty">
         <span class="icon-badge">
@@ -167,6 +178,45 @@ import Base from '../layouts/Base.astro';
   }
   .empty {
     max-width: 44rem;
+  }
+  /* Illustration sits on the right of the card, facing the content, with his head rising above
+     the card's top edge into the blue header. Decorative only (empty alt). */
+  .careers-sheet {
+    position: relative;
+  }
+  .careers-person {
+    pointer-events: none;
+    width: 8rem;
+    height: auto;
+    filter: drop-shadow(0 18px 22px #10293a40);
+    position: absolute;
+    top: -3.5rem;
+    right: clamp(0.5rem, 3vw, 1.5rem);
+  }
+  .careers-sheet > h2 {
+    padding-right: 8.5rem;
+  }
+  /* Phones: the vacancy card starts below his feet. */
+  .careers-sheet .empty {
+    margin-top: 6.75rem;
+  }
+  @media (width>=48rem) {
+    .careers-person {
+      width: 18rem;
+      top: auto;
+      bottom: 0;
+      right: clamp(1.5rem, 4vw, 4rem);
+    }
+    .careers-sheet {
+      min-height: 22rem;
+    }
+    .careers-sheet > h2 {
+      padding-right: 0;
+    }
+    .careers-sheet .empty {
+      margin-top: 0;
+      max-width: min(44rem, calc(100% - 20rem));
+    }
   }
   .empty__title {
     font-family: var(--font-display);
