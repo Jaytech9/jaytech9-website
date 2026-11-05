@@ -28,3 +28,18 @@ export const nav = [
   { label: 'Careers', href: '/careers/' },
   { label: 'Donate', href: '/donate/' },
 ];
+
+// Footer: keep each list to four items.
+export const footerLinks = [
+  { label: 'About us', href: '/about/' },
+  { label: 'Our work', href: '/work/' },
+  { label: 'Careers', href: '/careers/' },
+  { label: 'Donate', href: '/donate/' },
+];
+
+export const footerServices = [
+  { label: 'Websites and web apps', href: '/services/#websites' },
+  { label: 'Business systems', href: '/services/#systems' },
+  { label: 'Data dashboards', href: '/services/#data' },
+  { label: 'AgriTech and sustainability', href: '/services/#agritech' },
+];

@@ -1,0 +1,215 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+
+// App-style tab bar for phones and tablets. Hidden on wide screens, where the top bar has the full menu.
+const path = Astro.url.pathname.replace(/\/?$/, '/');
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+
+const tabs = [
+  { label: 'Home', href: '/', icon: 'home' },
+  { label: 'Services', href: '/services/', icon: 'layers' },
+  { label: 'Work', href: '/work/', icon: 'briefcase' },
+  { label: 'Contact', href: '/contact/', icon: 'mail' },
+] as const;
+
+const more = [
+  { label: 'About us', href: '/about/', icon: 'info' },
+  { label: 'Blog', href: '/blog/', icon: 'book' },
+  { label: 'Careers', href: '/careers/', icon: 'users' },
+  { label: 'Donate', href: '/donate/', icon: 'heart' },
+  { label: 'Start a project', href: '/contact/', icon: 'rocket' },
+  { label: 'Support', href: `mailto:${site.email}`, icon: 'headset' },
+] as const;
+---
+
+<nav class="tabbar" aria-label="App navigation">
+  <ul class="tabbar__list">
+    {tabs.map((t) => (
+      <li>
+        <a class="tabbar__item" href={t.href} aria-current={isCurrent(t.href) ? 'page' : undefined}>
+          <Icon name={t.icon} size={22} strokeWidth={1.8} />
+          <span>{t.label}</span>
+        </a>
+      </li>
+    ))}
+    <li>
+      <details class="tabbar__more">
+        <summary class="tabbar__item">
+          <Icon name="menu" size={22} strokeWidth={1.8} />
+          <span>Menu</span>
+        </summary>
+        <div class="sheet">
+          <span class="sheet__grip" aria-hidden="true"></span>
+          <ul class="sheet__grid">
+            {more.map((m) => (
+              <li>
+                <a class="sheet__tile" href={m.href} aria-current={m.href.startsWith('/') && m.href !== '/contact/' && isCurrent(m.href) ? 'page' : undefined}>
+                  <Icon name={m.icon} size={24} strokeWidth={1.8} />
+                  <span>{m.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <a class="button sheet__chat" href={site.whatsapp}>
+            <Icon name="chat" size={20} />
+            Chat on WhatsApp
+          </a>
+        </div>
+      </details>
+    </li>
+  </ul>
+</nav>
+
+<script is:inline>
+  // Close the menu sheet when tapping outside it or pressing Escape.
+  (function () {
+    var more = document.querySelector('.tabbar__more');
+    if (!more) return;
+    document.addEventListener('click', function (e) {
+      if (more.open && !more.contains(e.target)) more.open = false;
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && more.open) {
+        more.open = false;
+        more.querySelector('summary').focus();
+      }
+    });
+  })();
+</script>
+
+<style>
+  .tabbar {
+    z-index: 60;
+    background: var(--ink);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    box-shadow: 0 -6px 20px #10293a33;
+  }
+  .tabbar__list {
+    grid-template-columns: repeat(5, 1fr);
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+    display: grid;
+  }
+  .tabbar__item {
+    color: #b9c7d1;
+    cursor: pointer;
+    min-height: 4rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+    list-style: none;
+    text-decoration: none;
+    display: flex;
+    position: relative;
+  }
+  .tabbar__item::-webkit-details-marker {
+    display: none;
+  }
+  .tabbar__item:hover {
+    color: var(--white);
+  }
+  .tabbar__item[aria-current='page'],
+  .tabbar__more[open] > .tabbar__item {
+    color: var(--accent);
+  }
+  .tabbar__item[aria-current='page']:before {
+    content: '';
+    background: var(--accent);
+    border-radius: 0 0 3px 3px;
+    width: 1.75rem;
+    height: 3px;
+    position: absolute;
+    top: 0;
+  }
+  .tabbar__more[open]:before {
+    content: '';
+    background: #10293a80;
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+  }
+  .sheet {
+    background: var(--paper);
+    border-radius: 24px 24px 0 0;
+    padding: 0.75rem var(--gutter) 1.5rem;
+    position: fixed;
+    bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+    left: 0;
+    right: 0;
+    box-shadow: 0 -12px 30px #10293a40;
+    animation: sheet-up 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  @keyframes sheet-up {
+    from {
+      transform: translateY(24px);
+      opacity: 0;
+    }
+  }
+  .sheet__grip {
+    background: var(--line);
+    border-radius: 3px;
+    width: 2.5rem;
+    height: 5px;
+    margin: 0 auto 1rem;
+    display: block;
+  }
+  .sheet__grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    max-width: 34rem;
+    margin: 0 auto 1rem;
+    padding: 0;
+    list-style: none;
+    display: grid;
+  }
+  .sheet__tile {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    color: var(--ink);
+    text-align: center;
+    min-height: 5.75rem;
+    padding: 0.75rem 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.2;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    display: flex;
+  }
+  .sheet__tile :global(svg) {
+    color: var(--brand);
+  }
+  .sheet__tile:hover,
+  .sheet__tile[aria-current='page'] {
+    color: var(--brand);
+    box-shadow: 0 0 0 2px var(--brand);
+  }
+  .sheet__chat {
+    background: var(--accent-deep);
+    border-color: var(--accent-deep);
+    justify-content: center;
+    width: 100%;
+    max-width: 34rem;
+    margin: 0 auto;
+    display: flex;
+  }
+  @media (width>=64rem) {
+    .tabbar {
+      display: none;
+    }
+  }
+</style>

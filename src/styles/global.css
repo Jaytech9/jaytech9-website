@@ -1,19 +1,25 @@
 :root {
-  --paper: #f4f7f3;
-  --paper-deep: #e8eee9;
+  --paper: #f2f5f8;
+  --paper-deep: #e6ecf1;
   --ink: #10293a;
   --ink-soft: #3e5a6b;
   --blue: #0068a1;
   --blue-dark: #00507c;
   --green: #2fae00;
   --green-deep: #1e7a0b;
-  --line: #d3ddd6;
+  --line: #d6dfe6;
   --white: #fff;
+  /* App colours: brand blue bars, logo green accent, ink tab bar. */
+  --brand: #0068a1;
+  --brand-deep: #00507c;
+  --accent: #6fd04a;
+  --accent-deep: #1e7a0b;
+  --radius-lg: 20px;
   --teal: #0e6e6e;
   --teal-deep: #0a5556;
   --teal-tint: #e2f0ee;
-  --shadow-card: 0 1px 2px #10293a0f, 0 8px 24px -12px #10293a2e;
-  --shadow-card-hover: 0 2px 4px #10293a14, 0 18px 36px -16px #10293a47;
+  --shadow-card: 0 1px 3px #10293a12, 0 10px 24px -14px #10293a33;
+  --shadow-card-hover: 0 2px 6px #10293a1a, 0 20px 38px -18px #10293a52;
   --font-display:
     -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter Variable', 'Inter', 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
@@ -30,7 +36,7 @@
   --wrap: 72rem;
   --gutter: clamp(1rem, 4vw, 2.5rem);
   --space-section: clamp(4rem, 9vw, 7.5rem);
-  --radius: 12px;
+  --radius: 16px;
 }
 *,
 :before,
@@ -52,6 +58,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
   line-height: 1.5;
+}
+/* Room for the fixed tab bar on phones and tablets. */
+@media (width<64rem) {
+  body {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+  }
 }
 img,
 svg {
@@ -181,13 +193,15 @@ a:hover {
   text-decoration: none;
   transition:
     background-color 0.15s,
-    border-color 0.15s;
+    border-color 0.15s,
+    transform 0.15s;
   display: inline-flex;
 }
 .button:hover {
   background: var(--blue-dark);
   border-color: var(--blue-dark);
   color: var(--white);
+  transform: translateY(-1px);
 }
 .button--quiet {
   color: var(--ink);
@@ -229,9 +243,10 @@ a:hover {
   box-shadow: inset 0 0 0 2px var(--blue);
 }
 .page-head {
-  background: var(--teal);
+  background: var(--brand);
   color: var(--white);
-  padding-block: clamp(3rem, 7vw, 5.5rem) clamp(2.5rem, 5vw, 4rem);
+  border-radius: 0 0 clamp(24px, 4vw, 40px) clamp(24px, 4vw, 40px);
+  padding-block: clamp(2rem, 6vw, 4.5rem) clamp(2.5rem, 5vw, 4rem);
   position: relative;
   overflow: hidden;
 }
@@ -252,7 +267,7 @@ a:hover {
 }
 .page-head .lede,
 .page-head .muted {
-  color: #d3ebe8;
+  color: #d9ebf6;
 }
 .page-head a:not(.button) {
   color: var(--white);
@@ -318,10 +333,10 @@ a:hover {
 }
 .card {
   background: var(--white);
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
   min-width: 0;
   box-shadow: var(--shadow-card);
-  border: 1px solid #e3e9e5;
+  border: 1px solid #e6ecf0;
   flex-direction: column;
   gap: 0.6rem;
   padding: clamp(1.25rem, 2.5vw, 1.75rem);
@@ -351,7 +366,7 @@ a:hover {
 .card--link h3 a:after,
 .card--link h2 a:after {
   content: '';
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
   position: absolute;
   inset: 0;
 }
@@ -365,16 +380,36 @@ a:hover {
 .card__more {
   font-size: var(--step--1);
   color: var(--blue);
+  border-top: 1px solid var(--line);
+  justify-content: space-between;
+  align-items: center;
   margin-top: auto;
-  padding-top: 0.5rem;
+  padding-top: 0.85rem;
   font-weight: 500;
+  display: flex;
+}
+.card__more:after {
+  content: '→';
+  content: '→' / '';
+  background: var(--blue);
+  color: var(--white);
+  border-radius: 50%;
+  place-items: center;
+  width: 1.625rem;
+  height: 1.625rem;
+  line-height: 1;
+  transition: transform 0.2s;
+  display: grid;
+}
+.card--link:hover .card__more:after {
+  transform: translateX(3px);
 }
 .icon-badge {
-  background: var(--teal-tint);
-  width: 2.75rem;
-  height: 2.75rem;
-  color: var(--teal);
-  border-radius: 10px;
+  background: #e3f0f8;
+  width: 3rem;
+  height: 3rem;
+  color: var(--brand);
+  border-radius: 14px;
   flex: none;
   place-items: center;
   display: inline-grid;
@@ -397,7 +432,29 @@ a:hover {
   max-width: 46ch;
 }
 @media (prefers-reduced-motion: reduce) {
-  .card--link:hover {
+  .card--link:hover,
+  .card--link:hover .card__more:after,
+  .button:hover {
     transform: none;
   }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+.hero__text,
+.page-head > .wrap {
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+}
+/* The .motion class is set in Base.astro, so content stays visible without JS or with reduced motion. */
+@media screen {
+  .motion main :is(.section-head, .card, .service):not(.is-visible) {
+    opacity: 0;
+  }
+}
+.is-visible {
+  animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  animation-delay: calc(var(--reveal-order, 0) * 80ms);
 }

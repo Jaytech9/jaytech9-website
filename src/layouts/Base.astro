@@ -3,6 +3,7 @@ import '@fontsource-variable/inter/opsz.css';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import BottomNav from '../components/BottomNav.astro';
 import { site } from '../data/site';
 
 interface Props {
@@ -41,7 +42,7 @@ const org = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex" />}
-    <meta name="theme-color" content="#10293a" />
+    <meta name="theme-color" content="#0068a1" />
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -52,7 +53,7 @@ const org = {
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content={site.name} />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <meta property="og:type" content={ogType} />
@@ -64,6 +65,11 @@ const org = {
     <meta property="og:locale" content="en_US" />
     <meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json" set:html={JSON.stringify(org)} />
+    <script is:inline>
+      if ('IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+        document.documentElement.classList.add('motion');
+      }
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">
@@ -74,16 +80,35 @@ const org = {
       <slot />
     </main>
     <Footer />
-    {import.meta.env.PROD && (
-      <script is:inline>
-        // Register the service worker so the site works offline and can be installed.
-        // Built site only: in dev it would cache source files and hide edits.
-        if ('serviceWorker' in navigator) {
-          window.addEventListener('load', function () {
-            navigator.serviceWorker.register('/sw.js').catch(function () {});
-          });
-        }
-      </script>
-    )}
+    <BottomNav />
+    <script is:inline>
+      // Fade sections and cards in as they scroll into view.
+      if (document.documentElement.classList.contains('motion')) {
+        var revealObserver = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add('is-visible');
+              revealObserver.unobserve(entry.target);
+            });
+          },
+          { rootMargin: '0px 0px -6% 0px' },
+        );
+        document.querySelectorAll('main :is(.section-head, .card, .service)').forEach(function (el) {
+          var order = Array.prototype.indexOf.call(el.parentElement.children, el) % 3;
+          el.style.setProperty('--reveal-order', order);
+          revealObserver.observe(el);
+        });
+      }
+    </script>
+    {import.meta.env.PROD && <script is:inline>
+      // Register the service worker so the site works offline and can be installed.
+      // Built site only: in dev it would cache source files and hide edits.
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('/sw.js').catch(function () {});
+        });
+      }
+    </script>}
   </body>
 </html>
