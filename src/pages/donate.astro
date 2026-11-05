@@ -1,0 +1,206 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Donate | JayTech9"
+  description="Support JayTech9's community work: digital tools for smallholder farmers, digital skills training, and technology for community organisations."
+>
+  <header class="page-head">
+    <div class="wrap">
+      <h1>Support our community work</h1>
+      <p class="lede">
+        Your gift helps bring useful technology to farmers, young people and community organisations who would
+        otherwise go without.
+      </p>
+    </div>
+  </header>
+  <section class="section" aria-labelledby="uses-heading">
+    <div class="wrap donate">
+      <div>
+        <h2 id="uses-heading">What your gift supports</h2>
+        <ul class="uses">
+          <li class="card use">
+            <span class="icon-badge">
+              <svg
+                class="icon"
+                width="24"
+                height="24"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3" />
+                <path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4" />
+                <path d="M5 21h14" />
+              </svg>
+            </span>
+            <h3>Digital tools for smallholder farmers</h3>
+            <p>
+              Record-keeping and data collection tools that help farmers track their crops and qualify for
+              programmes such as carbon credits.
+            </p>
+          </li>
+          <li class="card use">
+            <span class="icon-badge">
+              <svg
+                class="icon"
+                width="24"
+                height="24"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" />
+                <path d="M22 10v6" />
+                <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />
+              </svg>
+            </span>
+            <h3>Digital skills training</h3>
+            <p>
+              Practical sessions for young people, farmers and small business owners on using technology in
+              their work.
+            </p>
+          </li>
+          <li class="card use">
+            <span class="icon-badge">
+              <svg
+                class="icon"
+                width="24"
+                height="24"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <path d="M16 3.128a4 4 0 0 1 0 7.744" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                <circle cx="9" cy="7" r="4" />
+              </svg>
+            </span>
+            <h3>Support for community organisations</h3>
+            <p>
+              Low-cost or free websites and tools for churches, schools and small nonprofits that couldn’t
+              otherwise afford them.
+            </p>
+          </li>
+        </ul>
+      </div>
+      <aside class="give" aria-labelledby="give-heading">
+        <h2 id="give-heading">How to give</h2>
+        <div class="give__options">
+          <p>
+            Online giving opens soon. If you’d like to give now, or support a specific programme, contact us
+            and we’ll share the details.
+          </p>
+          <div class="button-row">
+            <a class="button" href="https://wa.me/233203651974">
+              Message us on WhatsApp
+            </a>
+            <a class="button button--quiet" href="mailto:info@jaytech9.com?subject=Donation">
+              Email us
+            </a>
+          </div>
+        </div>
+        <p class="give__note">
+          Every gift is acknowledged. For partnerships or sponsorship of a full programme, please email
+          info@jaytech9.com.
+        </p>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .donate {
+    align-items: start;
+    gap: 3rem 5rem;
+    display: grid;
+  }
+  .donate h2 {
+    font-size: var(--step-2);
+    margin-bottom: 1.5rem;
+  }
+  .uses {
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+  }
+  .give {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    border: 1px solid #e3e9e5;
+    padding: clamp(1.5rem, 4vw, 2.25rem);
+  }
+  .give__options {
+    gap: 1.5rem;
+    display: grid;
+  }
+  .give__options p {
+    color: var(--ink-soft);
+  }
+  .give__options .button {
+    margin-top: 1rem;
+  }
+  .give__options .button-row .button {
+    margin-top: 0;
+  }
+  .momo {
+    gap: 1rem;
+    margin: 0;
+    display: grid;
+  }
+  .momo dt {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  .momo dd {
+    margin: 0.15rem 0 0;
+    font-weight: 600;
+  }
+  .momo__number {
+    font-size: var(--step-1);
+    font-variant-numeric: tabular-nums;
+    user-select: all;
+  }
+  .give__note {
+    border-top: 1px solid var(--line);
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+  }
+  @media (width>=56rem) {
+    .donate {
+      grid-template-columns: 1.2fr 1fr;
+    }
+    .give {
+      position: sticky;
+      top: 6.5rem;
+    }
+  }
+</style>

@@ -1,0 +1,269 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="Company website with CMS | JayTech9"
+  description="A corporate website with its own content manager, so the team can publish news and update pages without touching code."
+  ogType="article"
+>
+  <article>
+    <header class="page-head">
+      <div class="wrap">
+        <p class="crumb">
+          <a href="/work/">Work</a>
+        </p>
+        <h1>Company website with CMS</h1>
+        <p class="lede">
+          A corporate website with its own content manager, so the team can publish news and update pages
+          without touching code.
+        </p>
+        <dl class="facts">
+          <div>
+            <dt>Client</dt>
+            <dd>An investment company</dd>
+          </div>
+          <div>
+            <dt>Status</dt>
+            <dd>
+              <span class="status" data-status="In progress">
+                In progress
+              </span>
+            </dd>
+          </div>
+          <div>
+            <dt>Year</dt>
+            <dd>2026</dd>
+          </div>
+          <div>
+            <dt>Built with</dt>
+            <dd>PHP, MySQL</dd>
+          </div>
+        </dl>
+      </div>
+    </header>
+    <div class="wrap section case-body">
+      <div class="prose">
+        <h2 id="what-were-building">What we’re building</h2>
+        <p>
+          A clean, fast corporate website that presents the company’s services and track record, with a
+          private content manager for publishing updates. The site is being built in versions, so the earlier
+          build stays intact while the new one is reviewed.
+        </p>
+      </div>
+    </div>
+  </article>
+  <nav class="wrap next" aria-label="Next project">
+    <p class="muted">Next project</p>
+    <a href="/work/carbon-credits/">Carbon credits for smallholder farmers</a>
+  </nav>
+  <section class="contact-band" aria-labelledby="contact-band-heading">
+    <div class="wrap contact-band__inner">
+      <div class="contact-band__text">
+        <h2 id="contact-band-heading">Tell us what slows your business down</h2>
+        <p>
+          Start with a free 30-minute call. We’ll listen, suggest what would help, and send a written quote
+          with a clear timeline.
+        </p>
+        <div class="button-row">
+          <a class="button contact-band__primary" href="/contact/">
+            Book a free call
+          </a>
+          <a class="button button--quiet contact-band__quiet" href="https://wa.me/233203651974">
+            Chat on WhatsApp
+          </a>
+        </div>
+      </div>
+      <svg class="contours contact-band__art" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
+        <circle cx="40" cy="560" r="18" class="contours__dot"></circle>
+        <path
+          d="M 110 560 A 70 70 0 0 0 40 490"
+          pathLength="1"
+          class="contours__arc contours__arc--green"
+          style="--delay:0ms"
+        ></path>
+        <path
+          d="M 158 560 A 118 118 0 0 0 40 442"
+          pathLength="1"
+          class="contours__arc contours__arc--blue"
+          style="--delay:70ms"
+        ></path>
+        <path
+          d="M 206 560 A 166 166 0 0 0 40 394"
+          pathLength="1"
+          class="contours__arc contours__arc--blue"
+          style="--delay:140ms"
+        ></path>
+        <path
+          d="M 254 560 A 214 214 0 0 0 40 346"
+          pathLength="1"
+          class="contours__arc contours__arc--green"
+          style="--delay:210ms"
+        ></path>
+        <path
+          d="M 302 560 A 262 262 0 0 0 40 298"
+          pathLength="1"
+          class="contours__arc contours__arc--blue"
+          style="--delay:280ms"
+        ></path>
+        <path
+          d="M 350 560 A 310 310 0 0 0 40 250"
+          pathLength="1"
+          class="contours__arc contours__arc--blue"
+          style="--delay:350ms"
+        ></path>
+        <path
+          d="M 398 560 A 358 358 0 0 0 40 202"
+          pathLength="1"
+          class="contours__arc contours__arc--green"
+          style="--delay:420ms"
+        ></path>
+      </svg>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .crumb {
+    font-size: var(--step--1);
+    margin-bottom: 1rem;
+  }
+  .page-head h1 {
+    max-width: 20ch;
+  }
+  .facts {
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: 1rem 2rem;
+    max-width: 52rem;
+    margin: 2rem 0;
+    display: grid;
+  }
+  .facts dt {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  .facts dd {
+    margin: 0.2rem 0 0;
+    font-weight: 600;
+  }
+  .facts .status {
+    color: var(--ink);
+    font-size: var(--step-0);
+  }
+  .case-body {
+    padding-top: clamp(2.5rem, 6vw, 4rem);
+  }
+  .next {
+    padding-bottom: var(--space-section);
+    border-top: 1px solid var(--line);
+    padding-top: 2rem;
+  }
+  .next a {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-2);
+    color: var(--ink);
+    margin-top: 0.25rem;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .next a:hover {
+    color: var(--blue);
+    text-decoration: underline;
+  }
+  .contours {
+    width: 100%;
+    overflow: visible;
+  }
+  .contours__arc {
+    fill: none;
+    stroke-width: 2.5px;
+    stroke-linecap: round;
+  }
+  .contours__arc--blue {
+    stroke: var(--blue);
+  }
+  .contours__arc--green {
+    stroke: var(--green);
+    stroke-width: 4px;
+  }
+  .contours__dot {
+    fill: var(--green);
+  }
+  .contours--animate .contours__arc {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1px;
+    animation: 0.9s cubic-bezier(0.3, 0.6, 0.2, 1) forwards draw;
+    animation-delay: var(--delay);
+  }
+  @keyframes draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .contours--animate .contours__arc {
+      stroke-dashoffset: 0;
+      animation: none;
+    }
+  }
+  .contact-band {
+    background: var(--blue);
+    color: var(--white);
+    overflow: hidden;
+  }
+  .contact-band__inner {
+    align-items: end;
+    gap: 2rem;
+    padding-block: clamp(3.5rem, 8vw, 6rem);
+    display: grid;
+  }
+  .contact-band__text {
+    max-width: 34rem;
+  }
+  .contact-band h2 {
+    max-width: 18ch;
+  }
+  .contact-band p {
+    color: #dcecf5;
+    font-size: var(--step-1);
+    margin-block: 1.25rem 2rem;
+    line-height: 1.5;
+  }
+  .contact-band__primary {
+    background: var(--white);
+    border-color: var(--white);
+    color: var(--ink);
+  }
+  .contact-band__primary:hover {
+    background: var(--paper);
+    border-color: var(--paper);
+    color: var(--ink);
+  }
+  .contact-band__quiet {
+    color: var(--white);
+    border-color: var(--white);
+  }
+  .contact-band__quiet:hover {
+    background: var(--white);
+    border-color: var(--white);
+    color: var(--ink);
+  }
+  .contact-band .contact-band__art {
+    display: none;
+  }
+  .contact-band .contact-band__art .contours__arc--blue {
+    stroke: #4d9cc8;
+  }
+  @media (width>=52rem) {
+    .contact-band__inner {
+      grid-template-columns: 1.3fr 1fr;
+    }
+    .contact-band .contact-band__art {
+      justify-self: end;
+      max-width: 22rem;
+      margin-bottom: -6rem;
+      display: block;
+    }
+  }
+</style>

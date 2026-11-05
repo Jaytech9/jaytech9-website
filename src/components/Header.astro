@@ -1,0 +1,212 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.png';
+import { nav, site } from '../data/site';
+
+const path = Astro.url.pathname.replace(/\/?$/, '/');
+const current = (href: string) => (path.startsWith(href) ? 'page' : undefined);
+---
+
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href="/" aria-label={`${site.name} home`}>
+      <Image src={logo} alt="" width={44} height={44} loading="eager" format="webp" />
+      <span class="brand__name">{site.name}</span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        {nav.map((item) => (
+          <li>
+            <a href={item.href} aria-current={current(item.href)}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <a class="button site-nav__cta" href="/contact/">
+        Start a project
+      </a>
+    </nav>
+    <details class="mobile-nav">
+      <summary>
+        <span class="mobile-nav__icon" aria-hidden="true"></span>
+        <span>Menu</span>
+      </summary>
+      <div class="mobile-nav__panel">
+        <ul>
+          {nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={current(item.href)}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+          <li>
+            <a href="/contact/" aria-current={current('/contact/')}>
+              Contact
+            </a>
+          </li>
+        </ul>
+        <a class="button" href={site.whatsapp}>
+          Chat on WhatsApp
+        </a>
+      </div>
+    </details>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    padding-top: env(safe-area-inset-top, 0px);
+    z-index: 50;
+    background: color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+  }
+  .site-header__inner {
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    min-height: 4.5rem;
+    display: flex;
+  }
+  .brand {
+    color: var(--ink);
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    display: inline-flex;
+  }
+  .brand__name {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    font-size: 1.375rem;
+    font-weight: 600;
+  }
+  .site-nav {
+    align-items: center;
+    gap: 1.75rem;
+    display: none;
+  }
+  .site-nav ul {
+    gap: clamp(1rem, 1.6vw, 1.75rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+  }
+  .site-nav ul a {
+    color: var(--ink);
+    font-family: var(--font-body);
+    letter-spacing: -0.01em;
+    border-bottom: 2px solid #0000;
+    padding-block: 0.4rem;
+    font-size: 0.9375rem;
+    font-weight: 400;
+    text-decoration: none;
+  }
+  .site-nav ul a:hover {
+    border-bottom-color: var(--line);
+  }
+  .site-nav ul a[aria-current='page'] {
+    border-bottom-color: var(--green);
+  }
+  .site-nav__cta:hover {
+    background: #17620a;
+    border-color: #17620a;
+  }
+  .site-nav__cta {
+    background: var(--green-deep);
+    border-color: var(--green-deep);
+    min-height: 2.375rem;
+    padding: 0.5rem 1.1rem;
+    font-size: 0.9375rem;
+  }
+  .mobile-nav summary {
+    border: 2px solid var(--ink);
+    border-radius: var(--radius);
+    min-height: 2.75rem;
+    font-family: var(--font-display);
+    cursor: pointer;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.5rem 0.9rem;
+    font-weight: 600;
+    list-style: none;
+    display: inline-flex;
+  }
+  .mobile-nav summary::-webkit-details-marker {
+    display: none;
+  }
+  .mobile-nav__icon,
+  .mobile-nav__icon:before,
+  .mobile-nav__icon:after {
+    background: var(--ink);
+    width: 1.1rem;
+    height: 2px;
+    transition: transform 0.2s;
+    display: block;
+  }
+  .mobile-nav__icon {
+    position: relative;
+  }
+  .mobile-nav__icon:before,
+  .mobile-nav__icon:after {
+    content: '';
+    position: absolute;
+    left: 0;
+  }
+  .mobile-nav__icon:before {
+    top: -6px;
+  }
+  .mobile-nav__icon:after {
+    top: 6px;
+  }
+  .mobile-nav[open] .mobile-nav__icon {
+    background: 0 0;
+  }
+  .mobile-nav[open] .mobile-nav__icon:before {
+    transform: translateY(6px) rotate(45deg);
+  }
+  .mobile-nav[open] .mobile-nav__icon:after {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+  .mobile-nav__panel {
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    padding: 1rem var(--gutter) 1.5rem;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    box-shadow: 0 18px 30px -20px #10293a59;
+  }
+  .mobile-nav__panel ul {
+    margin: 0 0 1.25rem;
+    padding: 0;
+    list-style: none;
+  }
+  .mobile-nav__panel li a {
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-1);
+    padding: 0.85rem 0;
+    text-decoration: none;
+    display: block;
+  }
+  .mobile-nav__panel li a[aria-current='page'] {
+    color: var(--green-deep);
+  }
+  @media (width>=64rem) {
+    .site-nav {
+      display: flex;
+    }
+    .mobile-nav {
+      display: none;
+    }
+  }
+</style>

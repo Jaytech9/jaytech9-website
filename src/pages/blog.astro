@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Blog | JayTech9"
+  description="Practical guides on websites, business software, data and AgriTech for businesses and organisations."
+>
+  <header class="page-head">
+    <div class="wrap">
+      <h1>Blog</h1>
+      <p class="lede">Practical guides for running a business with technology.</p>
+    </div>
+  </header>
+  <section class="section posts-section" aria-label="Posts">
+    <div class="wrap">
+      <ul class="card-grid posts">
+        <li class="card card--link">
+          <p class="posts__meta">
+            <span class="posts__topic">Business</span>
+            <time datetime="2026-10-25T00:00:00.000Z">25 October 2026</time>
+          </p>
+          <h2>
+            <a href="/blog/own-domain-email/">Why your business email should end in your own name</a>
+          </h2>
+          <p>
+            A Gmail address is free, but an email on your own domain costs very little and makes customers
+            trust you more. Here&#39;s what it takes in Ghana.
+          </p>
+          <span class="card__more">Read the guide</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .posts-section {
+    padding-top: clamp(2rem, 5vw, 3.5rem);
+  }
+  .posts__meta {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    align-items: center;
+    gap: 0.75rem;
+    display: flex;
+  }
+  .posts__topic {
+    background: var(--teal-tint);
+    color: var(--teal);
+    border-radius: 999px;
+    padding: 0.15rem 0.65rem;
+    font-weight: 500;
+  }
+  .posts h2 {
+    font-size: var(--step-1);
+  }
+</style>

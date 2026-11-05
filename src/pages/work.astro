@@ -1,0 +1,624 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Work | JayTech9"
+  description="Projects by JayTech9: business software, donation and reporting systems, websites, AgriTech and open-source tools."
+>
+  <header class="page-head">
+    <div class="wrap">
+      <h1>Work</h1>
+      <p class="lede">
+        Delivered projects, work in progress, and our own products. Some clients aren’t named here until
+        they’ve agreed to it.
+      </p>
+    </div>
+  </header>
+  <section class="section work-section" aria-label="Projects">
+    <div class="wrap">
+      <ul class="card-grid work-cards">
+        <li class="card card--link work-card work-card--wide">
+          <div class="work-card__cover tone-ink">
+            <span class="work-card__icon">
+              <svg
+                class="icon"
+                width="22"
+                height="22"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+                <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09" />
+                <path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z" />
+                <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05" />
+              </svg>
+            </span>
+            <span class="work-card__sector">Product</span>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__meta">
+              <span>Our own product</span>
+              <span class="status" data-status="In development">
+                In development
+              </span>
+            </div>
+            <h2 class="work-card__title">
+              <a href="/work/buildsmart/">BuildSmart</a>
+            </h2>
+            <p>
+              Inventory, sales and accounting software for hardware stores and building material suppliers in
+              Ghana, with Ghana VAT, NHIL and GETFund built in.
+            </p>
+            <ul class="work-card__stack" aria-label="Built with">
+              <li>Node.js</li>
+              <li>Express</li>
+              <li>PostgreSQL</li>
+              <li>Docker</li>
+            </ul>
+          </div>
+        </li>
+        <li class="card card--link work-card">
+          <div class="work-card__cover tone-teal">
+            <span class="work-card__icon">
+              <svg
+                class="icon"
+                width="22"
+                height="22"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
+              </svg>
+            </span>
+            <span class="work-card__sector">Nonprofit</span>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__meta">
+              <span>A Ghanaian nonprofit</span>
+              <span class="status" data-status="Delivered">
+                Delivered
+              </span>
+            </div>
+            <h2 class="work-card__title">
+              <a href="/work/donation-management/">Donation management system</a>
+            </h2>
+            <p>
+              Online giving through Paystack, with a private dashboard that shows who gave, how much and when.
+            </p>
+            <ul class="work-card__stack" aria-label="Built with">
+              <li>PHP</li>
+              <li>MySQL</li>
+              <li>Paystack</li>
+              <li>Chart.js</li>
+            </ul>
+          </div>
+        </li>
+        <li class="card card--link work-card">
+          <div class="work-card__cover tone-blue">
+            <span class="work-card__icon">
+              <svg
+                class="icon"
+                width="22"
+                height="22"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M3 3v16a2 2 0 0 0 2 2h16" />
+                <path d="M18 17V9" />
+                <path d="M13 17V5" />
+                <path d="M8 17v-3" />
+              </svg>
+            </span>
+            <span class="work-card__sector">Finance</span>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__meta">
+              <span>A susu and microfinance platform</span>
+              <span class="status" data-status="In progress">
+                In progress
+              </span>
+            </div>
+            <h2 class="work-card__title">
+              <a href="/work/field-reporting-dashboard/">Field reporting dashboard</a>
+            </h2>
+            <p>
+              Replacing daily WhatsApp reports from branch field officers with a live dashboard that managers
+              can filter by branch and date.
+            </p>
+            <ul class="work-card__stack" aria-label="Built with">
+              <li>PHP</li>
+              <li>MySQL</li>
+            </ul>
+          </div>
+        </li>
+        <li class="card card--link work-card">
+          <div class="work-card__cover tone-blue-dark">
+            <span class="work-card__icon">
+              <svg
+                class="icon"
+                width="22"
+                height="22"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M10 12h4" />
+                <path d="M10 8h4" />
+                <path d="M14 21v-3a2 2 0 0 0-4 0v3" />
+                <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+                <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+              </svg>
+            </span>
+            <span class="work-card__sector">Business</span>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__meta">
+              <span>A creative media agency in Accra</span>
+              <span class="status" data-status="In progress">
+                In progress
+              </span>
+            </div>
+            <h2 class="work-card__title">
+              <a href="/work/agency-website-crm/">Website and CRM</a>
+            </h2>
+            <p>
+              A portfolio website the team can update themselves, linked to a simple CRM for tracking
+              enquiries, calls, emails and visits.
+            </p>
+            <ul class="work-card__stack" aria-label="Built with">
+              <li>PHP</li>
+              <li>MySQL</li>
+            </ul>
+          </div>
+        </li>
+        <li class="card card--link work-card">
+          <div class="work-card__cover tone-blue-dark">
+            <span class="work-card__icon">
+              <svg
+                class="icon"
+                width="22"
+                height="22"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M10 12h4" />
+                <path d="M10 8h4" />
+                <path d="M14 21v-3a2 2 0 0 0-4 0v3" />
+                <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+                <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+              </svg>
+            </span>
+            <span class="work-card__sector">Business</span>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__meta">
+              <span>An investment company</span>
+              <span class="status" data-status="In progress">
+                In progress
+              </span>
+            </div>
+            <h2 class="work-card__title">
+              <a href="/work/investment-website/">Company website with CMS</a>
+            </h2>
+            <p>
+              A corporate website with its own content manager, so the team can publish news and update pages
+              without touching code.
+            </p>
+            <ul class="work-card__stack" aria-label="Built with">
+              <li>PHP</li>
+              <li>MySQL</li>
+            </ul>
+          </div>
+        </li>
+        <li class="card card--link work-card">
+          <div class="work-card__cover tone-green">
+            <span class="work-card__icon">
+              <svg
+                class="icon"
+                width="22"
+                height="22"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3" />
+                <path d="M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4" />
+                <path d="M5 21h14" />
+              </svg>
+            </span>
+            <span class="work-card__sector">AgriTech</span>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__meta">
+              <span>AgriTech initiative</span>
+              <span class="status" data-status="In development">
+                In development
+              </span>
+            </div>
+            <h2 class="work-card__title">
+              <a href="/work/carbon-credits/">Carbon credits for smallholder farmers</a>
+            </h2>
+            <p>
+              Helping smallholder farmers who use sustainable methods find out whether they qualify for carbon
+              credits, and earn from it if they do.
+            </p>
+            <ul class="work-card__stack" aria-label="Built with">
+              <li>Field data collection</li>
+              <li>Data analysis</li>
+            </ul>
+          </div>
+        </li>
+        <li class="card card--link work-card">
+          <div class="work-card__cover tone-ink-soft">
+            <span class="work-card__icon">
+              <svg
+                class="icon"
+                width="22"
+                height="22"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m16 18 6-6-6-6" />
+                <path d="m8 6-6 6 6 6" />
+              </svg>
+            </span>
+            <span class="work-card__sector">Open source</span>
+          </div>
+          <div class="work-card__body">
+            <div class="work-card__meta">
+              <span>Open-source tool</span>
+              <span class="status" data-status="Live">
+                Live
+              </span>
+            </div>
+            <h2 class="work-card__title">
+              <a href="/work/logalyzer/">Logalyzer</a>
+            </h2>
+            <p>
+              A free browser tool that reads server log files and highlights errors, warnings and patterns in
+              seconds.
+            </p>
+            <ul class="work-card__stack" aria-label="Built with">
+              <li>JavaScript</li>
+              <li>HTML</li>
+              <li>CSS</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+  <section class="contact-band" aria-labelledby="contact-band-heading">
+    <div class="wrap contact-band__inner">
+      <div class="contact-band__text">
+        <h2 id="contact-band-heading">Tell us what slows your business down</h2>
+        <p>
+          Start with a free 30-minute call. We’ll listen, suggest what would help, and send a written quote
+          with a clear timeline.
+        </p>
+        <div class="button-row">
+          <a class="button contact-band__primary" href="/contact/">
+            Book a free call
+          </a>
+          <a class="button button--quiet contact-band__quiet" href="https://wa.me/233203651974">
+            Chat on WhatsApp
+          </a>
+        </div>
+      </div>
+      <svg class="contours contact-band__art" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
+        <circle cx="40" cy="560" r="18" class="contours__dot"></circle>
+        <path
+          d="M 110 560 A 70 70 0 0 0 40 490"
+          pathLength="1"
+          class="contours__arc contours__arc--green"
+          style="--delay:0ms"
+        ></path>
+        <path
+          d="M 158 560 A 118 118 0 0 0 40 442"
+          pathLength="1"
+          class="contours__arc contours__arc--blue"
+          style="--delay:70ms"
+        ></path>
+        <path
+          d="M 206 560 A 166 166 0 0 0 40 394"
+          pathLength="1"
+          class="contours__arc contours__arc--blue"
+          style="--delay:140ms"
+        ></path>
+        <path
+          d="M 254 560 A 214 214 0 0 0 40 346"
+          pathLength="1"
+          class="contours__arc contours__arc--green"
+          style="--delay:210ms"
+        ></path>
+        <path
+          d="M 302 560 A 262 262 0 0 0 40 298"
+          pathLength="1"
+          class="contours__arc contours__arc--blue"
+          style="--delay:280ms"
+        ></path>
+        <path
+          d="M 350 560 A 310 310 0 0 0 40 250"
+          pathLength="1"
+          class="contours__arc contours__arc--blue"
+          style="--delay:350ms"
+        ></path>
+        <path
+          d="M 398 560 A 358 358 0 0 0 40 202"
+          pathLength="1"
+          class="contours__arc contours__arc--green"
+          style="--delay:420ms"
+        ></path>
+      </svg>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .work-card {
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  .work-card__cover {
+    height: 8.5rem;
+    color: var(--white);
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+  }
+  .work-card__cover:before {
+    content: '';
+    background: repeating-radial-gradient(circle at 100% 100%, #0000 0 18px, #ffffff29 18px 20px);
+    position: absolute;
+    inset: 0;
+  }
+  .tone-ink {
+    background: var(--ink);
+  }
+  .tone-teal {
+    background: var(--teal);
+  }
+  .tone-blue {
+    background: var(--blue);
+  }
+  .tone-blue-dark {
+    background: var(--blue-dark);
+  }
+  .tone-green {
+    background: var(--green-deep);
+  }
+  .tone-ink-soft {
+    background: var(--ink-soft);
+  }
+  .work-card__icon {
+    background: #ffffff2e;
+    border-radius: 50%;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    display: grid;
+    position: relative;
+  }
+  .work-card__sector {
+    font-size: var(--step--1);
+    background: #ffffff2e;
+    border-radius: 999px;
+    padding: 0.2rem 0.65rem;
+    font-weight: 500;
+    position: relative;
+  }
+  .work-card__body {
+    flex-direction: column;
+    flex: 1;
+    gap: 0.6rem;
+    padding: 1.25rem 1.25rem 1.5rem;
+    display: flex;
+  }
+  .work-card__meta {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+    display: flex;
+  }
+  .work-card__title {
+    font-size: var(--step-1);
+  }
+  .work-card:hover .work-card__title a {
+    color: var(--blue);
+  }
+  .work-card__stack {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: auto 0 0;
+    padding: 0.5rem 0 0;
+    list-style: none;
+    display: flex;
+  }
+  .work-card--wide {
+    grid-column: 1/-1;
+  }
+  @media (width>=52rem) {
+    .work-card--wide {
+      grid-template-columns: minmax(16rem, 2fr) 3fr;
+      display: grid;
+    }
+    .work-card--wide .work-card__cover {
+      height: auto;
+      min-height: 15rem;
+    }
+    .work-card--wide .work-card__body {
+      justify-content: center;
+      padding: clamp(1.5rem, 3vw, 2.25rem);
+    }
+    .work-card--wide .work-card__title {
+      font-size: var(--step-2);
+    }
+  }
+  .work-card__stack li {
+    background: var(--paper);
+    color: var(--ink-soft);
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+    font-size: 0.8125rem;
+  }
+  .work-section {
+    padding-top: clamp(2rem, 5vw, 3.5rem);
+  }
+  .contours {
+    width: 100%;
+    overflow: visible;
+  }
+  .contours__arc {
+    fill: none;
+    stroke-width: 2.5px;
+    stroke-linecap: round;
+  }
+  .contours__arc--blue {
+    stroke: var(--blue);
+  }
+  .contours__arc--green {
+    stroke: var(--green);
+    stroke-width: 4px;
+  }
+  .contours__dot {
+    fill: var(--green);
+  }
+  .contours--animate .contours__arc {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1px;
+    animation: 0.9s cubic-bezier(0.3, 0.6, 0.2, 1) forwards draw;
+    animation-delay: var(--delay);
+  }
+  @keyframes draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .contours--animate .contours__arc {
+      stroke-dashoffset: 0;
+      animation: none;
+    }
+  }
+  .contact-band {
+    background: var(--blue);
+    color: var(--white);
+    overflow: hidden;
+  }
+  .contact-band__inner {
+    align-items: end;
+    gap: 2rem;
+    padding-block: clamp(3.5rem, 8vw, 6rem);
+    display: grid;
+  }
+  .contact-band__text {
+    max-width: 34rem;
+  }
+  .contact-band h2 {
+    max-width: 18ch;
+  }
+  .contact-band p {
+    color: #dcecf5;
+    font-size: var(--step-1);
+    margin-block: 1.25rem 2rem;
+    line-height: 1.5;
+  }
+  .contact-band__primary {
+    background: var(--white);
+    border-color: var(--white);
+    color: var(--ink);
+  }
+  .contact-band__primary:hover {
+    background: var(--paper);
+    border-color: var(--paper);
+    color: var(--ink);
+  }
+  .contact-band__quiet {
+    color: var(--white);
+    border-color: var(--white);
+  }
+  .contact-band__quiet:hover {
+    background: var(--white);
+    border-color: var(--white);
+    color: var(--ink);
+  }
+  .contact-band .contact-band__art {
+    display: none;
+  }
+  .contact-band .contact-band__art .contours__arc--blue {
+    stroke: #4d9cc8;
+  }
+  @media (width>=52rem) {
+    .contact-band__inner {
+      grid-template-columns: 1.3fr 1fr;
+    }
+    .contact-band .contact-band__art {
+      justify-self: end;
+      max-width: 22rem;
+      margin-bottom: -6rem;
+      display: block;
+    }
+  }
+</style>

@@ -1,0 +1,354 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Contact | JayTech9"
+  description="Book a free 30-minute call with JayTech9 or send a message. We reply within one working day."
+>
+  <header class="page-head">
+    <div class="wrap">
+      <h1>Let’s talk about your project</h1>
+      <p class="lede">
+        Tell us a little about what you need. We reply within one working day, usually sooner.
+      </p>
+    </div>
+  </header>
+  <section class="section contact-section">
+    <div class="wrap contact">
+      <!-- Netlify Forms picks this form up automatically at deploy time -->
+      <form
+        class="form"
+        name="contact"
+        method="POST"
+        action="/contact/thanks/"
+        data-netlify="true"
+        netlify-honeypot="company-website"
+      >
+        <input type="hidden" name="form-name" value="contact" />
+        <p class="visually-hidden">
+          <label>
+            Leave this empty: <input name="company-website" tabindex="-1" autocomplete="off" />
+          </label>
+        </p>
+        <div class="field">
+          <label for="name">Your name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required />
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required />
+          </div>
+          <div class="field">
+            <label for="phone">
+              Phone or WhatsApp <span class="optional">(optional)</span>
+            </label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="business">
+            Business or organisation <span class="optional">(optional)</span>
+          </label>
+          <input id="business" name="business" type="text" autocomplete="organization" />
+        </div>
+        <fieldset class="field">
+          <legend>What do you need help with?</legend>
+          <div class="choices">
+            <label class="choice">
+              <input type="checkbox" name="needs" value="A website" />
+              <span>A website</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="needs" value="A business system" />
+              <span>A business system</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="needs" value="A dashboard or data analysis" />
+              <span>A dashboard or data analysis</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="needs" value="AgriTech or farm data" />
+              <span>AgriTech or farm data</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="needs" value="Design" />
+              <span>Design</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="needs" value="Domain, email or hosting" />
+              <span>Domain, email or hosting</span>
+            </label>
+            <label class="choice">
+              <input type="checkbox" name="needs" value="Not sure yet" />
+              <span>Not sure yet</span>
+            </label>
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="message">Tell us about it</label>
+          <p class="hint" id="message-hint">
+            What’s the problem, and how are you handling it today?
+          </p>
+          <textarea id="message" name="message" rows="6" aria-describedby="message-hint" required></textarea>
+        </div>
+        <button class="button" type="submit">
+          Send message
+        </button>
+      </form>
+      <aside class="direct" aria-labelledby="direct-heading">
+        <h2 id="direct-heading">Prefer to reach us directly?</h2>
+        <ul class="direct__cards">
+          <li class="card card--link direct__card">
+            <span class="icon-badge">
+              <svg
+                class="icon"
+                width="24"
+                height="24"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
+              </svg>
+            </span>
+            <div>
+              <h3>
+                <a href="https://wa.me/233203651974">WhatsApp or call</a>
+              </h3>
+              <p>+233 20 365 1974</p>
+            </div>
+          </li>
+          <li class="card card--link direct__card">
+            <span class="icon-badge">
+              <svg
+                class="icon"
+                width="24"
+                height="24"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+              </svg>
+            </span>
+            <div>
+              <h3>
+                <a href="mailto:info@jaytech9.com">Email</a>
+              </h3>
+              <p>info@jaytech9.com</p>
+            </div>
+          </li>
+          <li class="card direct__card">
+            <span class="icon-badge">
+              <svg
+                class="icon"
+                width="24"
+                height="24"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+            </span>
+            <div>
+              <h3>Based in</h3>
+              <p>Accra, Ghana. We work with clients in Ghana and around the world.</p>
+            </div>
+          </li>
+          <li class="card direct__card">
+            <span class="icon-badge">
+              <svg
+                class="icon"
+                width="24"
+                height="24"
+                aria-hidden="true"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
+              </svg>
+            </span>
+            <div>
+              <h3>Response time</h3>
+              <p>Within one working day, usually sooner.</p>
+            </div>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact-section {
+    padding-top: clamp(2.5rem, 6vw, 4rem);
+  }
+  .contact {
+    align-items: start;
+    gap: 3.5rem 5rem;
+    display: grid;
+  }
+  .form {
+    gap: 1.5rem;
+    max-width: 40rem;
+    display: grid;
+  }
+  .field {
+    border: 0;
+    gap: 0.4rem;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    display: grid;
+  }
+  .field-row {
+    gap: 1.5rem;
+    display: grid;
+  }
+  label,
+  legend {
+    font-weight: 600;
+  }
+  legend {
+    margin-bottom: 0.6rem;
+    padding: 0;
+  }
+  .optional,
+  .hint {
+    color: var(--ink-soft);
+    font-weight: 400;
+    font-size: var(--step--1);
+  }
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'],
+  textarea {
+    width: 100%;
+    font: inherit;
+    color: var(--ink);
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 2px solid #a9bcb0;
+    padding: 0.7rem 0.85rem;
+  }
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 3px solid var(--green);
+    outline-offset: 1px;
+    border-color: var(--ink);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 9rem;
+  }
+  .choices {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    display: flex;
+  }
+  .choice {
+    cursor: pointer;
+    font-weight: 400;
+  }
+  .choice input {
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    position: absolute;
+  }
+  .choice span {
+    background: var(--white);
+    font-size: var(--step--1);
+    border: 2px solid #a9bcb0;
+    border-radius: 999px;
+    padding: 0.45rem 0.9rem;
+    transition:
+      background-color 0.12s,
+      border-color 0.12s;
+    display: inline-block;
+  }
+  .choice input:checked + span {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  .choice input:focus-visible + span {
+    outline: 3px solid var(--green);
+    outline-offset: 2px;
+  }
+  .form .button {
+    justify-self: start;
+  }
+  .direct h2 {
+    font-size: var(--step-1);
+    margin-bottom: 1.25rem;
+  }
+  .direct__cards {
+    gap: 0.85rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+  }
+  .direct__card {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .direct__card h3 {
+    font-size: var(--step-0);
+    letter-spacing: -0.01em;
+  }
+  .direct__card p {
+    overflow-wrap: anywhere;
+    margin-top: 0.15rem;
+  }
+  @media (width>=40rem) {
+    .field-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (width>=60rem) {
+    .contact {
+      grid-template-columns: 1.4fr 1fr;
+    }
+    .direct {
+      position: sticky;
+      top: 6.5rem;
+    }
+  }
+</style>

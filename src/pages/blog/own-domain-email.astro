@@ -1,0 +1,250 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base
+  title="Why your business email should end in your own name | JayTech9"
+  description="A Gmail address is free, but an email on your own domain costs very little and makes customers trust you more. Here's what it takes in Ghana."
+  ogType="article"
+>
+  <article>
+    <header class="page-head">
+      <div class="wrap">
+        <p class="crumb">
+          <a href="/blog/">Blog</a>
+        </p>
+        <h1>Why your business email should end in your own name</h1>
+        <p class="meta">
+          <time datetime="2026-10-25T00:00:00.000Z">25 October 2026</time>
+          <span>Business</span>
+        </p>
+      </div>
+    </header>
+    <div class="wrap section post-body">
+      <div class="prose">
+        <p>
+          Most small businesses in Ghana start with an address like <code>mybusiness2024@gmail.com</code>. It
+          works, it’s free, and nobody stops you. But when a customer is choosing between you and a
+          competitor, <code>info@mybusiness.com</code> quietly tells them you’re established and here to stay.
+        </p>
+        <h2 id="what-it-costs">What it costs</h2>
+        <p>You need two things: a domain name and somewhere for the email to live.</p>
+        <ul>
+          <li>
+            <strong>A .com domain</strong> costs roughly $10–11 a year at registrars that don’t add a markup,
+            which is about GH₵ 115–130 depending on the exchange rate. Watch out for registrars that charge a
+            few cedis for the first year and then three or four times more to renew.
+          </li>
+          <li>
+            <strong>Email forwarding</strong> can be free. Services like Cloudflare Email Routing send
+            everything addressed to <code>info@yourbusiness.com</code> straight to the Gmail you already use.
+          </li>
+          <li>
+            <strong>A full inbox</strong> that can also send from the new address is free on some plans for
+            small teams, or about $1 per person per month on paid plans.
+          </li>
+        </ul>
+        <p>So for around GH₵ 120 a year, you can look like a company rather than a side project.</p>
+        <h2 id="three-mistakes-to-avoid">Three mistakes to avoid</h2>
+        <p>
+          <strong>Signing up with the new address.</strong> Log in to your domain account with an email you
+          already control, such as your personal Gmail. If the domain ever lapses, you don’t want the password
+          reset to go to an inbox that no longer works.
+        </p>
+        <p>
+          <strong>Letting it expire.</strong> Turn on auto-renew and keep the card on file valid. When a
+          domain lapses, someone else can buy it, along with every customer who still emails you there.
+        </p>
+        <p>
+          <strong>Registering it in someone else’s name.</strong> If a web designer buys your domain for you,
+          make sure it’s registered to you or your business. You should be able to log in and see it yourself.
+        </p>
+        <h2 id="where-to-start">Where to start</h2>
+        <p>
+          Pick a short name that matches your business, check it’s available, and buy it in your own name.
+          Then point your email at it before you print it on anything. If you’d like help setting it up,{' '}
+          <a href="/contact/">get in touch</a> and we’ll walk you through it.
+        </p>
+      </div>
+    </div>
+  </article>
+  <section class="contact-band" aria-labelledby="contact-band-heading">
+    <div class="wrap contact-band__inner">
+      <div class="contact-band__text">
+        <h2 id="contact-band-heading">Want help setting this up?</h2>
+        <p>
+          Start with a free 30-minute call. We’ll listen, suggest what would help, and send a written quote
+          with a clear timeline.
+        </p>
+        <div class="button-row">
+          <a class="button contact-band__primary" href="/contact/">
+            Book a free call
+          </a>
+          <a class="button button--quiet contact-band__quiet" href="https://wa.me/233203651974">
+            Chat on WhatsApp
+          </a>
+        </div>
+      </div>
+      <svg class="contours contact-band__art" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
+        <circle cx="40" cy="560" r="18" class="contours__dot"></circle>
+        <path
+          d="M 110 560 A 70 70 0 0 0 40 490"
+          pathLength="1"
+          class="contours__arc contours__arc--green"
+          style="--delay:0ms"
+        ></path>
+        <path
+          d="M 158 560 A 118 118 0 0 0 40 442"
+          pathLength="1"
+          class="contours__arc contours__arc--blue"
+          style="--delay:70ms"
+        ></path>
+        <path
+          d="M 206 560 A 166 166 0 0 0 40 394"
+          pathLength="1"
+          class="contours__arc contours__arc--blue"
+          style="--delay:140ms"
+        ></path>
+        <path
+          d="M 254 560 A 214 214 0 0 0 40 346"
+          pathLength="1"
+          class="contours__arc contours__arc--green"
+          style="--delay:210ms"
+        ></path>
+        <path
+          d="M 302 560 A 262 262 0 0 0 40 298"
+          pathLength="1"
+          class="contours__arc contours__arc--blue"
+          style="--delay:280ms"
+        ></path>
+        <path
+          d="M 350 560 A 310 310 0 0 0 40 250"
+          pathLength="1"
+          class="contours__arc contours__arc--blue"
+          style="--delay:350ms"
+        ></path>
+        <path
+          d="M 398 560 A 358 358 0 0 0 40 202"
+          pathLength="1"
+          class="contours__arc contours__arc--green"
+          style="--delay:420ms"
+        ></path>
+      </svg>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-head h1 {
+    max-width: 22ch;
+  }
+  .crumb {
+    font-size: var(--step--1);
+    margin-bottom: 1rem;
+  }
+  .meta {
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+    display: flex;
+  }
+  .post-body {
+    padding-top: clamp(2.5rem, 6vw, 4rem);
+  }
+  .contours {
+    width: 100%;
+    overflow: visible;
+  }
+  .contours__arc {
+    fill: none;
+    stroke-width: 2.5px;
+    stroke-linecap: round;
+  }
+  .contours__arc--blue {
+    stroke: var(--blue);
+  }
+  .contours__arc--green {
+    stroke: var(--green);
+    stroke-width: 4px;
+  }
+  .contours__dot {
+    fill: var(--green);
+  }
+  .contours--animate .contours__arc {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1px;
+    animation: 0.9s cubic-bezier(0.3, 0.6, 0.2, 1) forwards draw;
+    animation-delay: var(--delay);
+  }
+  @keyframes draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .contours--animate .contours__arc {
+      stroke-dashoffset: 0;
+      animation: none;
+    }
+  }
+  .contact-band {
+    background: var(--blue);
+    color: var(--white);
+    overflow: hidden;
+  }
+  .contact-band__inner {
+    align-items: end;
+    gap: 2rem;
+    padding-block: clamp(3.5rem, 8vw, 6rem);
+    display: grid;
+  }
+  .contact-band__text {
+    max-width: 34rem;
+  }
+  .contact-band h2 {
+    max-width: 18ch;
+  }
+  .contact-band p {
+    color: #dcecf5;
+    font-size: var(--step-1);
+    margin-block: 1.25rem 2rem;
+    line-height: 1.5;
+  }
+  .contact-band__primary {
+    background: var(--white);
+    border-color: var(--white);
+    color: var(--ink);
+  }
+  .contact-band__primary:hover {
+    background: var(--paper);
+    border-color: var(--paper);
+    color: var(--ink);
+  }
+  .contact-band__quiet {
+    color: var(--white);
+    border-color: var(--white);
+  }
+  .contact-band__quiet:hover {
+    background: var(--white);
+    border-color: var(--white);
+    color: var(--ink);
+  }
+  .contact-band .contact-band__art {
+    display: none;
+  }
+  .contact-band .contact-band__art .contours__arc--blue {
+    stroke: #4d9cc8;
+  }
+  @media (width>=52rem) {
+    .contact-band__inner {
+      grid-template-columns: 1.3fr 1fr;
+    }
+    .contact-band .contact-band__art {
+      justify-self: end;
+      max-width: 22rem;
+      margin-bottom: -6rem;
+      display: block;
+    }
+  }
+</style>

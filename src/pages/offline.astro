@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="You’re offline | JayTech9" description="This page isn't available offline." noindex>
+  <section class="section">
+    <div class="wrap offline">
+      <h1>You’re offline</h1>
+      <p class="lede">
+        This page hasn’t been saved on your device yet. Check your connection and try again, or open a page
+        you’ve visited before.
+      </p>
+      <div class="button-row">
+        <a class="button" href="/">
+          Go to the home page
+        </a>
+        <a class="button button--quiet" href="/contact/">
+          Contact details
+        </a>
+      </div>
+      <p class="offline__contact muted">
+        You can still reach us on WhatsApp or by phone at +233 20 365 1974.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .offline .lede {
+    margin-block: 1.5rem 2.25rem;
+  }
+  .offline__contact {
+    margin-top: 2rem;
+  }
+</style>
