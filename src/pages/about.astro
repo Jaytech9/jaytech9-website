@@ -7,17 +7,24 @@ import Base from '../layouts/Base.astro';
   description="JayTech9 is an Accra-based technology company building websites, business systems, data dashboards and AgriTech tools for businesses, nonprofits and farmers in Ghana and around the world."
 >
   <header class="page-head about-head">
-    <img
-      class="about-head__shape"
-      src="/images/about-puzzle-360.webp"
-      srcset="/images/about-puzzle-360.webp 360w, /images/about-puzzle-640.webp 640w"
-      sizes="(width >= 48rem) 22rem, 8rem"
-      width="360"
-      height="448"
-      alt=""
-      loading="eager"
-      decoding="async"
-    />
+    <svg class="about-head__shape" viewBox="-200 -320 660 640" aria-hidden="true" focusable="false">
+      <defs>
+        <mask id="puzzle-gap" maskUnits="userSpaceOnUse" x="-200" y="-320" width="660" height="640">
+          <rect x="-200" y="-320" width="660" height="640" fill="#fff" />
+          <g fill="#000" stroke="#000" stroke-width="22" stroke-linejoin="round">
+            <path d="M0 -150.0 L150.0 0 L0 150.0 L-150.0 0 Z" /><circle cx="87.7" cy="-87.7" r="34"/><circle cx="87.7" cy="87.7" r="34"/><circle cx="-87.7" cy="87.7" r="34"/><circle cx="-87.7" cy="-87.7" r="34"/>
+          </g>
+        </mask>
+      </defs>
+      <g mask="url(#puzzle-gap)">
+        <path class="pz pz--blue" d="M150 -291.0 L291.0 -150 L150 -9.0 L9.0 -150 Z" />
+        <path class="pz pz--green" d="M300 -141.0 L441.0 0 L300 141.0 L159.0 0 Z" />
+        <path class="pz pz--red" d="M150 9.0 L291.0 150 L150 291.0 L9.0 150 Z" />
+      </g>
+      <g class="pz pz--yellow">
+        <path d="M0 -150.0 L150.0 0 L0 150.0 L-150.0 0 Z" /><circle cx="87.7" cy="-87.7" r="34"/><circle cx="87.7" cy="87.7" r="34"/><circle cx="-87.7" cy="87.7" r="34"/><circle cx="-87.7" cy="-87.7" r="34"/>
+      </g>
+    </svg>
     <div class="wrap">
       <h1>Technology that fits how your business works</h1>
       <p class="lede">
@@ -322,29 +329,41 @@ import Base from '../layouts/Base.astro';
 </Base>
 
 <style>
-  /* Puzzle shape tucked into the top-right corner of the header; decorative (empty alt). */
+  /* Puzzle shape in the header's top-right corner; vector, so every piece is complete and sharp.
+     Pieces run off the right edge of the screen only. Decorative. */
   .about-head__shape {
     pointer-events: none;
-    width: 8rem;
+    width: 11rem;
     height: auto;
-    /* The source image is cut flat at its top and bottom; fade those edges into the header. */
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 72%, transparent 96%);
-    mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 72%, transparent 96%);
     position: absolute;
-    top: -0.5rem;
-    right: 0;
+    top: 0.75rem;
+    right: -3.25rem;
+    overflow: visible;
+  }
+  .pz--yellow {
+    fill: #fdc85a;
+  }
+  .pz--blue {
+    fill: #4ab0e4;
+  }
+  .pz--green {
+    fill: #a2e45a;
+  }
+  .pz--red {
+    fill: #eb4e2b;
   }
   .about-head .wrap > :is(h1, .lede) {
-    padding-right: 6.5rem;
+    padding-right: 7rem;
   }
   @media (width>=48rem) {
     .about-head__shape {
-      width: clamp(15rem, 10rem + 12vw, 22rem);
-      top: -1.5rem;
+      width: clamp(17rem, 12rem + 12vw, 25rem);
+      top: 1rem;
+      right: clamp(-7rem, -4rem - 3vw, -4rem);
     }
     .about-head .wrap > :is(h1, .lede) {
       padding-right: 0;
-      max-width: min(40rem, calc(100% - 20rem));
+      max-width: min(40rem, calc(100% - 18rem));
     }
   }
   @media (prefers-reduced-motion: no-preference) {
