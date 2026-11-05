@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
+import Promo from '../components/Promo.astro';
+import { art } from '../data/promo-art';
 import { site } from '../data/site';
 
 // Banner slides at the top of the home screen. Keep each title short so it fits on a phone.
@@ -15,7 +17,7 @@ const slides = [
     sub: 'Fast, installable and easy for your team to update.',
     cta: 'Start a project',
     href: '/contact/',
-    art: `<svg viewBox="0 0 200 170" aria-hidden="true"><rect x="14" y="34" width="122" height="84" rx="8" fill="#1f5677"/><rect x="20" y="40" width="110" height="72" rx="4" fill="#e3f0f8"/><rect x="20" y="40" width="110" height="14" rx="4" fill="#0068a1"/><rect x="28" y="62" width="54" height="7" rx="3.5" fill="#10293a"/><rect x="28" y="75" width="72" height="4" rx="2" fill="#9fb3c2"/><rect x="28" y="84" width="60" height="4" rx="2" fill="#9fb3c2"/><rect x="28" y="95" width="30" height="10" rx="5" fill="#6fd04a"/><path d="M2 120h146l-8 9H10z" fill="#2c6487"/><rect x="128" y="36" width="60" height="118" rx="13" fill="#fff"/><rect x="133" y="46" width="50" height="98" rx="5" fill="#f2f5f8"/><rect x="133" y="46" width="50" height="17" rx="5" fill="#0068a1"/><rect x="137" y="69" width="20" height="19" rx="5" fill="#fff"/><rect x="159" y="69" width="20" height="19" rx="5" fill="#fff"/><rect x="137" y="92" width="20" height="19" rx="5" fill="#fff"/><rect x="159" y="92" width="20" height="19" rx="5" fill="#fff"/><circle cx="147" cy="78.5" r="4" fill="#0068a1"/><circle cx="169" cy="78.5" r="4" fill="#6fd04a"/><circle cx="147" cy="101.5" r="4" fill="#6fd04a"/><circle cx="169" cy="101.5" r="4" fill="#0068a1"/><rect x="138" y="122" width="40" height="11" rx="5.5" fill="#6fd04a"/></svg>`,
+    art: art.websites,
   },
   {
     tag: 'Business systems',
@@ -27,7 +29,7 @@ const slides = [
     sub: 'Sales, stock, donations and staff records in one place.',
     cta: 'Our services',
     href: '/services/#systems',
-    art: `<svg viewBox="0 0 200 170" aria-hidden="true"><rect x="12" y="26" width="150" height="128" rx="14" fill="#fff"/><rect x="26" y="40" width="64" height="8" rx="4" fill="#10293a"/><rect x="26" y="54" width="40" height="5" rx="2.5" fill="#9fb3c2"/><g><circle cx="34" cy="80" r="7" fill="#6fd04a"/><path d="m30.5 80 2.5 2.5 4.5-4.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><rect x="48" y="77" width="60" height="6" rx="3" fill="#d6dfe6"/><rect x="122" y="76" width="28" height="8" rx="4" fill="#e3f0f8"/></g><g><circle cx="34" cy="104" r="7" fill="#6fd04a"/><path d="m30.5 104 2.5 2.5 4.5-4.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><rect x="48" y="101" width="48" height="6" rx="3" fill="#d6dfe6"/><rect x="122" y="100" width="28" height="8" rx="4" fill="#e3f0f8"/></g><g><circle cx="34" cy="128" r="7" fill="#0068a1"/><rect x="48" y="125" width="54" height="6" rx="3" fill="#d6dfe6"/><rect x="122" y="124" width="28" height="8" rx="4" fill="#e3f0f8"/></g><rect x="122" y="8" width="68" height="48" rx="12" fill="#6fd04a"/><rect x="132" y="20" width="30" height="6" rx="3" fill="#10293a"/><rect x="132" y="32" width="46" height="12" rx="4" fill="#fff"/></svg>`,
+    art: art.systems,
   },
   {
     tag: 'Data dashboards',
@@ -39,9 +41,9 @@ const slides = [
     sub: 'Filter by branch, date or product without waiting for reports.',
     cta: 'See our work',
     href: '/work/',
-    art: `<svg viewBox="0 0 200 170" aria-hidden="true"><rect x="10" y="20" width="180" height="136" rx="14" fill="#fff"/><rect x="24" y="34" width="56" height="8" rx="4" fill="#10293a"/><rect x="24" y="48" width="36" height="5" rx="2.5" fill="#9fb3c2"/><circle cx="158" cy="56" r="18" fill="none" stroke="#e3f0f8" stroke-width="9"/><circle cx="158" cy="56" r="18" fill="none" stroke="#0068a1" stroke-width="9" stroke-dasharray="78 113" transform="rotate(-90 158 56)"/><circle cx="158" cy="56" r="18" fill="none" stroke="#6fd04a" stroke-width="9" stroke-dasharray="22 113" stroke-dashoffset="-78" transform="rotate(-90 158 56)"/><rect x="28" y="110" width="14" height="32" rx="3" fill="#0068a1"/><rect x="50" y="96" width="14" height="46" rx="3" fill="#0068a1"/><rect x="72" y="118" width="14" height="24" rx="3" fill="#9fc4dc"/><rect x="94" y="84" width="14" height="58" rx="3" fill="#6fd04a"/><rect x="116" y="102" width="14" height="40" rx="3" fill="#0068a1"/><polyline points="28,92 57,78 79,88 101,64 123,74 172,96" fill="none" stroke="#1e7a0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    art: art.data,
   },
-] as const;
+];
 
 // The six most-used actions, shown as app-style tiles under the banner.
 const tiles = [
@@ -70,46 +72,7 @@ const tiles = [
       </div>
     </div>
     <div class="wrap app-home__grid">
-      <div class="promo" role="region" aria-roledescription="carousel" aria-label="Highlights">
-        <div class="promo__track" tabindex="0">
-          {slides.map((s, i) => (
-            <article
-              class={`promo__slide promo__slide--${s.tone}`}
-              aria-roledescription="slide"
-              aria-label={`${i + 1} of ${slides.length}`}
-            >
-              <div class="promo__text">
-                <h2 class="promo__title">
-                  {s.before}
-                  <em>{s.highlight}</em>
-                  {s.after}
-                </h2>
-                <p class="promo__sub">{s.sub}</p>
-                <a class="promo__link" href={s.href}>
-                  {s.cta}
-                  <Icon name="arrow" size={16} />
-                </a>
-              </div>
-              <div class="promo__art" set:html={s.art} />
-              <span class="promo__tag">
-                <Icon name={s.icon} size={14} />
-                {s.tag}
-              </span>
-            </article>
-          ))}
-        </div>
-        <div class="promo__controls">
-        <button type="button" class="promo__pause" aria-label="Pause slideshow" hidden>
-          <svg class="promo__pause-icon" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10" rx="1"/><rect x="7" y="1" width="3" height="10" rx="1"/></svg>
-          <svg class="promo__play-icon" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z"/></svg>
-        </button>
-        <div class="promo__dots">
-          {slides.map((s, i) => (
-            <button type="button" class="promo__dot" aria-label={`Show slide ${i + 1}: ${s.tag}`} aria-current={i === 0 ? 'true' : undefined} data-index={i} />
-          ))}
-        </div>
-        </div>
-      </div>
+      <Promo slides={slides} label="Highlights" />
       <nav class="quick" aria-label="Quick actions">
         <ul class="quick__grid">
           {tiles.map((t) => (
@@ -650,66 +613,6 @@ const tiles = [
       </svg>
     </div>
   </section>
-  <script is:inline>
-    // Banner carousel: swipe or tap the dots; auto-advances unless the visitor prefers less motion.
-    (function () {
-      var track = document.querySelector('.promo__track');
-      if (!track) return;
-      var slides = Array.prototype.slice.call(track.children);
-      var dots = Array.prototype.slice.call(document.querySelectorAll('.promo__dot'));
-      var index = 0;
-      function go(i) {
-        var s = slides[i];
-        track.scrollTo({ left: s.offsetLeft - (track.clientWidth - s.clientWidth) / 2, behavior: 'smooth' });
-      }
-      function mark(i) {
-        index = i;
-        dots.forEach(function (d, j) {
-          if (j === i) d.setAttribute('aria-current', 'true');
-          else d.removeAttribute('aria-current');
-        });
-      }
-      if ('IntersectionObserver' in window) {
-        var io = new IntersectionObserver(
-          function (entries) {
-            entries.forEach(function (e) {
-              if (e.isIntersecting) mark(slides.indexOf(e.target));
-            });
-          },
-          { root: track, threshold: 0.6 },
-        );
-        slides.forEach(function (s) { io.observe(s); });
-      }
-      dots.forEach(function (d, i) {
-        d.addEventListener('click', function () { stop(); go(i); });
-      });
-      var timer = null;
-      var pause = document.querySelector('.promo__pause');
-      function setPaused(paused) {
-        pause.setAttribute('aria-label', paused ? 'Play slideshow' : 'Pause slideshow');
-        pause.classList.toggle('is-paused', paused);
-      }
-      function start() {
-        if (timer) return;
-        timer = setInterval(function () { go((index + 1) % slides.length); }, 6000);
-        setPaused(false);
-      }
-      function stop() {
-        if (timer) { clearInterval(timer); timer = null; }
-        setPaused(true);
-      }
-      if (matchMedia('(prefers-reduced-motion: no-preference)').matches) {
-        pause.hidden = false;
-        pause.addEventListener('click', function () { timer ? stop() : start(); });
-        ['pointerdown', 'wheel', 'touchstart'].forEach(function (ev) {
-          track.addEventListener(ev, stop, { passive: true });
-        });
-        track.addEventListener('focusin', stop);
-        document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); });
-        start();
-      }
-    })();
-  </script>
 </Base>
 
 <style>
@@ -973,191 +876,6 @@ const tiles = [
     display: grid;
     position: relative;
   }
-  /* Banner carousel */
-  .promo {
-    min-width: 0;
-    margin-inline: calc(-1 * var(--gutter));
-  }
-  .promo__track {
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    overscroll-behavior-x: contain;
-    grid-auto-columns: calc(100% - 2 * var(--gutter) - 1.5rem);
-    grid-auto-flow: column;
-    gap: 0.75rem;
-    padding: 0.25rem calc(var(--gutter) + 0.75rem) 1.75rem;
-    margin-bottom: -0.75rem;
-    display: grid;
-    overflow-x: auto;
-  }
-  .promo__track::-webkit-scrollbar {
-    display: none;
-  }
-  .promo__track:focus-visible {
-    outline-offset: -3px;
-  }
-  .promo__slide {
-    scroll-snap-align: center;
-    border-radius: var(--radius-lg);
-    color: var(--white);
-    min-height: 12.5rem;
-    box-shadow: 0 12px 22px -14px #10293a99;
-    grid-template-columns: 1.5fr 1fr;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 1.25rem 1rem 2.75rem 1.25rem;
-    display: grid;
-    position: relative;
-    overflow: hidden;
-  }
-  .promo__slide--ink {
-    background: linear-gradient(135deg, #10293a 0%, #1d4660 100%);
-  }
-  .promo__slide--blue {
-    background: linear-gradient(135deg, #00446b 0%, #0a7bb8 100%);
-  }
-  .promo__slide--green {
-    background: linear-gradient(135deg, #154f12 0%, #2a8a1c 100%);
-  }
-  .promo__slide--green .promo__title em {
-    color: #c9f5b5;
-  }
-  .promo__text {
-    flex-direction: column;
-    gap: 0.5rem;
-    display: flex;
-  }
-  .promo__title {
-    letter-spacing: -0.025em;
-    font-size: clamp(1.25rem, 0.95rem + 1.4vw, 2rem);
-    font-weight: 700;
-    line-height: 1.12;
-  }
-  .promo__title em {
-    color: var(--accent);
-    font-style: normal;
-  }
-  .promo__sub {
-    color: #d5e2ea;
-    font-size: 0.875rem;
-    line-height: 1.4;
-    display: none;
-  }
-  .promo__link {
-    color: var(--white);
-    font-size: 0.875rem;
-    font-weight: 600;
-    align-items: center;
-    gap: 0.35rem;
-    white-space: nowrap;
-    text-decoration: none;
-    display: inline-flex;
-  }
-  .promo__link:after {
-    content: '';
-    z-index: 2;
-    border-radius: var(--radius-lg);
-    position: absolute;
-    inset: 0;
-  }
-  .promo__slide {
-    isolation: isolate;
-  }
-  .promo__slide:has(.promo__link:hover) .promo__link {
-    color: var(--white);
-    text-decoration: underline;
-  }
-  .promo__slide:has(.promo__link:focus-visible) {
-    outline: 3px solid var(--accent);
-    outline-offset: -3px;
-  }
-  .promo__link:focus-visible {
-    outline: none;
-  }
-  .promo__art {
-    align-self: center;
-  }
-  .promo__art :global(svg) {
-    width: 100%;
-    max-width: 15rem;
-    margin-left: auto;
-    filter: drop-shadow(0 10px 14px #0000004d);
-  }
-  .promo__tag {
-    background: var(--accent);
-    color: var(--ink);
-    border-radius: 999px;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.3rem 0.7rem;
-    font-size: 0.75rem;
-    font-weight: 700;
-    display: inline-flex;
-    position: absolute;
-    bottom: 0.9rem;
-    left: 1.25rem;
-  }
-  .promo__controls {
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
-    display: flex;
-  }
-  .promo__dots {
-    display: flex;
-  }
-  .promo__pause {
-    cursor: pointer;
-    background: var(--white);
-    color: var(--ink);
-    fill: currentColor;
-    box-shadow: var(--shadow-card);
-    border: 0;
-    border-radius: 50%;
-    place-items: center;
-    width: 1.75rem;
-    height: 1.75rem;
-    padding: 0;
-    display: grid;
-  }
-  .promo__pause[hidden] {
-    display: none;
-  }
-  .promo__play-icon,
-  .promo__pause.is-paused .promo__pause-icon {
-    display: none;
-  }
-  .promo__pause.is-paused .promo__play-icon {
-    display: block;
-  }
-  /* 24px tap target around each small dot. */
-  .promo__dot {
-    cursor: pointer;
-    background: none;
-    border: 0;
-    place-items: center;
-    min-width: 1.5rem;
-    height: 1.5rem;
-    padding: 0 0.2rem;
-    display: grid;
-  }
-  .promo__dot:before {
-    content: '';
-    background: var(--brand);
-    opacity: 0.45;
-    border-radius: 999px;
-    width: 0.6rem;
-    height: 0.6rem;
-    transition:
-      width 0.25s,
-      opacity 0.25s,
-      background-color 0.25s;
-  }
-  .promo__dot[aria-current='true']:before {
-    background: var(--ink);
-    opacity: 1;
-    width: 1.5rem;
-  }
   /* Quick-action tiles */
   .quick__grid {
     grid-template-columns: repeat(3, 1fr);
@@ -1219,27 +937,7 @@ const tiles = [
     font-size: 0.75rem;
     line-height: 1.25;
   }
-  @media (width>=30rem) {
-    .promo__sub {
-      display: block;
-    }
-    .promo__slide {
-      grid-template-columns: 1.15fr 1fr;
-    }
-  }
   @media (width>=48rem) {
-    .promo__track {
-      grid-auto-columns: calc(100% - 2 * var(--gutter) - 6rem);
-      padding-inline: calc(var(--gutter) + 3rem);
-    }
-    .promo__slide {
-      min-height: 15rem;
-      padding: 2rem 1.5rem 3.25rem 2rem;
-    }
-    .promo__tag {
-      left: 2rem;
-      bottom: 1.25rem;
-    }
     .tile {
       min-height: 10rem;
     }
@@ -1253,23 +951,6 @@ const tiles = [
       align-items: start;
       gap: 1.75rem;
       margin-top: -8rem;
-    }
-    .promo {
-      margin-inline: 0;
-    }
-    .promo__track {
-      grid-auto-columns: 100%;
-      padding: 0 0 1.75rem;
-      margin-bottom: -0.75rem;
-      gap: 1rem;
-    }
-    .promo__slide {
-      min-height: 21rem;
-      padding: 2.5rem 2rem 3.75rem 2.5rem;
-    }
-    .promo__tag {
-      left: 2.5rem;
-      bottom: 1.5rem;
     }
     .quick__grid {
       grid-template-rows: repeat(2, 1fr);

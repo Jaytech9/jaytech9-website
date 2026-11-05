@@ -1,0 +1,362 @@
+---
+// Large banner cards that slide automatically (home page highlights, services header).
+// Swipe, tap the dots, or use the pause button. Respects "reduce motion" settings.
+import Icon from './Icon.astro';
+
+interface Slide {
+  tag: string;
+  icon: string;
+  tone: 'ink' | 'blue' | 'green' | 'teal';
+  before: string;
+  highlight: string;
+  after: string;
+  sub: string;
+  cta: string;
+  href: string;
+  art: string;
+}
+interface Props {
+  slides: Slide[];
+  label: string;
+  class?: string;
+}
+const { slides, label, class: className } = Astro.props;
+---
+
+<div class:list={['promo', className]} role="region" aria-roledescription="carousel" aria-label={label}>
+  <div class="promo__track" tabindex="0">
+    {slides.map((s, i) => (
+      <article class={`promo__slide promo__slide--${s.tone}`} aria-roledescription="slide" aria-label={`${i + 1} of ${slides.length}`}>
+        <div class="promo__text">
+          <h2 class="promo__title">
+            {s.before}
+            <em>{s.highlight}</em>
+            {s.after}
+          </h2>
+          <p class="promo__sub">{s.sub}</p>
+          <a class="promo__link" href={s.href}>
+            {s.cta}
+            <Icon name="arrow" size={16} />
+          </a>
+        </div>
+        <div class="promo__art" set:html={s.art} />
+        <span class="promo__tag">
+          <Icon name={s.icon as any} size={14} />
+          {s.tag}
+        </span>
+      </article>
+    ))}
+  </div>
+  <div class="promo__controls">
+    <button type="button" class="promo__pause" aria-label="Pause slideshow" hidden>
+      <svg class="promo__pause-icon" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10" rx="1" /><rect x="7" y="1" width="3" height="10" rx="1" /></svg>
+      <svg class="promo__play-icon" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z" /></svg>
+    </button>
+    <div class="promo__dots">
+      {slides.map((s, i) => (
+        <button type="button" class="promo__dot" aria-label={`Show slide ${i + 1}: ${s.tag}`} aria-current={i === 0 ? 'true' : undefined} />
+      ))}
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    document.querySelectorAll('.promo:not([data-ready])').forEach(function (root) {
+      root.setAttribute('data-ready', '');
+      var track = root.querySelector('.promo__track');
+      var slides = Array.prototype.slice.call(track.children);
+      var dots = Array.prototype.slice.call(root.querySelectorAll('.promo__dot'));
+      var pause = root.querySelector('.promo__pause');
+      var index = 0;
+      var timer = null;
+      function go(i) {
+        var s = slides[i];
+        track.scrollTo({ left: s.offsetLeft - (track.clientWidth - s.clientWidth) / 2, behavior: 'smooth' });
+      }
+      function mark(i) {
+        index = i;
+        dots.forEach(function (d, j) {
+          if (j === i) d.setAttribute('aria-current', 'true');
+          else d.removeAttribute('aria-current');
+        });
+      }
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) mark(slides.indexOf(e.target));
+            });
+          },
+          { root: track, threshold: 0.6 },
+        );
+        slides.forEach(function (s) { io.observe(s); });
+      }
+      function setPaused(paused) {
+        pause.setAttribute('aria-label', paused ? 'Play slideshow' : 'Pause slideshow');
+        pause.classList.toggle('is-paused', paused);
+      }
+      function start() {
+        if (timer) return;
+        timer = setInterval(function () { go((index + 1) % slides.length); }, 6000);
+        setPaused(false);
+      }
+      function stop() {
+        if (timer) { clearInterval(timer); timer = null; }
+        setPaused(true);
+      }
+      dots.forEach(function (d, i) {
+        d.addEventListener('click', function () { stop(); go(i); });
+      });
+      if (matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+        pause.hidden = false;
+        pause.addEventListener('click', function () { timer ? stop() : start(); });
+        ['pointerdown', 'wheel', 'touchstart'].forEach(function (ev) {
+          track.addEventListener(ev, stop, { passive: true });
+        });
+        track.addEventListener('focusin', stop);
+        document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); });
+        start();
+      }
+    });
+  })();
+</script>
+
+<style>
+  /* Banner carousel */
+  .promo {
+    min-width: 0;
+    margin-inline: calc(-1 * var(--gutter));
+  }
+  .promo__track {
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    grid-auto-columns: calc(100% - 2 * var(--gutter) - 1.5rem);
+    grid-auto-flow: column;
+    gap: 0.75rem;
+    padding: 0.25rem calc(var(--gutter) + 0.75rem) 1.75rem;
+    margin-bottom: -0.75rem;
+    display: grid;
+    overflow-x: auto;
+  }
+  .promo__track::-webkit-scrollbar {
+    display: none;
+  }
+  .promo__track:focus-visible {
+    outline-offset: -3px;
+  }
+  .promo__slide {
+    scroll-snap-align: center;
+    border-radius: var(--radius-lg);
+    color: var(--white);
+    min-height: 12.5rem;
+    box-shadow: 0 12px 22px -14px #10293a99;
+    grid-template-columns: 1.5fr 1fr;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.25rem 1rem 2.75rem 1.25rem;
+    display: grid;
+    position: relative;
+    overflow: hidden;
+  }
+  .promo__slide--ink {
+    background: linear-gradient(135deg, #10293a 0%, #1d4660 100%);
+  }
+  .promo__slide--blue {
+    background: linear-gradient(135deg, #00446b 0%, #0a7bb8 100%);
+  }
+  .promo__slide--green {
+    background: linear-gradient(135deg, #154f12 0%, #2a8a1c 100%);
+  }
+  .promo__slide--teal {
+    background: linear-gradient(135deg, #0a4f52 0%, #12857c 100%);
+  }
+  .promo__slide--green .promo__title em {
+    color: #c9f5b5;
+  }
+  .promo__text {
+    flex-direction: column;
+    gap: 0.5rem;
+    display: flex;
+  }
+  .promo__title {
+    letter-spacing: -0.025em;
+    font-size: clamp(1.25rem, 0.95rem + 1.4vw, 2rem);
+    font-weight: 700;
+    line-height: 1.12;
+  }
+  .promo__title em {
+    color: var(--accent);
+    font-style: normal;
+  }
+  .promo__sub {
+    color: #d5e2ea;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    display: none;
+  }
+  .promo__link {
+    color: var(--white);
+    font-size: 0.875rem;
+    font-weight: 600;
+    align-items: center;
+    gap: 0.35rem;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-flex;
+  }
+  .promo__link:after {
+    content: '';
+    z-index: 2;
+    border-radius: var(--radius-lg);
+    position: absolute;
+    inset: 0;
+  }
+  .promo__slide {
+    isolation: isolate;
+  }
+  .promo__slide:has(.promo__link:hover) .promo__link {
+    color: var(--white);
+    text-decoration: underline;
+  }
+  .promo__slide:has(.promo__link:focus-visible) {
+    outline: 3px solid var(--accent);
+    outline-offset: -3px;
+  }
+  .promo__link:focus-visible {
+    outline: none;
+  }
+  .promo__art {
+    align-self: center;
+  }
+  .promo__art :global(svg) {
+    width: 100%;
+    max-width: 15rem;
+    margin-left: auto;
+    filter: drop-shadow(0 10px 14px #0000004d);
+  }
+  .promo__tag {
+    background: var(--accent);
+    color: var(--ink);
+    border-radius: 999px;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: inline-flex;
+    position: absolute;
+    bottom: 0.9rem;
+    left: 1.25rem;
+  }
+  .promo__controls {
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    display: flex;
+  }
+  .promo__dots {
+    display: flex;
+  }
+  .promo__pause {
+    cursor: pointer;
+    background: var(--white);
+    color: var(--ink);
+    fill: currentColor;
+    box-shadow: var(--shadow-card);
+    border: 0;
+    border-radius: 50%;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0;
+    display: grid;
+  }
+  .promo__pause[hidden] {
+    display: none;
+  }
+  .promo__play-icon,
+  .promo__pause.is-paused .promo__pause-icon {
+    display: none;
+  }
+  .promo__pause.is-paused .promo__play-icon {
+    display: block;
+  }
+  /* 24px tap target around each small dot. */
+  .promo__dot {
+    cursor: pointer;
+    background: none;
+    border: 0;
+    place-items: center;
+    min-width: 1.5rem;
+    height: 1.5rem;
+    padding: 0 0.2rem;
+    display: grid;
+  }
+  .promo__dot:before {
+    content: '';
+    background: var(--brand);
+    opacity: 0.45;
+    border-radius: 999px;
+    width: 0.6rem;
+    height: 0.6rem;
+    transition:
+      width 0.25s,
+      opacity 0.25s,
+      background-color 0.25s;
+  }
+  .promo__dot[aria-current='true']:before {
+    background: var(--ink);
+    opacity: 1;
+    width: 1.5rem;
+  }
+  /* On a blue background (page headers) the dots switch to white. */
+  .promo--on-brand .promo__dot:before {
+    background: var(--white);
+  }
+  .promo--on-brand .promo__dot[aria-current='true']:before {
+    background: var(--accent);
+  }
+  @media (width>=30rem) {
+    .promo__sub {
+      display: block;
+    }
+    .promo__slide {
+      grid-template-columns: 1.15fr 1fr;
+    }
+  }
+  @media (width>=48rem) {
+    .promo__track {
+      grid-auto-columns: calc(100% - 2 * var(--gutter) - 6rem);
+      padding-inline: calc(var(--gutter) + 3rem);
+    }
+    .promo__slide {
+      min-height: 15rem;
+      padding: 2rem 1.5rem 3.25rem 2rem;
+    }
+    .promo__tag {
+      left: 2rem;
+      bottom: 1.25rem;
+    }
+  }
+  @media (width>=64rem) {
+    .promo {
+      margin-inline: 0;
+    }
+    .promo__track {
+      grid-auto-columns: 100%;
+      padding: 0 0 1.75rem;
+      margin-bottom: -0.75rem;
+      gap: 1rem;
+    }
+    .promo__slide {
+      min-height: 21rem;
+      padding: 2.5rem 2rem 3.75rem 2.5rem;
+    }
+    .promo__tag {
+      left: 2.5rem;
+      bottom: 1.5rem;
+    }
+  }
+</style>
