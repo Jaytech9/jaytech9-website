@@ -3,8 +3,8 @@ import Base from '../../layouts/Base.astro';
 ---
 
 <Base
-  title="Company website with CMS | JayTech9"
-  description="A corporate website with its own content manager, so the team can publish news and update pages without touching code."
+  title="Green Hatch Investments website | JayTech9"
+  description="Company website for Green Hatch Investments, a sustainable investment firm in Ghana: tree plantations, farms, real estate and eco-tourism."
   ogType="article"
 >
   <article>
@@ -13,22 +13,20 @@ import Base from '../../layouts/Base.astro';
         <p class="crumb">
           <a href="/products/">Products</a>
         </p>
-        <h1>Company website with CMS</h1>
+        <h1>Green Hatch Investments website</h1>
         <p class="lede">
-          A corporate website with its own content manager, so the team can publish news and update pages
-          without touching code.
+          Company website for a sustainable investment firm in Ghana, covering tree plantations, farms, real
+          estate and eco-tourism.
         </p>
         <dl class="facts">
           <div>
             <dt>Client</dt>
-            <dd>An investment company</dd>
+            <dd>Green Hatch Investments</dd>
           </div>
           <div>
             <dt>Status</dt>
             <dd>
-              <span class="status" data-status="In progress">
-                In progress
-              </span>
+              <span class="status" data-status="Live">Live</span>
             </dd>
           </div>
           <div>
@@ -36,20 +34,36 @@ import Base from '../../layouts/Base.astro';
             <dd>2026</dd>
           </div>
           <div>
+            <dt>Website</dt>
+            <dd><a href="https://greenhatchinv.com/home/" target="_blank" rel="noopener">greenhatchinv.com<span class="visually-hidden"> (opens in a new tab)</span></a></dd>
+          </div>
+          <div>
             <dt>Built with</dt>
             <dd>PHP, MySQL</dd>
           </div>
         </dl>
+        <div class="button-row case-cta">
+          <a class="button" href="https://greenhatchinv.com/home/" target="_blank" rel="noopener">
+            Visit the live site ↗<span class="visually-hidden"> (opens in a new tab)</span>
+          </a>
+        </div>
       </div>
     </header>
     <div class="wrap section case-body">
       <div class="prose">
-        <h2 id="what-were-building">What we’re building</h2>
+        <h2 id="what-we-built">What we built</h2>
         <p>
-          A clean, fast corporate website that presents the company’s services and track record, with a
-          private content manager for publishing updates. The site is being built in versions, so the earlier
-          build stays intact while the new one is reviewed.
+          Green Hatch Investments links economic returns with environmental care across Ghanaian communities.
+          The website presents that clearly: who they are, their approach, and their five service areas, from
+          tree plantations and farms to real estate and eco-tourism.
         </p>
+        <h2 id="whats-on-the-site">What’s on the site</h2>
+        <ul>
+          <li>Home, About, Services, Projects, Marketplace and Contact pages</li>
+          <li>A “Plant a Tree” page for the community tree initiative</li>
+          <li>Featured projects, such as the Kwabenya–Brekusu Avenue tree planting in Ga East</li>
+          <li>A management login so the team can run the site themselves</li>
+        </ul>
       </div>
     </div>
   </article>
@@ -138,16 +152,17 @@ import Base from '../../layouts/Base.astro';
     margin: 2rem 0;
     display: grid;
   }
+  /* Light labels: these sit on the blue page header. */
   .facts dt {
     font-size: var(--step--1);
-    color: var(--ink-soft);
+    color: #cfe4f2;
   }
   .facts dd {
     margin: 0.2rem 0 0;
     font-weight: 600;
   }
   .facts .status {
-    color: var(--ink);
+    color: var(--white);
     font-size: var(--step-0);
   }
   .case-body {
@@ -265,5 +280,8 @@ import Base from '../../layouts/Base.astro';
       margin-bottom: -6rem;
       display: block;
     }
+  }
+  .case-cta {
+    margin-top: 1.75rem;
   }
 </style>

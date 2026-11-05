@@ -294,23 +294,26 @@ const features = [
                 <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
               </svg>
             </span>
-            <span class="work-card__sector">Business</span>
-            <div class="work-card__shot" set:html={shots['investment-website']} />
+            <span class="work-card__sector">Investment</span>
+            <div class="work-card__shot" set:html={shots['green-hatch-investments']} />
           </div>
           <div class="work-card__body">
             <div class="work-card__meta">
-              <span>An investment company</span>
-              <span class="status" data-status="In progress">
-                In progress
-              </span>
+              <span>Green Hatch Investments</span>
+              <span class="status" data-status="Live">Live</span>
             </div>
             <h3 class="work-card__title">
-              <a href="/products/investment-website/">Company website with CMS</a>
+              <a href="/products/green-hatch-investments/">Green Hatch Investments website</a>
             </h3>
             <p>
-              A corporate website with its own content manager, so the team can publish news and update pages
-              without touching code.
+              Company website for a sustainable investment firm in Ghana: tree plantations, farms, real estate
+              and eco-tourism, with a management login for the team.
             </p>
+            <a class="work-card__live" href="https://greenhatchinv.com/home/" target="_blank" rel="noopener">
+              Visit live site
+              <span aria-hidden="true">↗</span>
+              <span class="visually-hidden">(opens in a new tab)</span>
+            </a>
             <ul class="work-card__stack" aria-label="Built with">
               <li>PHP</li>
               <li>MySQL</li>
@@ -882,6 +885,27 @@ const features = [
   }
   .work-card:hover .work-card__title a {
     color: var(--blue);
+  }
+  /* Sits above the card's stretched link so it opens the live site, not the case study. */
+  .work-card__live {
+    z-index: 2;
+    background: var(--accent-deep);
+    color: var(--white);
+    border-radius: 999px;
+    align-self: flex-start;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.25rem;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    position: relative;
+  }
+  .work-card__live:hover {
+    background: var(--brand);
+    color: var(--white);
   }
   .work-card__stack {
     flex-wrap: wrap;

@@ -1,3 +1,4 @@
 # Work was renamed to Products on 5 Nov 2026. Keep old links and search results working.
 /work        /products/          301
 /work/*      /products/:splat    301
+/products/investment-website/  /products/green-hatch-investments/  301
