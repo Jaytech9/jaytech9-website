@@ -6,7 +6,18 @@ import Base from '../layouts/Base.astro';
   title="About | JayTech9"
   description="JayTech9 is an Accra-based technology company building websites, business systems, data dashboards and AgriTech tools for businesses, nonprofits and farmers in Ghana and around the world."
 >
-  <header class="page-head">
+  <header class="page-head about-head">
+    <img
+      class="about-head__shape"
+      src="/images/about-puzzle-360.webp"
+      srcset="/images/about-puzzle-360.webp 360w, /images/about-puzzle-640.webp 640w"
+      sizes="(width >= 48rem) 22rem, 8rem"
+      width="360"
+      height="448"
+      alt=""
+      loading="eager"
+      decoding="async"
+    />
     <div class="wrap">
       <h1>Technology that fits how your business works</h1>
       <p class="lede">
@@ -311,6 +322,43 @@ import Base from '../layouts/Base.astro';
 </Base>
 
 <style>
+  /* Puzzle shape tucked into the top-right corner of the header; decorative (empty alt). */
+  .about-head__shape {
+    pointer-events: none;
+    width: 8rem;
+    height: auto;
+    /* The source image is cut flat at its top and bottom; fade those edges into the header. */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 72%, transparent 96%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 72%, transparent 96%);
+    position: absolute;
+    top: -0.5rem;
+    right: 0;
+  }
+  .about-head .wrap > :is(h1, .lede) {
+    padding-right: 6.5rem;
+  }
+  @media (width>=48rem) {
+    .about-head__shape {
+      width: clamp(15rem, 10rem + 12vw, 22rem);
+      top: -1.5rem;
+    }
+    .about-head .wrap > :is(h1, .lede) {
+      padding-right: 0;
+      max-width: min(40rem, calc(100% - 20rem));
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .about-head__shape {
+      animation: shape-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+  }
+  @keyframes shape-in {
+    from {
+      opacity: 0;
+      transform: translate(30px, -20px) rotate(6deg);
+    }
+  }
+
   .contours {
     width: 100%;
     overflow: visible;
