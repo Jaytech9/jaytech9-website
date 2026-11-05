@@ -18,7 +18,10 @@ import Base from '../../layouts/Base.astro';
           Replacing daily WhatsApp reports from branch field officers with a live dashboard that managers can
           filter by branch and date.
         </p>
-        <dl class="facts">
+      </div>
+    </header>
+    <div class="wrap overlap">
+        <dl class="facts facts-card">
           <div>
             <dt>Client</dt>
             <dd>A susu and microfinance platform</dd>
@@ -40,8 +43,7 @@ import Base from '../../layouts/Base.astro';
             <dd>PHP, MySQL</dd>
           </div>
         </dl>
-      </div>
-    </header>
+    </div>
     <div class="wrap section case-body">
       <div class="prose">
         <h2 id="the-problem">The problem</h2>
@@ -147,23 +149,21 @@ import Base from '../../layouts/Base.astro';
     max-width: 20ch;
   }
   .facts {
-    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr));
     gap: 1rem 2rem;
-    max-width: 52rem;
-    margin: 2rem 0;
+    margin: 0;
     display: grid;
   }
-  /* Light labels: these sit on the blue page header. */
   .facts dt {
     font-size: var(--step--1);
-    color: #cfe4f2;
+    color: var(--ink-soft);
   }
   .facts dd {
     margin: 0.2rem 0 0;
     font-weight: 600;
   }
   .facts .status {
-    color: var(--white);
+    color: var(--ink);
     font-size: var(--step-0);
   }
   .case-body {

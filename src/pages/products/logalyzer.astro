@@ -18,7 +18,13 @@ import Base from '../../layouts/Base.astro';
           A free browser tool that reads server log files and highlights errors, warnings and patterns in
           seconds.
         </p>
-        <dl class="facts">
+        <a class="button" href="https://jaytech9.github.io/Logalyzer/">
+          Open Logalyzer
+        </a>
+      </div>
+    </header>
+    <div class="wrap overlap">
+        <dl class="facts facts-card">
           <div>
             <dt>Client</dt>
             <dd>Open-source tool</dd>
@@ -40,11 +46,7 @@ import Base from '../../layouts/Base.astro';
             <dd>JavaScript, HTML, CSS</dd>
           </div>
         </dl>
-        <a class="button" href="https://jaytech9.github.io/Logalyzer/">
-          Open Logalyzer
-        </a>
-      </div>
-    </header>
+    </div>
     <div class="wrap section case-body">
       <div class="prose">
         <h2 id="what-it-does">What it does</h2>
@@ -135,23 +137,21 @@ import Base from '../../layouts/Base.astro';
     max-width: 20ch;
   }
   .facts {
-    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr));
     gap: 1rem 2rem;
-    max-width: 52rem;
-    margin: 2rem 0;
+    margin: 0;
     display: grid;
   }
-  /* Light labels: these sit on the blue page header. */
   .facts dt {
     font-size: var(--step--1);
-    color: #cfe4f2;
+    color: var(--ink-soft);
   }
   .facts dd {
     margin: 0.2rem 0 0;
     font-weight: 600;
   }
   .facts .status {
-    color: var(--white);
+    color: var(--ink);
     font-size: var(--step-0);
   }
   .case-body {

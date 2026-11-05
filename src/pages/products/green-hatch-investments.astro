@@ -18,7 +18,15 @@ import Base from '../../layouts/Base.astro';
           Company website for a sustainable investment firm in Ghana, covering tree plantations, farms, real
           estate and eco-tourism.
         </p>
-        <dl class="facts">
+        <div class="button-row case-cta">
+          <a class="button" href="https://greenhatchinv.com/home/" target="_blank" rel="noopener">
+            Visit the live site ↗<span class="visually-hidden"> (opens in a new tab)</span>
+          </a>
+        </div>
+      </div>
+    </header>
+    <div class="wrap overlap">
+        <dl class="facts facts-card">
           <div>
             <dt>Client</dt>
             <dd>Green Hatch Investments</dd>
@@ -42,13 +50,7 @@ import Base from '../../layouts/Base.astro';
             <dd>PHP, MySQL</dd>
           </div>
         </dl>
-        <div class="button-row case-cta">
-          <a class="button" href="https://greenhatchinv.com/home/" target="_blank" rel="noopener">
-            Visit the live site ↗<span class="visually-hidden"> (opens in a new tab)</span>
-          </a>
-        </div>
-      </div>
-    </header>
+    </div>
     <div class="wrap section case-body">
       <div class="prose">
         <h2 id="what-we-built">What we built</h2>
@@ -146,23 +148,21 @@ import Base from '../../layouts/Base.astro';
     max-width: 20ch;
   }
   .facts {
-    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr));
     gap: 1rem 2rem;
-    max-width: 52rem;
-    margin: 2rem 0;
+    margin: 0;
     display: grid;
   }
-  /* Light labels: these sit on the blue page header. */
   .facts dt {
     font-size: var(--step--1);
-    color: #cfe4f2;
+    color: var(--ink-soft);
   }
   .facts dd {
     margin: 0.2rem 0 0;
     font-weight: 600;
   }
   .facts .status {
-    color: var(--white);
+    color: var(--ink);
     font-size: var(--step-0);
   }
   .case-body {

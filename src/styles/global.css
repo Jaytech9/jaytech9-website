@@ -15,6 +15,8 @@
   --accent: #6fd04a;
   --accent-deep: #1e7a0b;
   --radius-lg: 20px;
+  /* How far the first card on a page rises into the blue header. */
+  --overlap: clamp(4rem, 9vw, 6.5rem);
   /* Header surface: starts at the app-bar blue at the top so the two join seamlessly,
      deepens downwards, with a soft sky-blue light top-right and a hint of logo green bottom-left. */
   --brand-surface:
@@ -251,8 +253,7 @@ a:hover {
 .page-head {
   background: var(--brand-surface);
   color: var(--white);
-  border-radius: 0 0 clamp(24px, 4vw, 40px) clamp(24px, 4vw, 40px);
-  padding-block: clamp(2rem, 6vw, 4.5rem) clamp(2.5rem, 5vw, 4rem);
+  padding-block: clamp(2rem, 6vw, 4.5rem) calc(var(--overlap) + clamp(1.5rem, 4vw, 2.5rem));
   position: relative;
   overflow: hidden;
 }
@@ -466,4 +467,32 @@ a:hover {
 .is-visible {
   animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
   animation-delay: calc(var(--reveal-order, 0) * 80ms);
+}
+
+/* ---------- Header overlap: the first card on every page rises into the blue header ---------- */
+.overlap {
+  z-index: 2;
+  margin-top: calc(-1 * var(--overlap));
+  position: relative;
+}
+.section:has(.overlap) {
+  padding-top: 0;
+}
+/* White sheet for a page's main content when it overlaps the header. */
+.sheet {
+  background: var(--white);
+  border-radius: clamp(20px, 3vw, 28px);
+  box-shadow:
+    0 2px 6px #10293a0f,
+    0 24px 48px -30px #10293a66;
+  padding: clamp(1.25rem, 4vw, 3rem);
+}
+/* Project facts as a white card under the project title. */
+.facts-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 2px 6px #10293a0f,
+    0 24px 48px -30px #10293a66;
+  padding: clamp(1.25rem, 3vw, 1.75rem) clamp(1.25rem, 3vw, 2rem);
 }
