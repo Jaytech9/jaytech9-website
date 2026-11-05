@@ -1,5 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+
+// Service cards that scroll across the page header. Each links to its section below.
+const services = [
+  { id: 'websites', title: 'Websites and web apps', text: 'Fast, mobile-friendly sites your team can update.', icon: 'monitor' },
+  { id: 'systems', title: 'Business systems', text: 'Replace paper books, spreadsheets and WhatsApp threads.', icon: 'layers' },
+  { id: 'data', title: 'Data dashboards and analysis', text: 'See your numbers clearly, without the wait.', icon: 'chart' },
+  { id: 'agritech', title: 'AgriTech and sustainability', text: 'Digital tools for farmers and cooperatives.', icon: 'sprout' },
+  { id: 'design', title: 'Brand and print design', text: 'Logos, flyers, banners and social graphics.', icon: 'brush' },
+  { id: 'care', title: 'Domains, hosting and care', text: 'Domain, email and hosting set up and kept running.', icon: 'shield' },
+] as const;
 ---
 
 <Base
@@ -13,29 +24,36 @@ import Base from '../layouts/Base.astro';
         Six things we do well. Most projects combine two or three, such as a website with a booking system, or
         a field app with a dashboard.
       </p>
-      <nav class="jump" aria-label="Jump to a service">
-        <ul>
-          <li>
-            <a href="#websites">Websites and web apps</a>
-          </li>
-          <li>
-            <a href="#systems">Business systems</a>
-          </li>
-          <li>
-            <a href="#data">Data dashboards and analysis</a>
-          </li>
-          <li>
-            <a href="#agritech">AgriTech and sustainability</a>
-          </li>
-          <li>
-            <a href="#design">Brand and print design</a>
-          </li>
-          <li>
-            <a href="#care">Domains, hosting and care</a>
-          </li>
-        </ul>
-      </nav>
     </div>
+    <nav class="jump" aria-label="Jump to a service">
+      <div class="jump__viewport">
+        <div class="jump__track">
+          {[0, 1].map((copy) => (
+            <ul class="jump__list" aria-hidden={copy === 1 ? 'true' : undefined}>
+              {services.map((sv) => (
+                <li>
+                  <a class="jump__card" href={`#${sv.id}`} tabindex={copy === 1 ? -1 : undefined}>
+                    <span class="jump__icon">
+                      <Icon name={sv.icon} size={22} />
+                    </span>
+                    <span class="jump__title">{sv.title}</span>
+                    <span class="jump__text">{sv.text}</span>
+                    <span class="jump__more">
+                      View service
+                      <Icon name="arrow" size={15} />
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ))}
+        </div>
+      </div>
+      <button type="button" class="jump__pause" aria-label="Pause moving cards" hidden>
+        <span class="jump__pause-icon"><Icon name="pause" size={14} /></span>
+        <span class="jump__play-icon"><Icon name="play" size={14} /></span>
+      </button>
+    </nav>
   </header>
   <div class="wrap">
     <section class="service" id="websites" aria-labelledby="websites-heading">
@@ -374,6 +392,19 @@ import Base from '../layouts/Base.astro';
       </svg>
     </div>
   </section>
+  <script is:inline>
+    // Pause/play for the moving service cards (needed for anything that moves on its own).
+    (function () {
+      var jump = document.querySelector('.jump');
+      var btn = jump && jump.querySelector('.jump__pause');
+      if (!btn || !matchMedia('(prefers-reduced-motion: no-preference)').matches) return;
+      btn.hidden = false;
+      btn.addEventListener('click', function () {
+        var paused = jump.classList.toggle('is-paused');
+        btn.setAttribute('aria-label', paused ? 'Play moving cards' : 'Pause moving cards');
+      });
+    })();
+  </script>
 </Base>
 
 <style>
@@ -472,28 +503,159 @@ import Base from '../layouts/Base.astro';
       display: block;
     }
   }
-  .jump ul {
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin: 2rem 0 0;
-    padding: 0;
+  /* Moving service cards in the page header. */
+  .jump {
+    z-index: 1;
+    margin-top: clamp(1.75rem, 4vw, 2.5rem);
+    position: relative;
+  }
+  .jump__viewport {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 2.5%, #000 97.5%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 2.5%, #000 97.5%, transparent);
+    padding-block: 0.5rem 1rem;
+    overflow: hidden;
+  }
+  .jump__track {
+    width: max-content;
+    display: flex;
+    animation: jump-scroll 45s linear infinite;
+  }
+  .jump:hover .jump__track,
+  .jump:focus-within .jump__track,
+  .jump.is-paused .jump__track {
+    animation-play-state: paused;
+  }
+  @keyframes jump-scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  .jump__list {
+    gap: 1rem;
+    margin: 0;
+    padding: 0 0.5rem;
     list-style: none;
     display: flex;
   }
-  .jump a {
-    color: var(--white);
-    font-size: var(--step--1);
-    background: #ffffff1a;
-    border: 1px solid #fff6;
-    border-radius: 999px;
-    padding: 0.35rem 0.85rem;
-    text-decoration: none;
-    display: inline-block;
+  /* .page-head makes links white, so the card restates its dark text colour. */
+  .page-head .jump__card,
+  .page-head .jump__card:hover {
+    color: var(--ink);
   }
-  .jump a:hover {
+  .jump__card {
     background: var(--white);
-    border-color: var(--white);
-    color: var(--teal);
+    border-radius: var(--radius-lg);
+    color: var(--ink);
+    width: clamp(15rem, 60vw, 18rem);
+    height: 100%;
+    box-shadow: 0 12px 26px -14px #0006;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: 1.25rem;
+    text-decoration: none;
+    transition:
+      transform 0.2s,
+      box-shadow 0.2s;
+    display: flex;
+  }
+  .jump__card:hover {
+    color: var(--ink);
+    transform: translateY(-4px);
+    box-shadow: 0 0 0 3px var(--accent), 0 18px 30px -14px #0007;
+  }
+  .jump__card:focus-visible {
+    outline-color: var(--accent);
+  }
+  .jump__icon {
+    background: #e3f0f8;
+    color: var(--brand);
+    border-radius: 14px;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-bottom: 0.25rem;
+    display: grid;
+  }
+  .jump__title {
+    font-family: var(--font-display);
+    letter-spacing: -0.015em;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+  .jump__text {
+    color: var(--ink-soft);
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+  .jump__more {
+    color: var(--brand);
+    border-top: 1px solid var(--line);
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: flex;
+  }
+  .jump__pause {
+    cursor: pointer;
+    background: #ffffff26;
+    color: var(--white);
+    border: 1px solid #fff6;
+    border-radius: 50%;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin: 0.25rem var(--gutter) 0 auto;
+    padding: 0;
+    display: grid;
+  }
+  .jump__pause[hidden],
+  .jump__play-icon,
+  .jump.is-paused .jump__pause-icon {
+    display: none;
+  }
+  .jump.is-paused .jump__play-icon,
+  .jump:not(.is-paused) .jump__pause-icon {
+    display: grid;
+  }
+  .jump__pause :global(svg) {
+    fill: currentColor;
+    stroke: none;
+  }
+  .jump__pause:hover {
+    background: var(--white);
+    color: var(--brand);
+  }
+  @media (width>=64rem) {
+    .jump__pause {
+      margin-right: max(var(--gutter), calc((100vw - var(--wrap)) / 2));
+    }
+  }
+  /* Reduced motion: no movement, the cards become a swipeable row and the copy is hidden. */
+  @media (prefers-reduced-motion: reduce) {
+    .jump__viewport {
+      -webkit-mask-image: none;
+      mask-image: none;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: var(--gutter);
+      padding-inline: var(--gutter);
+      overflow-x: auto;
+    }
+    .jump__track {
+      animation: none;
+    }
+    .jump__list {
+      padding: 0;
+    }
+    .jump__list[aria-hidden] {
+      display: none;
+    }
+    .jump__card {
+      scroll-snap-align: start;
+    }
   }
   .service {
     border-bottom: 1px solid var(--line);
