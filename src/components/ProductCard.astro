@@ -1,0 +1,234 @@
+---
+// One product/project card. Data comes from the "products" collection (src/content/products.json,
+// later the CRM). Used on the Products page and the home page.
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import { visual } from '../lib/visuals';
+
+interface Props {
+  product: CollectionEntry<'products'>;
+  wide?: boolean;
+}
+const { product, wide } = Astro.props;
+const p = product.data;
+const isWide = wide ?? p.wide;
+---
+
+<li class:list={['card card--link work-card', { 'work-card--wide': isWide }]}>
+  <div class={`work-card__cover tone-${p.tone}`}>
+    <span class="work-card__icon">
+      <Icon name={p.icon as any} size={22} />
+    </span>
+    <span class="work-card__sector">{p.sector}</span>
+    {
+      p.image ? (
+        <img class="work-card__photo" src={p.image.src} alt={p.image.alt} loading="lazy" decoding="async" />
+      ) : (
+        <div class="work-card__shot" set:html={visual(p.visual)} />
+      )
+    }
+  </div>
+  <div class="work-card__body">
+    <div class="work-card__meta">
+      <span>{p.client}</span>
+      <span class="status" data-status={p.status}>{p.status}</span>
+    </div>
+    <h3 class="work-card__title">
+      <a href={`/products/${product.id}/`}>{p.title}</a>
+    </h3>
+    <p>{p.summary}</p>
+    {
+      p.liveUrl && (
+        <a class="work-card__live" href={p.liveUrl} target="_blank" rel="noopener">
+          Visit live site
+          <span aria-hidden="true">↗</span>
+          <span class="visually-hidden">(opens in a new tab)</span>
+        </a>
+      )
+    }
+    {
+      p.stack.length > 0 && (
+        <ul class="work-card__stack" aria-label="Built with">
+          {p.stack.map((t) => (
+            <li>{t}</li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</li>
+
+<style>
+  .work-card {
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  /* Card top: product look-alike screen on a brand gradient, sliding in from the bottom edge. */
+  .work-card__cover {
+    height: 11.5rem;
+    color: var(--white);
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+  }
+  .work-card__shot {
+    pointer-events: none;
+    position: absolute;
+    top: 3.4rem;
+    left: 50%;
+    width: min(92%, 24rem);
+    transform: translateX(-50%);
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+    filter: drop-shadow(0 14px 22px #0006);
+  }
+  .work-card__shot :global(svg) {
+    width: 100%;
+  }
+  .work-card:hover .work-card__shot {
+    transform: translateX(-50%) translateY(-6px);
+  }
+  .tone-ink {
+    background: linear-gradient(135deg, #10293a, #1d4660);
+  }
+  .tone-teal {
+    background: linear-gradient(135deg, #0a5556, #12857c);
+  }
+  .tone-blue {
+    background: linear-gradient(135deg, #00507c, #0a7bb8);
+  }
+  .tone-blue-dark {
+    background: linear-gradient(135deg, #0b3d5c, #0068a1);
+  }
+  .tone-green {
+    background: linear-gradient(135deg, #154f12, #2a8a1c);
+  }
+  .tone-ink-soft {
+    background: linear-gradient(135deg, #2b4252, #4a6577);
+  }
+  .work-card__icon {
+    z-index: 1;
+    background: #ffffff2e;
+    border-radius: 50%;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    display: grid;
+    position: relative;
+  }
+  .work-card__sector {
+    z-index: 1;
+    font-size: var(--step--1);
+    background: #ffffff2e;
+    border-radius: 999px;
+    padding: 0.2rem 0.65rem;
+    font-weight: 500;
+    position: relative;
+  }
+  .work-card__body {
+    flex-direction: column;
+    flex: 1;
+    gap: 0.6rem;
+    padding: 1.25rem 1.25rem 1.5rem;
+    display: flex;
+  }
+  .work-card__meta {
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+    display: flex;
+  }
+  .work-card__title {
+    font-size: var(--step-1);
+  }
+  .work-card:hover .work-card__title a {
+    color: var(--blue);
+  }
+  /* Sits above the card's stretched link so it opens the live site, not the case study. */
+  .work-card__live {
+    z-index: 2;
+    background: var(--accent-deep);
+    color: var(--white);
+    border-radius: 999px;
+    align-self: flex-start;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.25rem;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    position: relative;
+  }
+  .work-card__live:hover {
+    background: var(--brand);
+    color: var(--white);
+  }
+  .work-card__stack {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: auto 0 0;
+    padding: 0.5rem 0 0;
+    list-style: none;
+    display: flex;
+  }
+  .work-card--wide {
+    grid-column: 1/-1;
+  }
+  @media (width>=52rem) {
+    .work-card--wide {
+      grid-template-columns: minmax(16rem, 2fr) 3fr;
+      display: grid;
+    }
+    .work-card--wide .work-card__cover {
+      height: auto;
+      min-height: 17rem;
+    }
+    .work-card--wide .work-card__shot {
+      top: 3.75rem;
+      width: min(90%, 26rem);
+    }
+    .work-card--wide .work-card__body {
+      justify-content: center;
+      padding: clamp(1.5rem, 3vw, 2.25rem);
+    }
+    .work-card--wide .work-card__title {
+      font-size: var(--step-2);
+    }
+  }
+  .work-card__stack li {
+    background: var(--paper);
+    color: var(--ink-soft);
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+    font-size: 0.8125rem;
+  }
+  .work-section {
+    padding-top: clamp(2rem, 5vw, 3.5rem);
+  }
+  /* An uploaded screenshot or photo, framed like the drawn screens. */
+  .work-card__photo {
+    border-radius: 10px 10px 0 0;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top;
+    width: min(92%, 24rem);
+    box-shadow: 0 14px 22px -6px #0006;
+    position: absolute;
+    top: 3.4rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .work-card:hover .work-card__shot {
+      transform: translateX(-50%);
+    }
+  }
+</style>

@@ -14,6 +14,7 @@ interface Slide {
   cta: string;
   href: string;
   art: string;
+  image?: { src: string; alt: string };
 }
 interface Props {
   slides: Slide[];
@@ -39,7 +40,7 @@ const { slides, label, class: className } = Astro.props;
             <Icon name="arrow" size={16} />
           </a>
         </div>
-        <div class="promo__art" set:html={s.art} />
+        {s.image ? <img class="promo__art promo__img" src={s.image.src} alt={s.image.alt} loading="lazy" /> : <div class="promo__art" set:html={s.art} />}
         <span class="promo__tag">
           <Icon name={s.icon as any} size={14} />
           {s.tag}
@@ -247,6 +248,14 @@ const { slides, label, class: className } = Astro.props;
   }
   .promo__art {
     align-self: center;
+  }
+  .promo__img {
+    border-radius: 12px;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    width: 100%;
+    max-width: 15rem;
+    margin-left: auto;
   }
   .promo__art :global(svg) {
     width: 100%;

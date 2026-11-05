@@ -30,6 +30,24 @@ To add a page, copy an existing one in `src/pages/` and change its `title`, `des
 
 Home, Services, Work (7 case studies), About, Blog, Careers, Donate, Contact (+ thank-you), Offline, 404.
 
+## Content (cards and banners) — ready for the CRM
+
+Every card and banner is **data**, not page code:
+
+| What | File | Shown on |
+| --- | --- | --- |
+| Product / project cards | `src/content/products.json` | Products page (all), Home (`"featured": true`) |
+| Banner cards | `src/content/banners.json` | Home, Services and Products headers (`"page"` field) |
+
+- **Add, edit, reorder or hide** an entry by editing the JSON (`order` sets position, `"active": false` hides a banner).
+- **Use a real image** instead of the drawn illustration: put the file in `public/uploads/` and add
+  `"image": { "src": "/uploads/name.webp", "alt": "What it shows" }`. Drawn illustrations are listed in `src/lib/visuals.ts`.
+- The allowed fields are defined in `src/content.config.ts`. The build stops with a clear error if an entry is wrong.
+
+**When the CRM is built:** keep the same fields, and in `src/content.config.ts` replace each
+`file('src/content/....json')` loader with one that fetches the entries from the CRM's API. No page code changes.
+Rebuild (or trigger a deploy hook from the CRM) to publish changes.
+
 ## Notes
 
 - **Contact form** uses Netlify Forms (`data-netlify="true"`). It only receives messages when the site is hosted on Netlify. If hosting moves elsewhere (e.g. Cloudflare Pages), switch the form to a service such as Formspree or Web3Forms.

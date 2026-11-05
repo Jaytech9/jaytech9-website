@@ -1,17 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
 import Promo from '../components/Promo.astro';
-import { art } from '../data/promo-art';
+import { getCollection } from 'astro:content';
+import { visual } from '../lib/visuals';
 
-// Banner cards in the page header, one per service. Each links to its section below.
-const slides = [
-  { tag: 'Websites and apps', icon: 'monitor', tone: 'ink', before: 'Websites that work on ', highlight: 'every phone', after: '', sub: 'Fast, installable and easy for your team to update.', cta: 'View service', href: '#websites', art: art.websites },
-  { tag: 'Business systems', icon: 'layers', tone: 'blue', before: 'Swap paper books for ', highlight: 'one simple system', after: '', sub: 'Sales, stock, donations and staff records in one place.', cta: 'View service', href: '#systems', art: art.systems },
-  { tag: 'Data dashboards', icon: 'chart', tone: 'green', before: 'Your numbers, ', highlight: 'live', after: ' on one screen', sub: 'Filter by branch, date or product without waiting for reports.', cta: 'View service', href: '#data', art: art.data },
-  { tag: 'AgriTech', icon: 'sprout', tone: 'teal', before: 'Digital tools ', highlight: 'for farmers', after: ' and field teams', sub: 'Field reporting, farmer records and carbon credit checks.', cta: 'View service', href: '#agritech', art: art.agritech },
-  { tag: 'Brand design', icon: 'brush', tone: 'ink', before: 'A brand that looks ', highlight: 'professional', after: ' everywhere', sub: 'Logos, flyers, banners and social media graphics.', cta: 'View service', href: '#design', art: art.design },
-  { tag: 'Hosting and care', icon: 'shield', tone: 'blue', before: 'Your domain, email and hosting, ', highlight: 'handled', after: '', sub: 'Set up properly, renewed on time and kept running.', cta: 'View service', href: '#care', art: art.care },
-];
+// Banner cards in the page header come from the "banners" collection (src/content/banners.json, later the CRM).
+const slides = (await getCollection('banners', (b) => b.data.page === 'services' && b.data.active))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((b) => ({ ...b.data, tag: b.data.tag ?? '', art: visual(b.data.visual) }));
 ---
 
 <Base
