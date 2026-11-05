@@ -26,7 +26,7 @@ const { slides, label, class: className } = Astro.props;
 <div class:list={['promo', className]} role="region" aria-roledescription="carousel" aria-label={label}>
   <div class="promo__track" tabindex="0">
     {slides.map((s, i) => (
-      <article class={`promo__slide promo__slide--${s.tone}`} aria-roledescription="slide" aria-label={`${i + 1} of ${slides.length}`}>
+      <article class={`promo__slide promo__slide--${s.tone}${i === 0 ? ' is-active' : ''}`} aria-roledescription="slide" aria-label={`${i + 1} of ${slides.length}`}>
         <div class="promo__text">
           <h2 class="promo__title">
             {s.before}
@@ -61,25 +61,49 @@ const { slides, label, class: className } = Astro.props;
 </div>
 
 <script is:inline>
+  // Banner motion: each card stays 6s (the active dot fills up as a timer), then glides to the next.
+  // Hovering or focusing pauses; a swipe pauses briefly and then resumes; the button pauses for good.
   (function () {
+    var DELAY = 6000;
+    var motionOK = matchMedia('(prefers-reduced-motion: no-preference)').matches;
     document.querySelectorAll('.promo:not([data-ready])').forEach(function (root) {
       root.setAttribute('data-ready', '');
+      root.style.setProperty('--promo-delay', DELAY + 'ms');
       var track = root.querySelector('.promo__track');
       var slides = Array.prototype.slice.call(track.children);
       var dots = Array.prototype.slice.call(root.querySelectorAll('.promo__dot'));
       var pause = root.querySelector('.promo__pause');
-      var index = 0;
-      var timer = null;
+      var index = 0, timer = null, resumeTimer = null;
+      var userPaused = false, hovering = false, interacting = false;
+
+      function canPlay() {
+        return motionOK && !userPaused && !hovering && !interacting && !document.hidden;
+      }
+      function schedule() {
+        clearTimeout(timer);
+        var playing = canPlay();
+        root.classList.toggle('is-playing', playing);
+        if (playing) timer = setTimeout(function () { go((index + 1) % slides.length); }, DELAY);
+      }
       function go(i) {
         var s = slides[i];
-        track.scrollTo({ left: s.offsetLeft - (track.clientWidth - s.clientWidth) / 2, behavior: 'smooth' });
+        track.scrollTo({ left: s.offsetLeft - (track.clientWidth - s.clientWidth) / 2, behavior: motionOK ? 'smooth' : 'auto' });
       }
       function mark(i) {
+        if (i === index && slides[i].classList.contains('is-active')) return;
         index = i;
+        slides.forEach(function (s, j) { s.classList.toggle('is-active', j === i); });
         dots.forEach(function (d, j) {
           if (j === i) d.setAttribute('aria-current', 'true');
           else d.removeAttribute('aria-current');
         });
+        schedule();
+      }
+      function holdThenResume() {
+        interacting = true;
+        schedule();
+        clearTimeout(resumeTimer);
+        resumeTimer = setTimeout(function () { interacting = false; schedule(); }, 8000);
       }
       if ('IntersectionObserver' in window) {
         var io = new IntersectionObserver(
@@ -92,32 +116,26 @@ const { slides, label, class: className } = Astro.props;
         );
         slides.forEach(function (s) { io.observe(s); });
       }
-      function setPaused(paused) {
-        pause.setAttribute('aria-label', paused ? 'Play slideshow' : 'Pause slideshow');
-        pause.classList.toggle('is-paused', paused);
-      }
-      function start() {
-        if (timer) return;
-        timer = setInterval(function () { go((index + 1) % slides.length); }, 6000);
-        setPaused(false);
-      }
-      function stop() {
-        if (timer) { clearInterval(timer); timer = null; }
-        setPaused(true);
-      }
       dots.forEach(function (d, i) {
-        d.addEventListener('click', function () { stop(); go(i); });
+        d.addEventListener('click', function () { holdThenResume(); go(i); });
       });
-      if (matchMedia('(prefers-reduced-motion: no-preference)').matches) {
-        pause.hidden = false;
-        pause.addEventListener('click', function () { timer ? stop() : start(); });
-        ['pointerdown', 'wheel', 'touchstart'].forEach(function (ev) {
-          track.addEventListener(ev, stop, { passive: true });
-        });
-        track.addEventListener('focusin', stop);
-        document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); });
-        start();
-      }
+      if (!motionOK) return;
+      pause.hidden = false;
+      pause.addEventListener('click', function () {
+        userPaused = !userPaused;
+        pause.setAttribute('aria-label', userPaused ? 'Play slideshow' : 'Pause slideshow');
+        pause.classList.toggle('is-paused', userPaused);
+        schedule();
+      });
+      root.addEventListener('mouseenter', function () { hovering = true; schedule(); });
+      root.addEventListener('mouseleave', function () { hovering = false; schedule(); });
+      root.addEventListener('focusin', function () { hovering = true; schedule(); });
+      root.addEventListener('focusout', function () { hovering = false; schedule(); });
+      ['pointerdown', 'wheel', 'touchstart'].forEach(function (ev) {
+        track.addEventListener(ev, holdThenResume, { passive: true });
+      });
+      document.addEventListener('visibilitychange', schedule);
+      schedule();
     });
   })();
 </script>
@@ -283,40 +301,110 @@ const { slides, label, class: className } = Astro.props;
   .promo__pause.is-paused .promo__play-icon {
     display: block;
   }
-  /* 24px tap target around each small dot. */
+  /* Dots: 24px tap target; the active dot is a pill that fills up while the slide is showing. */
   .promo__dot {
     cursor: pointer;
     background: none;
     border: 0;
-    place-items: center;
+    place-items: center start;
     min-width: 1.5rem;
     height: 1.5rem;
     padding: 0 0.2rem;
     display: grid;
   }
-  .promo__dot:before {
+  .promo__dot:before,
+  .promo__dot:after {
     content: '';
-    background: var(--brand);
-    opacity: 0.45;
     border-radius: 999px;
-    width: 0.6rem;
-    height: 0.6rem;
+    grid-area: 1 / 1;
+    height: 0.5rem;
+  }
+  .promo__dot:before {
+    background: var(--brand);
+    opacity: 0.4;
+    width: 0.5rem;
     transition:
-      width 0.25s,
-      opacity 0.25s,
-      background-color 0.25s;
+      width 0.35s ease,
+      opacity 0.35s ease;
+  }
+  .promo__dot:after {
+    background: var(--ink);
+    width: 0;
   }
   .promo__dot[aria-current='true']:before {
-    background: var(--ink);
-    opacity: 1;
-    width: 1.5rem;
+    opacity: 0.25;
+    width: 1.75rem;
   }
-  /* On a blue background (page headers) the dots switch to white. */
+  .promo__dot[aria-current='true']:after {
+    width: 1.75rem;
+  }
+  .promo.is-playing .promo__dot[aria-current='true']:after {
+    animation: promo-progress var(--promo-delay, 6s) linear forwards;
+  }
+  @keyframes promo-progress {
+    from {
+      width: 0.5rem;
+    }
+    to {
+      width: 1.75rem;
+    }
+  }
+  /* On a blue background (page headers) the dots switch to white with a green fill. */
   .promo--on-brand .promo__dot:before {
     background: var(--white);
+    opacity: 0.55;
   }
   .promo--on-brand .promo__dot[aria-current='true']:before {
+    opacity: 0.3;
+  }
+  .promo--on-brand .promo__dot:after {
     background: var(--accent);
+  }
+  /* Card change: the incoming card settles to full size while its words rise in; neighbours rest slightly back. */
+  .promo__slide {
+    transition:
+      transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+      opacity 0.6s ease;
+  }
+  .promo__slide:not(.is-active) {
+    opacity: 0.75;
+    transform: scale(0.955);
+  }
+  .promo__text > *,
+  .promo__tag {
+    transition:
+      transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+      opacity 0.7s ease;
+  }
+  .promo__slide:not(.is-active) .promo__text > *,
+  .promo__slide:not(.is-active) .promo__tag {
+    opacity: 0.4;
+    transform: translateY(10px);
+  }
+  .promo__slide.is-active .promo__text > :nth-child(2) {
+    transition-delay: 0.08s;
+  }
+  .promo__slide.is-active .promo__text > :nth-child(3) {
+    transition-delay: 0.16s;
+  }
+  .promo__slide.is-active .promo__art :global(svg) {
+    animation: promo-float 6s ease-in-out infinite;
+  }
+  @keyframes promo-float {
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .promo__slide:not(.is-active),
+    .promo__slide:not(.is-active) .promo__text > *,
+    .promo__slide:not(.is-active) .promo__tag {
+      opacity: 1;
+      transform: none;
+    }
+    .promo__slide.is-active .promo__art :global(svg) {
+      animation: none;
+    }
   }
   @media (width>=30rem) {
     .promo__sub {

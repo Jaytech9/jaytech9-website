@@ -18,14 +18,15 @@ const slides = [
   title="Services | JayTech9"
   description="Websites, business systems, data dashboards, AgriTech tools, design, and domain and hosting care for businesses and organisations worldwide."
 >
-  <header class="page-head">
+  <header class="page-head page-head--overlap">
     <div class="wrap">
       <h1>Services</h1>
     </div>
-    <div class="wrap page-head__promo">
-      <Promo slides={slides} label="Our services" class="promo--on-brand" />
-    </div>
   </header>
+  <!-- Banner cards sit half on the blue header, half on the page (same as the Products hero). -->
+  <div class="wrap services-promo">
+    <Promo slides={slides} label="Our services" />
+  </div>
   <div class="wrap">
     <section class="service" id="websites" aria-labelledby="websites-heading">
       <div class="service__intro">
@@ -461,8 +462,15 @@ const slides = [
       display: block;
     }
   }
-  .page-head__promo {
-    margin-top: clamp(1.25rem, 3vw, 2rem);
+  .page-head--overlap {
+    --overlap: clamp(7rem, 16vw, 11rem);
+    border-radius: 0;
+    padding-bottom: calc(var(--overlap) + 1.25rem);
+  }
+  .services-promo {
+    z-index: 2;
+    margin-top: calc(-1 * clamp(7rem, 16vw, 11rem));
+    position: relative;
   }
   .service {
     border-bottom: 1px solid var(--line);
