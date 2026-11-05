@@ -4,6 +4,40 @@ import Icon from '../components/Icon.astro';
 import { art } from '../data/promo-art';
 import { shots } from '../data/product-shots';
 
+// Header cards that shuffle like a deck. Keep titles short so they fit on a phone.
+const heroCards = [
+  {
+    tone: 'green',
+    eyebrow: 'Products',
+    title: 'Built for businesses that rely on their software.',
+    sub: 'Our own products and the systems we’ve delivered for clients, from hardware stores to nonprofits.',
+    cta: 'Book a demo',
+    href: '/contact/',
+    external: false,
+    art: art.data,
+  },
+  {
+    tone: 'ink',
+    eyebrow: 'Our product · In development',
+    title: 'BuildSmart: sales, stock and VAT in one place.',
+    sub: 'Inventory, sales and accounting for hardware stores, with Ghana VAT, NHIL and GETFund built in.',
+    cta: 'See BuildSmart',
+    href: '/products/buildsmart/',
+    external: false,
+    art: shots.buildsmart,
+  },
+  {
+    tone: 'forest',
+    eyebrow: 'Client project · Live',
+    title: 'Green Hatch Investments, now live.',
+    sub: 'Website for a sustainable investment firm: plantations, farms, real estate and eco-tourism.',
+    cta: 'Visit live site',
+    href: 'https://greenhatchinv.com/home/',
+    external: true,
+    art: shots['green-hatch-investments'],
+  },
+];
+
 // Why-us cards beside the featured product. Keep each line short.
 const features = [
   { icon: 'key', title: 'You own it', text: 'Code, data and logins handed over to you.' },
@@ -18,23 +52,100 @@ const features = [
 >
   <section class="prod-hero" aria-labelledby="prod-heading">
     <div class="wrap">
-      <div class="prod-hero__card">
-        <div class="prod-hero__art" set:html={art.data} />
-        <div class="prod-hero__text">
-          <div class="prod-hero__lines" aria-hidden="true"><span></span><span></span></div>
-          <p class="prod-hero__eyebrow">Products</p>
-          <h1 id="prod-heading">Built for businesses that rely on their software.</h1>
-          <p class="prod-hero__sub">
-            Our own products and the systems we’ve delivered for clients, from hardware stores to nonprofits.
-          </p>
-        </div>
-        <a class="prod-hero__cta" href="/contact/">
-          Book a demo
-          <Icon name="arrow" size={16} />
-        </a>
+      <h1 id="prod-heading" class="visually-hidden">Products</h1>
+      <div class="prod-hero__deck" role="region" aria-roledescription="carousel" aria-label="Featured products">
+        {heroCards.map((c, i) => (
+          <article
+            class={`prod-hero__card prod-hero__card--${c.tone}`}
+            data-pos={i}
+            aria-roledescription="slide"
+            aria-label={`${i + 1} of ${heroCards.length}`}
+            inert={i !== 0}
+          >
+            <div class="prod-hero__art" set:html={c.art} />
+            <div class="prod-hero__text">
+              <div class="prod-hero__lines" aria-hidden="true"><span></span><span></span></div>
+              <p class="prod-hero__eyebrow">{c.eyebrow}</p>
+              <h2 class="prod-hero__title">{c.title}</h2>
+              <p class="prod-hero__sub">{c.sub}</p>
+            </div>
+            <a
+              class="prod-hero__cta"
+              href={c.href}
+              target={c.external ? '_blank' : undefined}
+              rel={c.external ? 'noopener' : undefined}
+            >
+              {c.cta}
+              {c.external ? <span aria-hidden="true">↗</span> : <Icon name="arrow" size={16} />}
+              {c.external && <span class="visually-hidden">(opens in a new tab)</span>}
+            </a>
+          </article>
+        ))}
+      </div>
+      <div class="deck-controls">
+        <button type="button" class="deck-pause" aria-label="Pause slideshow" hidden>
+          <svg class="deck-pause__pause" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10" rx="1" /><rect x="7" y="1" width="3" height="10" rx="1" /></svg>
+          <svg class="deck-pause__play" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z" /></svg>
+        </button>
+        {heroCards.map((c, i) => (
+          <button type="button" class="deck-dot" aria-label={`Show card ${i + 1}: ${c.eyebrow}`} aria-current={i === 0 ? 'true' : undefined} />
+        ))}
       </div>
     </div>
   </section>
+  <script is:inline>
+    // Header deck: the front card shows for 6s (its dot fills as a timer), then moves to the back
+    // while the next one comes forward. Hover or focus pauses; the button pauses for good.
+    (function () {
+      var DELAY = 6000;
+      var deck = document.querySelector('.prod-hero__deck');
+      if (!deck) return;
+      var cards = Array.prototype.slice.call(deck.querySelectorAll('.prod-hero__card'));
+      var wrap = deck.parentElement;
+      var dots = Array.prototype.slice.call(wrap.querySelectorAll('.deck-dot'));
+      var pause = wrap.querySelector('.deck-pause');
+      var n = cards.length, front = 0, timer = null;
+      var motionOK = matchMedia('(prefers-reduced-motion: no-preference)').matches;
+      var userPaused = false, hovering = false;
+      wrap.style.setProperty('--deck-delay', DELAY + 'ms');
+      function show(i) {
+        front = (i + n) % n;
+        cards.forEach(function (c, j) {
+          var pos = (j - front + n) % n;
+          c.setAttribute('data-pos', pos);
+          if (pos === 0) c.removeAttribute('inert');
+          else c.setAttribute('inert', '');
+        });
+        dots.forEach(function (d, j) {
+          if (j === front) d.setAttribute('aria-current', 'true');
+          else d.removeAttribute('aria-current');
+        });
+        schedule();
+      }
+      function canPlay() { return motionOK && !userPaused && !hovering && !document.hidden; }
+      function schedule() {
+        clearTimeout(timer);
+        var playing = canPlay();
+        wrap.classList.toggle('is-playing', playing);
+        if (playing) timer = setTimeout(function () { show(front + 1); }, DELAY);
+      }
+      dots.forEach(function (d, i) { d.addEventListener('click', function () { show(i); }); });
+      if (!motionOK) return;
+      pause.hidden = false;
+      pause.addEventListener('click', function () {
+        userPaused = !userPaused;
+        pause.setAttribute('aria-label', userPaused ? 'Play slideshow' : 'Pause slideshow');
+        pause.classList.toggle('is-paused', userPaused);
+        schedule();
+      });
+      deck.addEventListener('mouseenter', function () { hovering = true; schedule(); });
+      deck.addEventListener('mouseleave', function () { hovering = false; schedule(); });
+      deck.addEventListener('focusin', function () { hovering = true; schedule(); });
+      deck.addEventListener('focusout', function () { hovering = false; schedule(); });
+      document.addEventListener('visibilitychange', schedule);
+      schedule();
+    })();
+  </script>
 
   <section class="section prod-why" aria-labelledby="why-heading">
     <div class="wrap">
@@ -487,11 +598,23 @@ const features = [
     background: linear-gradient(#0068a1 0%, #005d91 45%, var(--paper) 45%);
     padding-top: clamp(0.5rem, 2vw, 1.5rem);
   }
+  /* Deck: three cards stacked; the ones behind peek out above the front card. */
+  .prod-hero__deck {
+    padding-top: clamp(1.1rem, 2.4vw, 1.75rem);
+    display: grid;
+  }
   .prod-hero__card {
+    grid-area: 1 / 1;
+    transform-origin: 50% 0;
+    transition:
+      transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1),
+      opacity 0.8s ease,
+      filter 0.8s ease;
     border-radius: clamp(22px, 3vw, 32px);
     color: var(--white);
     min-height: clamp(26rem, 52vw, 34rem);
     box-shadow: 0 24px 50px -28px #10293ab3;
+    --fade: 13, 46, 36;
     background:
       radial-gradient(circle at 78% 30%, #2f9a4a66 0, transparent 55%),
       linear-gradient(140deg, #0d2e24 0%, #15532f 55%, #1e7a3c 100%);
@@ -502,6 +625,48 @@ const features = [
     display: flex;
     position: relative;
     overflow: hidden;
+  }
+  .prod-hero__card--ink {
+    --fade: 13, 34, 51;
+    background:
+      radial-gradient(circle at 78% 30%, #2aa3e055 0, transparent 55%),
+      linear-gradient(140deg, #0d2233 0%, #123a56 55%, #0068a1 100%);
+  }
+  .prod-hero__card--forest {
+    --fade: 10, 46, 40;
+    background:
+      radial-gradient(circle at 78% 30%, #6fd04a40 0, transparent 55%),
+      linear-gradient(140deg, #0a2e28 0%, #12584a 55%, #1f8a5e 100%);
+  }
+  .prod-hero__card[data-pos='0'] {
+    z-index: 3;
+  }
+  .prod-hero__card[data-pos='1'] {
+    z-index: 2;
+    opacity: 0.9;
+    filter: brightness(0.85);
+    transform: translateY(calc(-1 * clamp(0.55rem, 1.2vw, 0.875rem))) scale(0.955);
+  }
+  .prod-hero__card[data-pos='2'] {
+    z-index: 1;
+    opacity: 0.7;
+    filter: brightness(0.7);
+    transform: translateY(calc(-1 * clamp(1.1rem, 2.4vw, 1.75rem))) scale(0.91);
+  }
+  .prod-hero__card > * {
+    transition:
+      opacity 0.5s ease,
+      transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .prod-hero__card:not([data-pos='0']) > * {
+    opacity: 0;
+  }
+  .prod-hero__card[data-pos='0'] .prod-hero__text,
+  .prod-hero__card[data-pos='0'] .prod-hero__cta {
+    transition-delay: 0.15s;
+  }
+  .prod-hero__card:not([data-pos='0']) .prod-hero__text {
+    transform: translateY(14px);
   }
   .prod-hero__art {
     opacity: 0.95;
@@ -543,7 +708,7 @@ const features = [
     font-size: 0.8125rem;
     font-weight: 700;
   }
-  .prod-hero h1 {
+  .prod-hero__title {
     font-size: clamp(2rem, 1.2rem + 3.4vw, 3.75rem);
     font-weight: 600;
     letter-spacing: -0.035em;
@@ -578,7 +743,7 @@ const features = [
   .prod-hero__card:after {
     content: '';
     pointer-events: none;
-    background: linear-gradient(to top, #0d2e24f2 0%, #0d2e24b3 40%, transparent 68%);
+    background: linear-gradient(to top, rgba(var(--fade), 0.95) 0%, rgba(var(--fade), 0.7) 40%, transparent 68%);
     position: absolute;
     inset: 0;
   }
@@ -615,12 +780,97 @@ const features = [
   }
   @media (width>=48rem) {
     .prod-hero__card:after {
-      background: linear-gradient(to right, #0d2e24d9 0%, #0d2e2480 40%, transparent 62%);
+      background: linear-gradient(to right, rgba(var(--fade), 0.85) 0%, rgba(var(--fade), 0.5) 40%, transparent 62%);
     }
     .prod-hero__cta {
       position: absolute;
       bottom: clamp(1.5rem, 4vw, 3rem);
       right: clamp(1.5rem, 4vw, 3rem);
+    }
+  }
+  .deck-controls {
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.85rem;
+    display: flex;
+  }
+  .deck-pause {
+    cursor: pointer;
+    background: var(--white);
+    color: var(--ink);
+    fill: currentColor;
+    box-shadow: var(--shadow-card);
+    border: 0;
+    border-radius: 50%;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-right: 0.35rem;
+    padding: 0;
+    display: grid;
+  }
+  .deck-pause[hidden] {
+    display: none;
+  }
+  .deck-pause__play,
+  .deck-pause.is-paused .deck-pause__pause {
+    display: none;
+  }
+  .deck-pause.is-paused .deck-pause__play {
+    display: block;
+  }
+  .deck-dot {
+    cursor: pointer;
+    background: none;
+    border: 0;
+    place-items: center start;
+    min-width: 1.5rem;
+    height: 1.5rem;
+    padding: 0 0.2rem;
+    display: grid;
+  }
+  .deck-dot:before,
+  .deck-dot:after {
+    content: '';
+    border-radius: 999px;
+    grid-area: 1 / 1;
+    height: 0.5rem;
+  }
+  .deck-dot:before {
+    background: var(--brand);
+    opacity: 0.4;
+    width: 0.5rem;
+    transition:
+      width 0.35s ease,
+      opacity 0.35s ease;
+  }
+  .deck-dot:after {
+    background: var(--ink);
+    width: 0;
+  }
+  .deck-dot[aria-current='true']:before {
+    opacity: 0.25;
+    width: 1.75rem;
+  }
+  .deck-dot[aria-current='true']:after {
+    width: 1.75rem;
+  }
+  .is-playing .deck-dot[aria-current='true']:after {
+    animation: deck-progress var(--deck-delay, 6s) linear forwards;
+  }
+  @keyframes deck-progress {
+    from {
+      width: 0.5rem;
+    }
+    to {
+      width: 1.75rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .prod-hero__card,
+    .prod-hero__card > * {
+      transition: none;
     }
   }
   /* ---------- Intro row + feature grid ---------- */
