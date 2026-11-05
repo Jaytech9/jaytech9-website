@@ -14,9 +14,9 @@ export const site = {
   founder: 'Jones Yaw Kwamehene',
   social: [
     { label: 'Facebook', href: 'https://www.facebook.com/Jaytech9' },
-    { label: 'Instagram', href: 'https://www.instagram.com/jaytech9' },
+    { label: 'Instagram', href: 'https://www.instagram.com/Jaytech9' },
     { label: 'TikTok', href: 'https://www.tiktok.com/@jaytech_9' },
-    { label: 'YouTube', href: 'https://www.youtube.com/@JayTech9' },
+    { label: 'YouTube', href: 'https://www.youtube.com/@JayTech9-9' },
   ],
 };
 

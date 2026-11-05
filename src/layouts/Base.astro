@@ -74,13 +74,16 @@ const org = {
       <slot />
     </main>
     <Footer />
-    <script is:inline>
-      // Register the service worker so the site works offline and can be installed.
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function () {
-          navigator.serviceWorker.register('/sw.js').catch(function () {});
-        });
-      }
-    </script>
+    {import.meta.env.PROD && (
+      <script is:inline>
+        // Register the service worker so the site works offline and can be installed.
+        // Built site only: in dev it would cache source files and hide edits.
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/sw.js').catch(function () {});
+          });
+        }
+      </script>
+    )}
   </body>
 </html>
