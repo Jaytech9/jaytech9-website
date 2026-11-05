@@ -19,15 +19,14 @@ import Base from '../layouts/Base.astro';
     <div class="wrap overlap sheet careers-sheet">
       <div class="careers-visual" aria-hidden="true">
         <span class="careers-circle"></span>
-        <span class="careers-floor"></span>
       </div>
       <img
         class="careers-person"
-        src="/images/careers-person-560.webp"
-        srcset="/images/careers-person-560.webp 363w, /images/careers-person-900.webp 583w"
-        sizes="(width >= 48rem) 17rem, 8rem"
-        width="363"
-        height="560"
+        src="/images/careers-person-400.webp"
+        srcset="/images/careers-person-400.webp 400w, /images/careers-person-674.webp 674w"
+        sizes="(width >= 48rem) 21rem, 9rem"
+        width="400"
+        height="595"
         alt=""
         loading="eager"
         decoding="async"
@@ -183,13 +182,14 @@ import Base from '../layouts/Base.astro';
   .empty {
     max-width: 44rem;
   }
-  /* Illustration: he sits on the right of the card facing the content, in front of a soft blue
-     circle that is clipped to the card, with his head rising above the card into the header.
-     Circle size and position are fractions of the picture width (--pw) so they stay aligned. */
+  /* Illustration: he stands on the right of the card holding his laptop towards the content, in
+     front of a soft blue circle clipped to the card; his head rises above the card into the header.
+     The picture is cropped at the waist, so that edge always sits on the card's bottom edge (laptop)
+     or behind the vacancy card (phone). Sizes are fractions of the picture width (--pw). */
   .careers-sheet {
-    --pw: 8rem;
-    --pr: clamp(0.75rem, 3vw, 1.5rem);
-    --pt: -3.25rem;
+    --pw: 9rem;
+    --pr: clamp(0.5rem, 3vw, 1.25rem);
+    --pt: -3.75rem;
     position: relative;
   }
   .careers-sheet > :not(.careers-visual, .careers-person) {
@@ -205,70 +205,60 @@ import Base from '../layouts/Base.astro';
   }
   .careers-circle {
     border-radius: 50%;
-    width: calc(var(--pw) * 1.327);
+    width: calc(var(--pw) * 1.08);
     aspect-ratio: 1;
-    background: radial-gradient(circle at 42% 38%, #4a80e0 0%, #2d62cc 45%, #2452b8 100%);
+    background: radial-gradient(circle at 40% 35%, #2a8fd0 0%, #0068a1 55%, #00507c 100%);
     position: absolute;
-    top: calc(var(--pt) - var(--pw) * 0.1237);
-    right: calc(var(--pr) - var(--pw) * 0.327);
+    top: calc(var(--pt) + var(--pw) * 0.42);
+    right: calc(var(--pr) - var(--pw) * 0.02);
   }
   .careers-circle:after {
     content: '';
-    border: 1.5px dashed #ffffff73;
+    border: 1.5px dashed #ffffff80;
     border-radius: 50%;
     position: absolute;
     inset: 7%;
-  }
-  .careers-floor {
-    display: none;
   }
   .careers-person {
     z-index: 1;
     pointer-events: none;
     width: var(--pw);
     height: auto;
-    filter: drop-shadow(0 14px 18px #10293a33);
+    filter: drop-shadow(0 10px 18px #10293a33);
     position: absolute;
     top: var(--pt);
     right: var(--pr);
   }
   .careers-sheet > h2 {
-    padding-right: calc(var(--pw) + 0.75rem);
+    padding-right: calc(var(--pw) + 0.5rem);
   }
-  /* Phones: the vacancy card starts below his feet. */
+  /* Phones: the vacancy card covers his waist, hiding where the picture is cropped. */
   .careers-sheet .empty {
-    margin-top: 7rem;
+    margin-top: 3.25rem;
+    box-shadow: 0 -10px 24px -12px #10293a40;
   }
   @media (width>=48rem) {
     .careers-sheet {
-      --pw: 17rem;
-      --pr: clamp(2rem, 5vw, 5rem);
-      --pb: 2rem;
-      min-height: 25rem;
+      /* Taller than the card so his head and shoulders rise above its top edge. */
+      --pw: clamp(19rem, 14rem + 9vw, 21rem);
+      --pr: clamp(2rem, 6vw, 6rem);
+      padding-bottom: clamp(2.5rem, 4vw, 3.5rem);
     }
     .careers-person {
       top: auto;
-      bottom: var(--pb);
+      bottom: 0;
     }
     .careers-circle {
       top: auto;
-      bottom: calc(var(--pb) + var(--pw) * 0.3393);
-    }
-    .careers-floor {
-      background: radial-gradient(closest-side, #10293a38, transparent);
-      width: calc(var(--pw) * 0.85);
-      height: 1.4rem;
-      display: block;
-      position: absolute;
-      bottom: calc(var(--pb) - 0.65rem);
-      right: calc(var(--pr) + var(--pw) * 0.04);
+      bottom: calc(var(--pw) * -0.18);
     }
     .careers-sheet > h2 {
       padding-right: 0;
     }
     .careers-sheet .empty {
       margin-top: 0;
-      max-width: min(44rem, calc(100% - var(--pw) - 3rem));
+      box-shadow: none;
+      max-width: min(44rem, calc(100% - var(--pw) - 4rem));
     }
   }
   .empty__title {
