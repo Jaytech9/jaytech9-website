@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
-import { site } from '../data/site';
 
 const principles = [
   { icon: 'search', title: 'Start with the real problem', text: 'We ask how the work is done today before suggesting any software. Sometimes the answer is a better spreadsheet, and we’ll say so.' },
@@ -19,12 +18,6 @@ const skills = [
   { icon: 'brush', label: 'Brand and print design' },
 ];
 
-const company = [
-  { icon: 'building', label: 'Registered name', value: site.legalName },
-  { icon: 'pin', label: 'Based in', value: `${site.city}, ${site.country}` },
-  { icon: 'globe', label: 'Serving', value: 'Clients worldwide, online and on site' },
-  { icon: 'mail', label: 'Email us', value: site.email, href: `mailto:${site.email}` },
-];
 ---
 
 <Base
@@ -165,23 +158,6 @@ const company = [
           <li class="card skill">
             <span class="skill__icon"><Icon name={k.icon as any} size={30} strokeWidth={1.5} /></span>
             <span class="skill__label">{k.label}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
-  <section class="section section--band" aria-labelledby="company-heading">
-    <div class="wrap">
-      <div class="center-head">
-        <h2 id="company-heading">Company details</h2>
-        <p>JayTech9 is a trading name of {site.legalName}, registered in Ghana.</p>
-      </div>
-      <ul class="contact-row">
-        {company.map((c) => (
-          <li>
-            <span class="contact-row__icon"><Icon name={c.icon as any} size={24} strokeWidth={1.6} /></span>
-            <span class="contact-row__label">{c.label}</span>
-            {c.href ? <a href={c.href}>{c.value}</a> : <span class="contact-row__value">{c.value}</span>}
           </li>
         ))}
       </ul>
@@ -461,22 +437,6 @@ const company = [
     font-size: var(--step-1);
     padding-block: 0.9rem;
   }
-  .company dl {
-    border-top: 1px solid var(--line);
-    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-    gap: 1.25rem 2rem;
-    margin: clamp(3rem, 6vw, 4.5rem) 0 0;
-    padding-top: 2rem;
-    display: grid;
-  }
-  .company dt {
-    font-size: var(--step--1);
-    color: var(--ink-soft);
-  }
-  .company dd {
-    margin: 0.2rem 0 0;
-    font-weight: 600;
-  }
   .team {
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
     gap: 2.5rem 2rem;
@@ -635,46 +595,5 @@ const company = [
     .skill-grid {
       grid-template-columns: repeat(3, 1fr);
     }
-  }
-  /* Company details */
-  .contact-row {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
-    gap: 2rem 1.5rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: grid;
-  }
-  .contact-row li {
-    text-align: center;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.35rem;
-    display: flex;
-  }
-  .contact-row__icon {
-    color: var(--brand);
-    background: var(--white);
-    border: var(--card-border);
-    box-shadow: var(--shadow-card);
-    border-radius: 50%;
-    place-items: center;
-    width: 4.5rem;
-    height: 4.5rem;
-    margin-bottom: 0.6rem;
-    display: grid;
-  }
-  .contact-row__label {
-    color: var(--ink);
-    font-weight: 700;
-  }
-  .contact-row__value,
-  .contact-row a {
-    color: var(--ink-soft);
-    font-size: 0.9375rem;
-    overflow-wrap: anywhere;
-  }
-  .contact-row a {
-    color: var(--brand);
   }
 </style>
