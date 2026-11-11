@@ -2,6 +2,16 @@
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 
+// About header background: a short field video, then photos from our field work. Each photo shows for
+// a few seconds with a slow zoom. `pos` picks which part of the photo stays in view.
+const slides = [
+  { src: '/images/about/maize-field.webp', pos: 'center 60%' },
+  { src: '/images/about/nursery.webp', pos: 'center 55%' },
+  { src: '/images/about/field-visit.webp', pos: 'center 45%' },
+  { src: '/images/about/grain-store.webp', pos: 'center 40%' },
+  { src: '/images/about/farm-road.webp', pos: 'center 45%' },
+];
+
 const principles = [
   { icon: 'search', title: 'Start with the real problem', text: 'We ask how the work is done today before suggesting any software. Sometimes the answer is a better spreadsheet, and we’ll say so.' },
   { icon: 'globe', title: 'Built for real-world conditions', text: 'Fast on mobile data, mobile money and local taxes built in, and screens that make sense to staff who aren’t technical.' },
@@ -25,28 +35,32 @@ import { site } from '../data/site';
   title="About | JayTech9"
   description="JayTech9 is an Accra-based technology company building websites, business systems, data dashboards and AgriTech tools for businesses, nonprofits and farmers in Ghana and around the world."
 >
-  <header class="page-head about-head">
-    <svg class="about-head__shape" viewBox="-200 -320 660 640" aria-hidden="true" focusable="false">
-      <defs>
-        <mask id="puzzle-gap" maskUnits="userSpaceOnUse" x="-200" y="-320" width="660" height="640">
-          <rect x="-200" y="-320" width="660" height="640" fill="#fff" />
-          <g fill="#000" stroke="#000" stroke-width="22" stroke-linejoin="round">
-            <path d="M0 -150.0 L150.0 0 L0 150.0 L-150.0 0 Z" /><circle cx="87.7" cy="-87.7" r="34"/><circle cx="87.7" cy="87.7" r="34"/><circle cx="-87.7" cy="87.7" r="34"/><circle cx="-87.7" cy="-87.7" r="34"/>
-          </g>
-        </mask>
-      </defs>
-      <g mask="url(#puzzle-gap)" class="pz-set">
-        <path class="pz pz--blue" style="--i:1" d="M150 -291.0 L291.0 -150 L150 -9.0 L9.0 -150 Z" />
-        <path class="pz pz--green" style="--i:2" d="M300 -141.0 L441.0 0 L300 141.0 L159.0 0 Z" />
-        <path class="pz pz--red" style="--i:3" d="M150 9.0 L291.0 150 L150 291.0 L9.0 150 Z" />
-      </g>
-      <g class="pz pz--yellow">
-        <path d="M0 -150.0 L150.0 0 L0 150.0 L-150.0 0 Z" /><circle cx="87.7" cy="-87.7" r="34"/><circle cx="87.7" cy="87.7" r="34"/><circle cx="-87.7" cy="87.7" r="34"/><circle cx="-87.7" cy="-87.7" r="34"/>
-      </g>
-    </svg>
-    <div class="wrap">
-      <h1>Technology that fits how your business works</h1>
+  <header class="page-head about-hero">
+    <div class="about-hero__media" aria-hidden="true">
+      <video
+        class="about-hero__slide is-active"
+        src="/videos/about-road.mp4"
+        poster="/images/about/road-poster.jpg"
+        muted
+        playsinline
+        preload="auto"
+        style="--pos: center 55%"
+      ></video>
+      {
+        slides.map((s) => (
+          <img class="about-hero__slide" data-src={s.src} alt="" decoding="async" style={`--pos: ${s.pos}`} />
+        ))
+      }
     </div>
+    <div class="wrap about-hero__content">
+      <p class="about-hero__eyebrow">About JayTech9</p>
+      <h1>Technology that fits how your business works</h1>
+      <p class="about-hero__lede">Born in Ghana’s farms and warehouses. Built for the way real work gets done.</p>
+    </div>
+    <button type="button" class="about-hero__pause" aria-label="Pause background slideshow" hidden>
+      <svg class="i-pause" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><rect x="2" y="1" width="3" height="10" rx="1" /><rect x="7" y="1" width="3" height="10" rx="1" /></svg>
+      <svg class="i-play" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z" /></svg>
+    </button>
   </header>
   <section class="section">
     <div class="wrap overlap sheet storyB">
@@ -101,82 +115,208 @@ import { site } from '../data/site';
   </section>
 </Base>
 
+<script>
+  // Background slideshow for the About header: the video plays once, then each photo shows for
+  // 6 seconds with a slow zoom, then it starts again. No sound. Respects reduced motion and has a
+  // pause button (needed for anything that moves for more than five seconds).
+  const hero = document.querySelector<HTMLElement>('.about-hero');
+  if (hero) {
+    const slides = Array.from(hero.querySelectorAll<HTMLElement>('.about-hero__slide'));
+    const video = slides[0] as HTMLVideoElement;
+    const pauseBtn = hero.querySelector<HTMLButtonElement>('.about-hero__pause')!;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const saveData = (navigator as any).connection?.saveData;
+    let current = 0;
+    let timer = 0;
+    let paused = false;
+
+    const loadImages = () =>
+      slides.forEach((s) => {
+        const src = s.dataset.src;
+        if (src && !(s as HTMLImageElement).src) (s as HTMLImageElement).src = src;
+      });
+
+    function show(i: number) {
+      const prev = slides[current];
+      current = (i + slides.length) % slides.length;
+      const next = slides[current];
+      if (prev !== next) {
+        prev.classList.remove('is-active');
+        // restart the zoom on images
+        next.classList.remove('is-active');
+        void next.offsetWidth;
+      }
+      next.classList.add('is-active');
+      clearTimeout(timer);
+      if (paused) return;
+      if (next === video) {
+        video.currentTime = 0;
+        video.play().catch(() => show(current + 1));
+      } else {
+        timer = window.setTimeout(() => show(current + 1), 6000);
+      }
+    }
+
+    if (reduce || saveData) {
+      // Still picture only: first photo, no movement.
+      video.remove();
+      slides.shift();
+      loadImages();
+      slides[0]?.classList.add('is-active');
+    } else {
+      pauseBtn.hidden = false;
+      video.addEventListener('ended', () => show(current + 1));
+      video.addEventListener('error', () => show(current + 1));
+      // Load the photos once the page has settled, so the first view stays fast.
+      if (document.readyState === 'complete') loadImages();
+      else addEventListener('load', loadImages, { once: true });
+      show(0);
+      pauseBtn.addEventListener('click', () => {
+        paused = !paused;
+        pauseBtn.classList.toggle('is-paused', paused);
+        pauseBtn.setAttribute('aria-label', paused ? 'Play background slideshow' : 'Pause background slideshow');
+        if (paused) {
+          clearTimeout(timer);
+          video.pause();
+          hero.classList.add('is-paused');
+        } else {
+          hero.classList.remove('is-paused');
+          show(current + 1);
+        }
+      });
+      // Stop when the tab is hidden.
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          clearTimeout(timer);
+          video.pause();
+        } else if (!paused) show(current);
+      });
+    }
+  }
+</script>
+
 <style>
-  /* Puzzle shape: its right edge lines up with the card's right edge, and on wider screens it
-     rests on the card's top edge (tucked just behind it). Vector, so every piece is complete. */
-  .about-head {
-    --edge: max(var(--gutter), calc((100% - var(--wrap)) / 2));
+  /* ---------- Header: field video and photos behind the title ----------
+     A dark brand-blue overlay keeps the pictures quiet so the words lead. */
+  .about-hero {
+    isolation: isolate;
+    min-height: clamp(24rem, 62vh, 36rem);
+    display: flex;
+    align-items: center;
+    padding-top: clamp(3rem, 8vw, 6rem);
+    background: #06223a;
   }
-  .about-head__shape {
-    pointer-events: none;
-    width: 8.5rem;
-    height: auto;
+  .about-hero__media {
     position: absolute;
-    top: 0.75rem;
-    right: var(--edge);
-    overflow: visible;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
   }
-  .pz--yellow {
-    fill: #fdc85a;
+  .about-hero__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, #04182bf2 0%, #06264ad9 40%, #06264a99 75%, #06264a80 100%),
+      linear-gradient(to top, #06223a 0%, #06223a00 45%);
   }
-  .pz--blue {
-    fill: #4ab0e4;
+  .about-hero__slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--pos, center);
+    opacity: 0;
+    transition: opacity 1.6s ease;
   }
-  .pz--green {
-    fill: #a2e45a;
+  .about-hero__slide.is-active {
+    opacity: 1;
   }
-  .pz--red {
-    fill: #eb4e2b;
+  img.about-hero__slide.is-active {
+    animation: hero-zoom 7.5s ease-out both;
   }
-  .about-head .wrap > h1 {
-    padding-right: 7.5rem;
-  }
-  @media (width>=48rem) {
-    .about-head__shape {
-      width: clamp(13rem, 6rem + 12vw, 19rem);
-      top: auto;
-      bottom: calc(var(--overlap) - 1.25rem);
-    }
-    .about-head .wrap > h1 {
-      padding-right: 0;
-    }
-    .about-head .wrap > :is(h1, .lede) {
-      max-width: min(40rem, calc(100% - 17rem));
-    }
-  }
-  /* Small animation: pieces slide together on load, then the yellow piece gently bobs in place. */
-  .pz-set .pz,
-  .pz--yellow {
-    transform-box: fill-box;
-    transform-origin: center;
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .pz-set .pz {
-      animation: pz-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--i) * 0.12s) both;
-    }
-    .pz--yellow {
-      animation:
-        pz-yellow-in 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.2) 0.5s both,
-        pz-bob 4.5s ease-in-out 1.6s infinite;
-    }
-  }
-  @keyframes pz-in {
+  @keyframes hero-zoom {
     from {
-      opacity: 0;
-      translate: 24px -16px;
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.08);
     }
   }
-  @keyframes pz-yellow-in {
-    from {
-      opacity: 0;
-      translate: -36px 0;
-      rotate: -8deg;
-    }
+  .about-hero__content {
+    position: relative;
   }
-  @keyframes pz-bob {
-    50% {
-      translate: -5px 4px;
-      rotate: -2deg;
+  .about-hero__eyebrow {
+    display: inline-block;
+    margin: 0 0 1rem;
+    padding: 0.3rem 0.85rem;
+    border-radius: 999px;
+    background: #ffffff1f;
+    border: 1px solid #ffffff33;
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    backdrop-filter: blur(6px);
+  }
+  .about-hero h1 {
+    max-width: 16ch;
+    margin: 0;
+    color: var(--white);
+    text-wrap: balance;
+    text-shadow: 0 2px 24px #0006;
+  }
+  .about-hero__lede {
+    max-width: 34rem;
+    margin: 1.1rem 0 0;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: #d9e8f2;
+    text-wrap: pretty;
+  }
+  .about-hero__pause {
+    position: absolute;
+    z-index: 2;
+    right: max(var(--gutter), calc((100% - var(--wrap)) / 2));
+    bottom: calc(var(--overlap) + 1rem);
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    border: 1px solid #ffffff40;
+    background: #ffffff1a;
+    color: var(--white);
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+  }
+  .about-hero__pause:hover {
+    background: #ffffff33;
+  }
+  .about-hero__pause:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .about-hero__pause svg {
+    fill: currentColor;
+  }
+  .about-hero__pause .i-play,
+  .about-hero__pause.is-paused .i-pause {
+    display: none;
+  }
+  .about-hero__pause.is-paused .i-play {
+    display: block;
+  }
+  .about-hero.is-paused img.about-hero__slide.is-active {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .about-hero__slide {
+      transition: none;
+    }
+    img.about-hero__slide.is-active {
+      animation: none;
     }
   }
 
