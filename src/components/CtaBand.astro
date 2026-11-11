@@ -11,14 +11,14 @@ interface Props {
 }
 const {
   heading = 'Tell us what slows your business down',
-  text = 'Start with a free 30-minute call. We’ll listen, suggest what would help, and send a written quote with a clear timeline.',
+  text = 'Book a free 30-minute call. We’ll listen, then send a clear quote.',
   eyebrow = 'Let’s build it together',
 } = Astro.props;
 
 const steps = [
-  { icon: 'headset', title: 'Free 30-minute call', text: 'We listen to how your business works today.' },
-  { icon: 'wallet', title: 'Written quote', text: 'A clear price and timeline, in your currency.' },
-  { icon: 'rocket', title: 'We build, you launch', text: 'Weekly progress you can see. You own the code.' },
+  { icon: 'headset', title: 'Free 30-minute call', text: 'We listen first.' },
+  { icon: 'wallet', title: 'Written quote', text: 'Clear price and timeline.' },
+  { icon: 'rocket', title: 'We build, you launch', text: 'You own the code.' },
 ] as const;
 ---
 
@@ -29,10 +29,7 @@ const steps = [
       <div class="cta__glow cta__glow--blue" aria-hidden="true"></div>
 
       <div class="cta__text">
-        <p class="cta__eyebrow">
-          <Icon name="sparkle" size={16} />
-          {eyebrow}
-        </p>
+        <p class="cta__eyebrow">{eyebrow}</p>
         <h2 id="cta-heading">{heading}</h2>
         <p class="cta__lead">{text}</p>
         <div class="cta__actions">
@@ -48,7 +45,6 @@ const steps = [
         <ul class="cta__trust" aria-label="What you can expect">
           <li><Icon name="check" size={16} strokeWidth={2.5} /> Reply within one working day</li>
           <li><Icon name="check" size={16} strokeWidth={2.5} /> No obligation</li>
-          <li><Icon name="check" size={16} strokeWidth={2.5} /> Based in {site.city}, working worldwide</li>
         </ul>
       </div>
 
@@ -132,9 +128,7 @@ const steps = [
   }
 
   .cta__eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
+    display: inline-block;
     margin: 0 0 1rem;
     padding: 0.35rem 0.8rem;
     border-radius: 999px;
@@ -144,17 +138,16 @@ const steps = [
     font-weight: 600;
     color: var(--white);
   }
-  .cta__eyebrow :global(svg) {
-    color: var(--accent);
-  }
   .cta h2 {
     margin: 0;
-    max-width: 20ch;
+    max-width: 18ch;
     color: var(--white);
+    text-wrap: balance;
   }
   .cta__lead {
     margin: 1rem 0 1.75rem;
-    max-width: 34rem;
+    max-width: 30rem;
+    text-wrap: pretty;
     font-size: var(--step-1);
     line-height: 1.5;
     color: #dcecf5;
