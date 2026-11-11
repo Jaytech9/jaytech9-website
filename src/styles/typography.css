@@ -1,0 +1,18 @@
+/* ---------- Justified body text ----------
+   Editorial rule for the whole site: running paragraphs (three or more lines of body copy) are
+   justified with hyphenation so both edges line up. Left alone on purpose:
+   - headings, header intros and anything centred (centred cards keep their centring)
+   - short interface text: buttons, labels, chips, form hints, step lists, quotes */
+:where(.prose, .service__intro, .storyB__text, .work-card__body, .section-head) > p,
+:where(.prose) li,
+:where(.card) > p {
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  text-wrap: wrap;
+}
+
+/* Centred blocks stay centred. */
+:where(.feature-grid, .skill-grid, [class*='--center'], .is-centered) :is(p, li) {
+  text-align: center;
+}
