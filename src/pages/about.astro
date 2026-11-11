@@ -65,8 +65,17 @@ import { site } from '../data/site';
     <div class="wrap overlap sheet storyB">
       <div class="storyB__text">
         <h2>Our story</h2>
-        <p>JayTech9 grew out of agricultural field work. Training smallholder farmers and running cereal quality checks meant long days of paperwork: the same figures copied into forms and notebooks, again and again.</p>
-        <p>Automating that work led to building tools for others with the same problem. Today we build websites, business systems and data dashboards for clients in Ghana and abroad, and BuildSmart, our own software for building material businesses.</p>
+        <p class="storyB__lead">JayTech9 began in the field, not in an office.</p>
+        <p>
+          Training smallholder farmers and running cereal quality checks meant long days of paperwork. The same
+          figures were copied from forms to notebooks to reports, again and again. We started building simple
+          tools to end that repetition.
+        </p>
+        <p>
+          Today we bring the same approach to businesses and organisations in Ghana and abroad: websites,
+          business systems and data dashboards that take the manual work away. We also build
+          <strong>BuildSmart</strong>, our own software for building material suppliers.
+        </p>
       </div>
       <div class="storyB__logo">
         <Image src={logo} alt="JayTech9 logo" width={320} height={320} />
@@ -475,8 +484,17 @@ import { site } from '../data/site';
 
   .storyB { display: grid; gap: 2rem 3.5rem; align-items: center; padding: clamp(1.5rem, 4vw, 3rem); }
   @media (width >= 52rem) { .storyB { grid-template-columns: 1.2fr 1fr; } }
-  .storyB__text h2 { margin: 0 0 1rem; }
-  .storyB__text p { color: var(--ink-soft); line-height: 1.65; max-width: 36rem; margin: 0 0 1rem; }
+  .storyB__text h2 { margin: 0 0 1.25rem; }
+  .storyB__text p { color: var(--ink-soft); line-height: 1.7; max-width: 34rem; margin: 0 0 1.1rem; text-wrap: pretty; }
+  .storyB__text p:last-child { margin-bottom: 0; }
+  .storyB__text strong { color: var(--ink); font-weight: 600; }
+  .storyB__text .storyB__lead {
+    margin: 0 0 1.25rem;
+    font-size: var(--step-1);
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--ink);
+  }
   /* JayTech9 logo beside the story, on a soft brand glow, floating gently. */
   .storyB__logo {
     position: relative;
