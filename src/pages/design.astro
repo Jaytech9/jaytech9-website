@@ -3,7 +3,6 @@
 // Visitors filter by category or search; tapping a piece opens a viewer with zoom, a front/back flip
 // (when the piece has a back image) or a 360° spin (when it has a set of spin photos).
 import Base from '../layouts/Base.astro';
-import CtaBand from '../components/CtaBand.astro';
 import { getCollection } from 'astro:content';
 import { designCategories } from '../content.config';
 import { designCategoryLabels, showPlaceholders } from '../data/services';
@@ -224,11 +223,6 @@ const viewerData = pieces.map((p) => ({
   </dialog>
 
   <script type="application/json" id="gdata" set:html={JSON.stringify(viewerData)} />
-
-  <CtaBand
-    heading="Need a design that gets noticed?"
-    text="Tell us what it’s for. We’ll share ideas and a clear price."
-  />
 </Base>
 
 <script>
