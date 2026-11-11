@@ -1,6 +1,6 @@
 // The six services, in the order they appear on the Services page. `id` matches the section anchor.
 export const services = [
-  { id: 'websites', blurb: 'Business sites, online shops and web apps.', title: 'Websites and web apps', icon: 'monitor' },
+  { id: 'websites', blurb: 'Business sites, online shops and web applications.', title: 'Websites and web applications', icon: 'monitor' },
   { id: 'systems', blurb: 'Stock, sales, donations and records in one place.', title: 'Business systems', icon: 'layers' },
   { id: 'data', blurb: 'Dashboards and reports from your numbers.', title: 'Data dashboards and analysis', icon: 'chart' },
   { id: 'agritech', blurb: 'Digital tools for farmers and programmes.', title: 'AgriTech and sustainability', icon: 'sprout' },

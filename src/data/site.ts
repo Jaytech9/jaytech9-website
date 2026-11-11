@@ -41,7 +41,7 @@ export const footerLinks = [
 ];
 
 export const footerServices = [
-  { label: 'Websites and web apps', href: '/services/#websites' },
+  { label: 'Websites and web applications', href: '/services/#websites' },
   { label: 'Business systems', href: '/services/#systems' },
   { label: 'Data dashboards', href: '/services/#data' },
   { label: 'AgriTech and sustainability', href: '/services/#agritech' },

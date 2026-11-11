@@ -5,7 +5,7 @@ import { site } from './site';
 export const helpFaq: [string, string][] = [
   [
     'What services do you offer? Do you build websites, web apps or systems?',
-    'We build websites and web apps, business systems, and data dashboards. We also do AgriTech and sustainability tools, brand and print design, and domains, hosting and care.',
+    'We build websites and web applications, business systems, and data dashboards. We also do AgriTech and sustainability tools, brand and print design, and domains, hosting and care.',
   ],
   [
     'How much does a website or system cost?',
