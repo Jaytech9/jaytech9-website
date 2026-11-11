@@ -1,0 +1,77 @@
+---
+// Under each service on the Services page: links to the products and projects that show it in action.
+// Comes from the "service" field on each product, so new work appears here automatically.
+import { getCollection } from 'astro:content';
+
+interface Props {
+  service: string;
+}
+const { service } = Astro.props;
+const examples = (await getCollection('products', (p) => p.data.service === service)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<div class="examples">
+  {
+    examples.length > 0 ? (
+      <>
+        <p class="examples__label">See it in action</p>
+        <ul class="examples__list">
+          {examples.map((e) => (
+            <li>
+              <a href={`/products/${e.id}/`}>
+                {e.data.title}
+                <span aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </>
+    ) : (
+      <a class="examples__ask" href="/contact/">
+        Ask us about this <span aria-hidden="true">→</span>
+      </a>
+    )
+  }
+</div>
+
+<style>
+  .examples {
+    margin-top: 1.25rem;
+  }
+  .examples__label {
+    margin: 0 0 0.5rem;
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+  .examples__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .examples__list a,
+  .examples__ask {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 2.5rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    background: #e6f1f8;
+    color: var(--brand-deep);
+    font-size: var(--step--1);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  .examples__list a:hover,
+  .examples__ask:hover {
+    background: var(--brand);
+    color: var(--white);
+  }
+</style>

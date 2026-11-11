@@ -54,11 +54,11 @@ import Base from '../layouts/Base.astro';
           </svg>
         </span>
         <p class="empty__title">Currently, there is no open vacancy.</p>
-        <p>
-          We’re always glad to hear from talented people. Send your CV to{' '}
-          <a href="mailto:info@jaytech9.com?subject=Future%20roles%20at%20JayTech9">info@jaytech9.com</a> and
-          we’ll keep it on file for future roles.
-        </p>
+        <p>We’re always glad to hear from talented people. Send your CV and we’ll keep it on file for future roles.</p>
+        <div class="button-row empty__actions">
+          <a class="button" href="mailto:info@jaytech9.com?subject=Future%20roles%20at%20JayTech9">Send your CV</a>
+          <a class="button button--quiet" href="/about/">About JayTech9</a>
+        </div>
       </div>
     </div>
   </section>
@@ -181,6 +181,15 @@ import Base from '../layouts/Base.astro';
   }
   .empty {
     max-width: 44rem;
+  }
+  .empty__actions {
+    margin-top: 1.25rem;
+  }
+  /* Phones: his head rises above the card, so the header text needs room above it. */
+  @media (width < 48rem) {
+    .page-head {
+      padding-bottom: calc(var(--overlap) + 5.5rem);
+    }
   }
   /* Illustration: he stands on the right of the card holding his laptop towards the content, in
      front of a soft blue circle clipped to the card; his head rises above the card into the header.

@@ -9,6 +9,7 @@ const slides = (await getCollection('banners', (b) => b.data.page === 'services'
   .sort((a, b) => a.data.order - b.data.order)
   .map((b) => ({ ...b.data, tag: b.data.tag ?? '', art: visual(b.data.visual) }));
 import CtaBand from '../components/CtaBand.astro';
+import ServiceExamples from '../components/ServiceExamples.astro';
 ---
 
 <Base
@@ -53,6 +54,7 @@ import CtaBand from '../components/CtaBand.astro';
           Most of your customers will find you on a phone, often on mobile data. We build websites that load
           quickly, look right on small screens and turn visitors into enquiries.
         </p>
+        <ServiceExamples service="websites" />
       </div>
       <div class="card service__detail">
         <h3>What’s included</h3>
@@ -96,6 +98,7 @@ import CtaBand from '../components/CtaBand.astro';
           If your team spends hours copying figures between notebooks, spreadsheets and messages, a simple
           system can do it for them. We build tools around how you already work.
         </p>
+        <ServiceExamples service="systems" />
       </div>
       <div class="card service__detail">
         <h3>What’s included</h3>
@@ -139,6 +142,7 @@ import CtaBand from '../components/CtaBand.astro';
           We turn the data you already collect into live dashboards and clear reports, so you can spot what’s
           working, what isn’t, and where money is leaking.
         </p>
+        <ServiceExamples service="data" />
       </div>
       <div class="card service__detail">
         <h3>What’s included</h3>
@@ -182,6 +186,7 @@ import CtaBand from '../components/CtaBand.astro';
           Our founder trained farmers in sustainable and regenerative agriculture before moving into tech. We
           build tools that work in the field, not just in the office.
         </p>
+        <ServiceExamples service="agritech" />
       </div>
       <div class="card service__detail">
         <h3>What’s included</h3>
@@ -225,6 +230,7 @@ import CtaBand from '../components/CtaBand.astro';
           A consistent look makes a small business seem established. We design the pieces you need for print
           and online, ready to use.
         </p>
+        <ServiceExamples service="design" />
       </div>
       <div class="card service__detail">
         <h3>What’s included</h3>
@@ -266,6 +272,7 @@ import CtaBand from '../components/CtaBand.astro';
           We register domains in your name, set up professional email, host your site and keep it updated and
           backed up, so you can focus on your business.
         </p>
+        <ServiceExamples service="care" />
       </div>
       <div class="card service__detail">
         <h3>What’s included</h3>
@@ -281,7 +288,7 @@ import CtaBand from '../components/CtaBand.astro';
       </div>
     </section>
   </div>
-  <section class="section pricing" aria-labelledby="pricing-heading">
+  <section class="section pricing" id="pricing" aria-labelledby="pricing-heading">
     <div class="wrap pricing__inner">
       <h2 id="pricing-heading">How pricing works</h2>
       <div class="prose">

@@ -1,6 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
 import CtaBand from '../../components/CtaBand.astro';
+import CaseAside from '../../components/CaseAside.astro';
+import Testimonials from '../../components/Testimonials.astro';
 ---
 
 <Base
@@ -82,8 +84,10 @@ import CtaBand from '../../components/CtaBand.astro';
           partner stores.
         </p>
       </div>
+      <CaseAside id="buildsmart" />
     </div>
   </article>
+  <Testimonials heading="What the client says" product="buildsmart" limit={1} />
   <nav class="wrap next" aria-label="Next project">
     <p class="muted">Next project</p>
     <a href="/products/donation-management/">Donation management system</a>
@@ -122,9 +126,18 @@ import CtaBand from '../../components/CtaBand.astro';
   }
   .case-body {
     padding-top: clamp(2.5rem, 6vw, 4rem);
+    padding-bottom: clamp(2.5rem, 6vw, 4rem);
+    display: grid;
+    gap: clamp(2rem, 5vw, 3.5rem);
+    align-items: start;
+  }
+  @media (width >= 56rem) {
+    .case-body {
+      grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
+    }
   }
   .next {
-    padding-bottom: var(--space-section);
+    padding-bottom: 0.5rem;
     border-top: 1px solid var(--line);
     padding-top: 2rem;
   }

@@ -1,0 +1,31 @@
+[
+  {
+    "id": "placeholder-1",
+    "order": 1,
+    "quote": "Placeholder: add a short quote from a client about working with JayTech9.",
+    "name": "Client name",
+    "role": "Role",
+    "organisation": "Organisation",
+    "product": "donation-management",
+    "placeholder": true
+  },
+  {
+    "id": "placeholder-2",
+    "order": 2,
+    "quote": "Placeholder: add a second client quote, ideally about a result they saw.",
+    "name": "Client name",
+    "role": "Role",
+    "organisation": "Organisation",
+    "product": "green-hatch-investments",
+    "placeholder": true
+  },
+  {
+    "id": "placeholder-3",
+    "order": 3,
+    "quote": "Placeholder: add a third client quote.",
+    "name": "Client name",
+    "role": "Role",
+    "organisation": "Organisation",
+    "placeholder": true
+  }
+]

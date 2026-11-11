@@ -19,6 +19,8 @@ const skills = [
 ];
 
 import CtaBand from '../components/CtaBand.astro';
+import { site } from '../data/site';
+import { showPlaceholders } from '../data/services';
 ---
 
 <Base
@@ -162,6 +164,34 @@ import CtaBand from '../components/CtaBand.astro';
           </li>
         ))}
       </ul>
+    </div>
+  </section>
+  <section class="section section--band founder" aria-labelledby="founder-heading">
+    <div class="wrap founder__inner">
+      <figure class:list={['founder__photo', { 'is-placeholder': !site.founderPhoto && showPlaceholders }]}>
+        {
+          site.founderPhoto ? (
+            <img src={site.founderPhoto} alt={site.founder} width="320" height="320" loading="lazy" />
+          ) : (
+            <span class="founder__initials" aria-hidden="true">JK</span>
+          )
+        }
+        {!site.founderPhoto && showPlaceholders && <figcaption class="ph-badge">Placeholder: add your photo</figcaption>}
+      </figure>
+      <div class="founder__text">
+        <h2 id="founder-heading">Meet the founder</h2>
+        <blockquote>
+          <p>{site.founderNote}</p>
+        </blockquote>
+        <p class="founder__name">
+          <strong>{site.founder}</strong>
+          <span>{site.founderRole}</span>
+        </p>
+        <div class="button-row">
+          <a class="button" href="/products/">See our work</a>
+          <a class="button button--quiet" href="/services/">Our services</a>
+        </div>
+      </div>
     </div>
   </section>
   <CtaBand
@@ -437,6 +467,81 @@ import CtaBand from '../components/CtaBand.astro';
   .feature p {
     font-size: 0.9375rem;
     line-height: 1.6;
+  }
+  /* Meet the founder */
+  .founder__inner {
+    display: grid;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+  }
+  @media (width >= 48rem) {
+    .founder__inner {
+      grid-template-columns: minmax(12rem, 18rem) 1fr;
+    }
+  }
+  .founder__photo {
+    position: relative;
+    margin: 0;
+    width: min(100%, 18rem);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--brand-surface);
+    box-shadow: var(--shadow-card);
+    justify-self: center;
+  }
+  .founder__photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .founder__initials {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    color: var(--white);
+    font-size: clamp(3rem, 8vw, 4.5rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .founder__photo.is-placeholder {
+    outline: 2px dashed #9fb6c6;
+    outline-offset: 6px;
+    overflow: visible;
+  }
+  .ph-badge {
+    position: absolute;
+    left: 50%;
+    bottom: -0.5rem;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    background: #fff4d6;
+    color: #6b4e00;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .founder blockquote {
+    margin: 1rem 0 1.25rem;
+    padding-left: 1.25rem;
+    border-left: 4px solid var(--accent);
+  }
+  .founder blockquote p {
+    margin: 0;
+    font-size: var(--step-1);
+    line-height: 1.55;
+    color: var(--ink);
+    max-width: 38rem;
+  }
+  .founder__name {
+    margin: 0 0 1.5rem;
+  }
+  .founder__name span {
+    display: block;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
   }
   /* What we bring */
   .skill-grid {

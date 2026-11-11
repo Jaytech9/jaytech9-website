@@ -18,6 +18,7 @@ const features = [
   { icon: 'headset', title: 'Support after launch', text: 'Fixes and changes when you need them.' },
 ] as const;
 import CtaBand from '../components/CtaBand.astro';
+import Testimonials from '../components/Testimonials.astro';
 ---
 
 <Base
@@ -170,7 +171,7 @@ import CtaBand from '../components/CtaBand.astro';
         <div class="prod-intro__side">
           <p>Built for mobile data, local payments and the people who use it every day.</p>
           <a class="prod-pill" href="/contact/">
-            Talk to us
+            Book a free call
             <Icon name="arrow" size={15} />
           </a>
         </div>
@@ -211,6 +212,7 @@ import CtaBand from '../components/CtaBand.astro';
       </ul>
     </div>
   </section>
+  <Testimonials />
   <CtaBand
     heading="Tell us what slows your business down"
     text="Book a free 30-minute call. We’ll listen, then send a clear quote."

@@ -1,0 +1,115 @@
+---
+// "Trusted by" row from the "clients" collection (src/content/clients.json, later the CRM).
+// Placeholders show only in the local preview; the live site hides the row until a real entry exists.
+import { getCollection } from 'astro:content';
+import { showPlaceholders } from '../data/services';
+
+interface Props {
+  heading?: string;
+}
+const { heading = 'Trusted by' } = Astro.props;
+
+const clients = (await getCollection('clients'))
+  .filter((c) => showPlaceholders || !c.data.placeholder)
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+{
+  clients.length > 0 && (
+    <section class="logos" aria-label={heading}>
+      <div class="wrap logos__inner">
+        <p class="logos__label">{heading}</p>
+        <ul class="logos__list">
+          {clients.map((c) => {
+            const body = c.data.logo ? (
+              <img src={c.data.logo} alt={c.data.name} loading="lazy" />
+            ) : (
+              <span class="logos__name">{c.data.name}</span>
+            );
+            return (
+              <li class:list={['logos__item', { 'is-placeholder': c.data.placeholder }]}>
+                {c.data.url ? (
+                  <a href={c.data.url} target="_blank" rel="noopener">
+                    {body}
+                    <span class="visually-hidden">(opens in a new tab)</span>
+                  </a>
+                ) : (
+                  body
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .logos {
+    padding-block: clamp(1.75rem, 4vw, 2.5rem);
+  }
+  .logos__inner {
+    display: grid;
+    gap: 1rem;
+    justify-items: center;
+  }
+  .logos__label {
+    margin: 0;
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .logos__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+  .logos__item {
+    display: grid;
+    place-items: center;
+    min-width: 9rem;
+    height: 3.75rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 14px;
+    background: var(--white);
+    box-shadow: var(--shadow-card);
+  }
+  .logos__item a {
+    display: grid;
+    place-items: center;
+    color: inherit;
+    text-decoration: none;
+  }
+  .logos__item img {
+    max-height: 2.25rem;
+    max-width: 8rem;
+    object-fit: contain;
+    filter: grayscale(1);
+    opacity: 0.8;
+    transition:
+      filter 0.2s,
+      opacity 0.2s;
+  }
+  .logos__item:hover img {
+    filter: none;
+    opacity: 1;
+  }
+  .logos__name {
+    font-weight: 600;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+    text-align: center;
+  }
+  .is-placeholder {
+    border: 2px dashed #9fb6c6;
+    box-shadow: none;
+    background: transparent;
+  }
+</style>

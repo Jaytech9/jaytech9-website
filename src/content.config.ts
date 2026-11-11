@@ -17,6 +17,11 @@ const image = z
   })
   .optional();
 
+// The six services. Products point at one, so each service can show its examples and each
+// product page can link back to the service it came from.
+export const serviceIds = ['websites', 'systems', 'data', 'agritech', 'design', 'care'] as const;
+const service = z.enum(serviceIds);
+
 const products = defineCollection({
   loader: file('src/content/products.json'),
   schema: z.object({
@@ -31,6 +36,9 @@ const products = defineCollection({
     tone, // card-top colour
     visual: z.string().optional(), // drawn illustration key, see src/lib/visuals.ts
     image,
+    service, // which service this work belongs to
+    gallery: z.array(z.object({ src: z.string(), alt: z.string() })).default([]), // real screenshots for the product page
+    outcome: z.string().optional(), // one-line result, e.g. "Donor reports in minutes instead of an afternoon"
     liveUrl: z.string().url().optional(), // adds a "Visit live site" button
     featured: z.boolean().default(false), // also show on the home page
     wide: z.boolean().default(false), // full-width card on the Products page
@@ -59,4 +67,31 @@ const banners = defineCollection({
   }),
 });
 
-export const collections = { products, banners };
+// Placeholders (placeholder: true) only show in the local preview, labelled, so you can see where
+// real content goes. The live site never shows them. Set placeholder to false once the entry is real.
+const testimonials = defineCollection({
+  loader: file('src/content/testimonials.json'),
+  schema: z.object({
+    order: z.number(),
+    quote: z.string(),
+    name: z.string(),
+    role: z.string(), // e.g. "Director"
+    organisation: z.string(),
+    product: z.string().optional(), // a products id, to show it on that product page too
+    photo: z.string().optional(), // path in public/uploads/ or https URL
+    placeholder: z.boolean().default(false),
+  }),
+});
+
+const clients = defineCollection({
+  loader: file('src/content/clients.json'),
+  schema: z.object({
+    order: z.number(),
+    name: z.string(),
+    logo: z.string().optional(), // path in public/uploads/ or https URL; the name shows until a logo is added
+    url: z.string().url().optional(),
+    placeholder: z.boolean().default(false),
+  }),
+});
+
+export const collections = { products, banners, testimonials, clients };

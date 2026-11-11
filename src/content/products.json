@@ -17,7 +17,9 @@
     "tone": "ink",
     "visual": "screen/buildsmart",
     "featured": true,
-    "wide": true
+    "wide": true,
+    "service": "systems",
+    "gallery": []
   },
   {
     "id": "donation-management",
@@ -36,7 +38,10 @@
     "icon": "heart",
     "tone": "teal",
     "visual": "screen/donation-management",
-    "featured": true
+    "featured": true,
+    "service": "systems",
+    "gallery": [],
+    "outcome": "Donor reports in minutes instead of an afternoon."
   },
   {
     "id": "field-reporting-dashboard",
@@ -53,7 +58,9 @@
     "icon": "chart",
     "tone": "blue",
     "visual": "screen/field-reporting-dashboard",
-    "featured": true
+    "featured": true,
+    "service": "data",
+    "gallery": []
   },
   {
     "id": "agency-website-crm",
@@ -69,7 +76,9 @@
     ],
     "icon": "building",
     "tone": "blue-dark",
-    "visual": "screen/agency-website-crm"
+    "visual": "screen/agency-website-crm",
+    "service": "websites",
+    "gallery": []
   },
   {
     "id": "green-hatch-investments",
@@ -86,7 +95,9 @@
     "icon": "building",
     "tone": "blue-dark",
     "visual": "screen/green-hatch-investments",
-    "liveUrl": "https://greenhatchinv.com/home/"
+    "liveUrl": "https://greenhatchinv.com/home/",
+    "service": "websites",
+    "gallery": []
   },
   {
     "id": "carbon-credits",
@@ -102,7 +113,9 @@
     ],
     "icon": "sprout",
     "tone": "green",
-    "visual": "screen/carbon-credits"
+    "visual": "screen/carbon-credits",
+    "service": "agritech",
+    "gallery": []
   },
   {
     "id": "logalyzer",
@@ -119,6 +132,8 @@
     ],
     "icon": "code",
     "tone": "ink-soft",
-    "visual": "screen/logalyzer"
+    "visual": "screen/logalyzer",
+    "service": "data",
+    "gallery": []
   }
 ]

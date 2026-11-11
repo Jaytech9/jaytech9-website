@@ -15,14 +15,16 @@ const featured = (await getCollection('products', (p) => p.data.featured)).sort(
 
 // The six most-used actions, shown as app-style tiles under the banner.
 const tiles = [
-  { label: 'Start a Project', hint: 'Free 30-min call', href: '/contact/', icon: 'rocket' },
+  { label: 'Book a Call', hint: 'Free, 30 minutes', href: '/contact/', icon: 'rocket' },
   { label: 'Our Services', hint: '6 ways we help', href: '/services/', icon: 'layers' },
   { label: 'Our Products', hint: 'Software we build', href: '/products/', icon: 'package' },
   { label: 'WhatsApp Us', hint: 'Quick replies', href: site.whatsapp, icon: 'chat' },
-  { label: 'Careers', hint: 'Join the team', href: '/careers/', icon: 'users' },
-  { label: 'Support', hint: 'Help and feedback', href: `mailto:${site.email}`, icon: 'headset' },
+  { label: 'Pricing', hint: 'How quotes work', href: '/services/#pricing', icon: 'wallet' },
+  { label: 'About Us', hint: 'Who we are', href: '/about/', icon: 'info' },
 ] as const;
 import CtaBand from '../components/CtaBand.astro';
+import Testimonials from '../components/Testimonials.astro';
+import ClientLogos from '../components/ClientLogos.astro';
 ---
 
 <Base
@@ -59,6 +61,7 @@ import CtaBand from '../components/CtaBand.astro';
       </nav>
     </div>
   </section>
+  <ClientLogos />
   <section class="section section--band" aria-labelledby="services-heading">
     <div class="wrap">
       <div class="section-head">
@@ -249,6 +252,7 @@ import CtaBand from '../components/CtaBand.astro';
       </ul>
     </div>
   </section>
+  <Testimonials />
   <section class="section section--band" aria-labelledby="why-heading">
     <div class="wrap">
       <div class="section-head">
@@ -349,36 +353,6 @@ import CtaBand from '../components/CtaBand.astro';
       <p class="why__more">
         <a href="/about/">More about JayTech9</a>
       </p>
-    </div>
-  </section>
-  <section class="section" aria-labelledby="process-heading">
-    <div class="wrap">
-      <div class="section-head">
-        <h2 id="process-heading">How a project works</h2>
-      </div>
-      <ol class="card-grid steps">
-        <li class="card step">
-          <h3>Free call</h3>
-          <p>
-            A 30-minute conversation about your business and what’s slowing it down. No cost, no obligation.
-          </p>
-        </li>
-        <li class="card step">
-          <h3>Written quote</h3>
-          <p>
-            A clear scope, timeline and price in your currency, so you know exactly what you’re getting before
-            you pay.
-          </p>
-        </li>
-        <li class="card step">
-          <h3>Build and review</h3>
-          <p>You see progress every week and can try things early, so there are no surprises at the end.</p>
-        </li>
-        <li class="card step">
-          <h3>Launch and support</h3>
-          <p>We put it live, train your team, and stay on hand for fixes and changes afterwards.</p>
-        </li>
-      </ol>
     </div>
   </section>
   <CtaBand
@@ -516,37 +490,6 @@ import CtaBand from '../components/CtaBand.astro';
   }
   .why__more {
     margin-top: 1.75rem;
-  }
-  .steps {
-    counter-reset: step;
-    grid-template-columns: 1fr;
-  }
-  @media (width>=40rem) {
-    .steps {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  @media (width>=64rem) {
-    .steps {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-  .step {
-    counter-increment: step;
-  }
-  .step:before {
-    content: counter(step);
-    background: var(--green-deep);
-    width: 2.75rem;
-    height: 2.75rem;
-    color: var(--white);
-    font-family: var(--font-display);
-    border-radius: 50%;
-    place-items: center;
-    margin-bottom: 0.4rem;
-    font-size: 1.25rem;
-    font-weight: 600;
-    display: grid;
   }
   @media (prefers-reduced-motion: reduce) {
     .work-card:hover .work-card__shot {

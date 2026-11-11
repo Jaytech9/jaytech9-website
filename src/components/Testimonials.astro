@@ -1,0 +1,146 @@
+---
+// Client quotes from the "testimonials" collection (src/content/testimonials.json, later the CRM).
+// Placeholder entries show only in the local preview, clearly labelled. The live site shows real
+// quotes only, and hides this whole section when there are none yet.
+import { getCollection } from 'astro:content';
+import { showPlaceholders } from '../data/services';
+
+interface Props {
+  heading?: string;
+  product?: string; // only quotes linked to this product
+  limit?: number;
+}
+const { heading = 'What our clients say', product, limit = 3 } = Astro.props;
+
+const items = (await getCollection('testimonials'))
+  .filter((t) => showPlaceholders || !t.data.placeholder)
+  .filter((t) => !product || t.data.product === product)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, limit);
+
+const initials = (name: string) =>
+  name
+    .split(/\s+/)
+    .map((w) => w[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+---
+
+{
+  items.length > 0 && (
+    <section class="section testimonials" aria-labelledby={`quotes-${product ?? 'all'}`}>
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id={`quotes-${product ?? 'all'}`}>{heading}</h2>
+        </div>
+        <ul class:list={['quotes', { 'quotes--single': items.length === 1 }]}>
+          {items.map((t) => (
+            <li class:list={['card quote', { 'is-placeholder': t.data.placeholder }]}>
+              {t.data.placeholder && <span class="ph-badge">Placeholder</span>}
+              <svg class="quote__mark" viewBox="0 0 32 24" aria-hidden="true">
+                <path d="M0 24V14C0 6 4 1 12 0l1 4c-4 1-6 4-6 8h5v12zm19 0V14c0-8 4-13 12-14l1 4c-4 1-6 4-6 8h5v12z" />
+              </svg>
+              <blockquote>
+                <p>{t.data.quote}</p>
+              </blockquote>
+              <footer class="quote__by">
+                {t.data.photo ? (
+                  <img src={t.data.photo} alt="" width="44" height="44" loading="lazy" />
+                ) : (
+                  <span class="quote__avatar" aria-hidden="true">
+                    {initials(t.data.name)}
+                  </span>
+                )}
+                <span>
+                  <strong>{t.data.name}</strong>
+                  <span class="quote__role">
+                    {t.data.role}, {t.data.organisation}
+                  </span>
+                </span>
+              </footer>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .quotes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  }
+  .quotes--single {
+    max-width: 40rem;
+  }
+  .quote {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .quote__mark {
+    width: 2rem;
+    fill: var(--accent);
+  }
+  .quote blockquote {
+    margin: 0;
+    flex: 1;
+  }
+  .quote blockquote p {
+    margin: 0;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--ink);
+  }
+  .quote__by {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .quote__by img,
+  .quote__avatar {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    flex: none;
+    object-fit: cover;
+  }
+  .quote__avatar {
+    display: grid;
+    place-items: center;
+    background: #e6f1f8;
+    color: var(--brand);
+    font-weight: 700;
+    font-size: var(--step--1);
+  }
+  .quote__by strong {
+    display: block;
+  }
+  .quote__role {
+    display: block;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  .is-placeholder {
+    border: 2px dashed #9fb6c6;
+    box-shadow: none;
+  }
+  .ph-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: #fff4d6;
+    color: #6b4e00;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+</style>

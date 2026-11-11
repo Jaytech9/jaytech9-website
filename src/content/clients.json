@@ -1,0 +1,33 @@
+[
+  {
+    "id": "green-hatch-investments",
+    "order": 1,
+    "name": "Green Hatch Investments",
+    "url": "https://greenhatchinv.com/home/",
+    "placeholder": true
+  },
+  {
+    "id": "client-2",
+    "order": 2,
+    "name": "Client logo",
+    "placeholder": true
+  },
+  {
+    "id": "client-3",
+    "order": 3,
+    "name": "Client logo",
+    "placeholder": true
+  },
+  {
+    "id": "client-4",
+    "order": 4,
+    "name": "Client logo",
+    "placeholder": true
+  },
+  {
+    "id": "client-5",
+    "order": 5,
+    "name": "Client logo",
+    "placeholder": true
+  }
+]

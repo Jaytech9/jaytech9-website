@@ -1,0 +1,208 @@
+---
+// Right-hand column on each product page: screenshots, the service it belongs to, the result and
+// next steps. All data comes from the product's entry in the "products" collection (later the CRM).
+import { getEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import { visual } from '../lib/visuals';
+import { serviceById, showPlaceholders } from '../data/services';
+
+interface Props {
+  id: string;
+}
+const entry = await getEntry('products', Astro.props.id);
+if (!entry) throw new Error(`Unknown product: ${Astro.props.id}`);
+const p = entry.data;
+const svc = serviceById[p.service];
+const [main, ...thumbs] = p.gallery;
+---
+
+<aside class="case-aside" aria-label="Project details">
+  <figure class:list={['shot', { 'is-placeholder': !main && showPlaceholders }]}>
+    <div class="shot__bar" aria-hidden="true"><span></span><span></span><span></span></div>
+    {
+      main ? (
+        <img src={main.src} alt={main.alt} loading="lazy" decoding="async" />
+      ) : (
+        <div class={`shot__art tone-${p.tone}`} role="img" aria-label={`Illustration of ${p.title}`} set:html={visual(p.visual)} />
+      )
+    }
+    {!main && showPlaceholders && <figcaption class="ph-badge">Placeholder: add real screenshots in the CRM</figcaption>}
+  </figure>
+  {
+    thumbs.length > 0 && (
+      <ul class="thumbs">
+        {thumbs.map((t) => (
+          <li>
+            <img src={t.src} alt={t.alt} loading="lazy" decoding="async" />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  <div class="aside-card">
+    <p class="aside-card__label">Service</p>
+    <a class="aside-card__service" href={`/services/#${svc.id}`}>
+      <span class="aside-card__icon"><Icon name={svc.icon as any} size={18} /></span>
+      {svc.title}
+      <Icon name="arrow" size={16} />
+    </a>
+    {
+      p.outcome && (
+        <>
+          <p class="aside-card__label">Result</p>
+          <p class="aside-card__outcome">{p.outcome}</p>
+        </>
+      )
+    }
+    <div class="aside-card__actions">
+      {
+        p.liveUrl && (
+          <a class="button button--quiet" href={p.liveUrl} target="_blank" rel="noopener">
+            Visit live site <span aria-hidden="true">↗</span>
+            <span class="visually-hidden">(opens in a new tab)</span>
+          </a>
+        )
+      }
+      <a class="button" href="/contact/">Book a free call</a>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .case-aside {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+  }
+  @media (width >= 56rem) {
+    .case-aside {
+      position: sticky;
+      top: 6rem;
+    }
+  }
+  .shot {
+    position: relative;
+    margin: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--white);
+    box-shadow: var(--shadow-card);
+  }
+  .shot__bar {
+    display: flex;
+    gap: 0.35rem;
+    padding: 0.6rem 0.8rem;
+    background: #e9eff4;
+  }
+  .shot__bar span {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: #b9c8d3;
+  }
+  .shot img,
+  .shot__art {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+  .shot__art {
+    display: grid;
+    place-items: center;
+    padding: 1.25rem;
+  }
+  .shot__art :global(svg) {
+    width: 100%;
+    height: auto;
+  }
+  .tone-ink { background: linear-gradient(135deg, #10293a, #1d4660); }
+  .tone-teal { background: linear-gradient(135deg, #0a5556, #12857c); }
+  .tone-blue { background: linear-gradient(135deg, #00507c, #0a7bb8); }
+  .tone-blue-dark { background: linear-gradient(135deg, #0b3d5c, #0068a1); }
+  .tone-green { background: linear-gradient(135deg, #154f12, #2a8a1c); }
+  .tone-forest { background: linear-gradient(135deg, #0f3b1f, #1e6b34); }
+  .tone-ink-soft { background: linear-gradient(135deg, #2b4252, #4a6577); }
+  .shot.is-placeholder {
+    outline: 2px dashed #9fb6c6;
+    outline-offset: 4px;
+  }
+  .ph-badge {
+    position: absolute;
+    left: 0.75rem;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 10px;
+    background: #fff4d6;
+    color: #6b4e00;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+  }
+  .thumbs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+  .thumbs img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: var(--shadow-card);
+  }
+  .aside-card {
+    padding: 1.25rem;
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    box-shadow: var(--shadow-card);
+  }
+  .aside-card__label {
+    margin: 0 0 0.4rem;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  .aside-card__label:not(:first-child) {
+    margin-top: 1rem;
+  }
+  .aside-card__service {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .aside-card__service:hover {
+    color: var(--blue);
+  }
+  .aside-card__icon {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 10px;
+    background: #e6f1f8;
+    color: var(--brand);
+  }
+  .aside-card__outcome {
+    margin: 0;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .aside-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1.25rem;
+  }
+  .aside-card__actions .button {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+</style>

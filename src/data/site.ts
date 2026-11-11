@@ -12,6 +12,10 @@ export const site = {
   country: 'Ghana',
   countryCode: 'GH',
   founder: 'Jones Yaw Kwamehene',
+  founderRole: 'Founder and Lead Developer',
+  founderPhoto: '', // e.g. '/uploads/jones.webp'; initials show until a photo is added
+  founderNote:
+    'I spent years in the field training farmers and checking cereal quality, and watched good people lose hours to paperwork. I started JayTech9 to build the simple tools I wished we had. Every project still starts the same way: understand the real problem first.',
   social: [
     { label: 'Facebook', href: 'https://www.facebook.com/Jaytech9' },
     { label: 'Instagram', href: 'https://www.instagram.com/Jaytech9' },
@@ -24,16 +28,14 @@ export const nav = [
   { label: 'Services', href: '/services/' },
   { label: 'Products', href: '/products/' },
   { label: 'About', href: '/about/' },
-  { label: 'Blog', href: '/blog/' },
   { label: 'Careers', href: '/careers/' },
-  { label: 'Donate', href: '/donate/' },
 ];
 
 // Footer: keep each list to four items.
 export const footerLinks = [
   { label: 'About us', href: '/about/' },
-  { label: 'Our products', href: '/products/' },
   { label: 'Careers', href: '/careers/' },
+  { label: 'Blog', href: '/blog/' },
   { label: 'Donate', href: '/donate/' },
 ];
 
