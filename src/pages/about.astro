@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 
-// About header background: a short field video, then photos from our field work. Each photo shows for
+// About header background: photos from our field work. Each photo shows for
 // a few seconds with a slow zoom. `pos` picks which part of the photo stays in view.
 const slides = [
   { src: '/images/about/maize-field.webp', pos: 'center 60%' },
@@ -37,18 +37,17 @@ import { site } from '../data/site';
 >
   <header class="page-head about-hero">
     <div class="about-hero__media" aria-hidden="true">
-      <video
-        class="about-hero__slide is-active"
-        src="/videos/about-road.mp4"
-        poster="/images/about/road-poster.jpg"
-        muted
-        playsinline
-        preload="auto"
-        style="--pos: center 55%"
-      ></video>
       {
-        slides.map((s) => (
-          <img class="about-hero__slide" data-src={s.src} alt="" decoding="async" style={`--pos: ${s.pos}`} />
+        slides.map((s, i) => (
+          <img
+            class:list={['about-hero__slide', { 'is-active': i === 0 }]}
+            src={i === 0 ? s.src : undefined}
+            data-src={s.src}
+            alt=""
+            decoding="async"
+            fetchpriority={i === 0 ? 'high' : undefined}
+            style={`--pos: ${s.pos}`}
+          />
         ))
       }
     </div>
@@ -116,13 +115,12 @@ import { site } from '../data/site';
 </Base>
 
 <script>
-  // Background slideshow for the About header: the video plays once, then each photo shows for
-  // 6 seconds with a slow zoom, then it starts again. No sound. Respects reduced motion and has a
-  // pause button (needed for anything that moves for more than five seconds).
+  // Background slideshow for the About header: each photo shows for 6 seconds with a slow zoom,
+  // then fades to the next. Respects reduced motion and data saver, and has a pause button
+  // (needed for anything that moves for more than five seconds).
   const hero = document.querySelector<HTMLElement>('.about-hero');
   if (hero) {
-    const slides = Array.from(hero.querySelectorAll<HTMLElement>('.about-hero__slide'));
-    const video = slides[0] as HTMLVideoElement;
+    const slides = Array.from(hero.querySelectorAll<HTMLImageElement>('.about-hero__slide'));
     const pauseBtn = hero.querySelector<HTMLButtonElement>('.about-hero__pause')!;
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const saveData = (navigator as any).connection?.saveData;
@@ -132,8 +130,7 @@ import { site } from '../data/site';
 
     const loadImages = () =>
       slides.forEach((s) => {
-        const src = s.dataset.src;
-        if (src && !(s as HTMLImageElement).src) (s as HTMLImageElement).src = src;
+        if (!s.getAttribute('src') && s.dataset.src) s.src = s.dataset.src;
       });
 
     function show(i: number) {
@@ -142,61 +139,38 @@ import { site } from '../data/site';
       const next = slides[current];
       if (prev !== next) {
         prev.classList.remove('is-active');
-        // restart the zoom on images
         next.classList.remove('is-active');
-        void next.offsetWidth;
+        void next.offsetWidth; // restart the zoom
+        next.classList.add('is-active');
       }
-      next.classList.add('is-active');
       clearTimeout(timer);
-      if (paused) return;
-      if (next === video) {
-        video.currentTime = 0;
-        video.play().catch(() => show(current + 1));
-      } else {
-        timer = window.setTimeout(() => show(current + 1), 6000);
-      }
+      if (!paused) timer = window.setTimeout(() => show(current + 1), 6000);
     }
 
-    if (reduce || saveData) {
-      // Still picture only: first photo, no movement.
-      video.remove();
-      slides.shift();
-      loadImages();
-      slides[0]?.classList.add('is-active');
-    } else {
+    if (!reduce && !saveData && slides.length > 1) {
       pauseBtn.hidden = false;
-      video.addEventListener('ended', () => show(current + 1));
-      video.addEventListener('error', () => show(current + 1));
-      // Load the photos once the page has settled, so the first view stays fast.
+      // Load the other photos once the page has settled, so the first view stays fast.
       if (document.readyState === 'complete') loadImages();
       else addEventListener('load', loadImages, { once: true });
       show(0);
       pauseBtn.addEventListener('click', () => {
         paused = !paused;
         pauseBtn.classList.toggle('is-paused', paused);
+        hero.classList.toggle('is-paused', paused);
         pauseBtn.setAttribute('aria-label', paused ? 'Play background slideshow' : 'Pause background slideshow');
-        if (paused) {
-          clearTimeout(timer);
-          video.pause();
-          hero.classList.add('is-paused');
-        } else {
-          hero.classList.remove('is-paused');
-          show(current + 1);
-        }
+        if (paused) clearTimeout(timer);
+        else show(current + 1);
       });
-      // Stop when the tab is hidden.
       document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-          clearTimeout(timer);
-          video.pause();
-        } else if (!paused) show(current);
+        if (document.hidden) clearTimeout(timer);
+        else if (!paused) show(current);
       });
     }
   }
 </script>
 
 <style>
-  /* ---------- Header: field video and photos behind the title ----------
+  /* ---------- Header: field photos behind the title ----------
      A dark brand-blue overlay keeps the pictures quiet so the words lead. */
   .about-hero {
     isolation: isolate;
