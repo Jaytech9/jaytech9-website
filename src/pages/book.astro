@@ -668,10 +668,12 @@ const steps = ['Service', 'Project', 'Call time', 'Your details'];
   .bfield textarea {
     resize: vertical;
   }
+  /* Focus shows on the field's own border (no ring outside the box). */
+  .bfield :is(input, textarea, select):focus,
   .bfield :is(input, textarea, select):focus-visible {
-    outline: 3px solid var(--accent);
-    outline-offset: 1px;
+    outline: none;
     border-color: var(--brand);
+    background-color: var(--white);
   }
   .bfield [aria-invalid='true']:not([type='radio']) {
     border-color: #c0392b;
