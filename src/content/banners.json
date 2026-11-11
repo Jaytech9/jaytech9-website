@@ -8,7 +8,7 @@
     "highlight": "every phone",
     "sub": "Fast, installable and easy for your team to update.",
     "cta": "Book a free call",
-    "href": "/contact/",
+    "href": "/book/",
     "visual": "art/websites",
     "page": "home",
     "order": 1
@@ -127,7 +127,7 @@
     "after": "",
     "sub": "Set up properly, renewed on time and kept running.",
     "cta": "Book a free call",
-    "href": "/contact/",
+    "href": "/book/?service=care",
     "visual": "art/care",
     "page": "services",
     "order": 6
@@ -139,7 +139,7 @@
     "before": "Built for businesses that rely on their software.",
     "sub": "Our own products and the systems we’ve delivered for clients, from hardware stores to nonprofits.",
     "cta": "Book a free call",
-    "href": "/contact/",
+    "href": "/book/",
     "visual": "art/data",
     "page": "products",
     "order": 1

@@ -1,0 +1,900 @@
+---
+// Booking page: a four-step request for a free 30-minute call about a service.
+// Sent with Netlify Forms (form name "booking"). Works without JavaScript as one long form;
+// with JavaScript it becomes a step-by-step form with a live summary.
+// Days, times, budgets and call methods are set in src/data/site.ts (booking).
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { services } from '../data/services';
+import { booking, site } from '../data/site';
+
+const steps = ['Service', 'Project', 'Call time', 'Your details'];
+---
+
+<Base
+  title="Book a service | JayTech9"
+  description="Book a free 30-minute call with JayTech9 about a website, business system, dashboard, AgriTech tool or design project."
+>
+  <header class="page-head">
+    <div class="wrap">
+      <h1>Book a service</h1>
+      <p class="lede">Choose a service and a time for a free 30-minute call. We’ll confirm within one working day.</p>
+    </div>
+  </header>
+
+  <section class="section book-section" aria-label="Booking form">
+    <div class="wrap">
+      <div class="sheet overlap book">
+        <form
+          class="bform"
+          name="booking"
+          method="POST"
+          action="/book/thanks/"
+          data-netlify="true"
+          netlify-honeypot="company-website"
+          novalidate
+        >
+          <input type="hidden" name="form-name" value="booking" />
+          <p class="visually-hidden" aria-hidden="true">
+            <label>
+              Leave this empty: <input name="company-website" tabindex="-1" autocomplete="off" />
+            </label>
+          </p>
+
+          <ol class="bsteps" aria-label="Booking steps">
+            {
+              steps.map((s, i) => (
+                <li class="bsteps__item" data-step={i}>
+                  <span class="bsteps__num" aria-hidden="true">
+                    {i + 1}
+                  </span>
+                  <span class="bsteps__label">{s}</span>
+                </li>
+              ))
+            }
+          </ol>
+          <div class="bprogress" aria-hidden="true"><span></span></div>
+
+          <!-- Step 1: service -->
+          <fieldset class="bstep" data-step="0">
+            <legend class="bstep__title" tabindex="-1">Which service do you need?</legend>
+            <div class="bservices">
+              {
+                services.map((s) => (
+                  <label class="bservice">
+                    <input type="radio" name="service" value={s.title} data-id={s.id} required />
+                    <span class="bservice__card">
+                      <span class="bservice__icon">
+                        <Icon name={s.icon as any} size={22} />
+                      </span>
+                      <span class="bservice__text">
+                        <strong>{s.title}</strong>
+                        <span>{s.blurb}</span>
+                      </span>
+                      <span class="bservice__tick" aria-hidden="true">
+                        <Icon name="check" size={14} strokeWidth={3} />
+                      </span>
+                    </span>
+                  </label>
+                ))
+              }
+              <label class="bservice">
+                <input type="radio" name="service" value="Not sure yet" data-id="unsure" required />
+                <span class="bservice__card">
+                  <span class="bservice__icon">
+                    <Icon name="search" size={22} />
+                  </span>
+                  <span class="bservice__text">
+                    <strong>Not sure yet</strong>
+                    <span>Tell us the problem and we’ll suggest the right fit.</span>
+                  </span>
+                  <span class="bservice__tick" aria-hidden="true">
+                    <Icon name="check" size={14} strokeWidth={3} />
+                  </span>
+                </span>
+              </label>
+            </div>
+            <p class="berror" data-for="service" hidden>Please choose a service.</p>
+          </fieldset>
+
+          <!-- Step 2: project -->
+          <fieldset class="bstep" data-step="1">
+            <legend class="bstep__title" tabindex="-1">Tell us about your project</legend>
+            <div class="bfield">
+              <label for="b-details">What would you like us to help with?</label>
+              <textarea
+                id="b-details"
+                name="details"
+                rows="5"
+                required
+                minlength="10"
+                placeholder="For example: we sell building materials and want to track stock and sales across two shops."
+              ></textarea>
+              <p class="berror" data-for="details" hidden>Please add a short description (a sentence is enough).</p>
+            </div>
+            <div class="bfield">
+              <p class="bfield__label" id="b-budget-label">Budget</p>
+              <div class="bchips" role="radiogroup" aria-labelledby="b-budget-label">
+                {
+                  booking.budgets.map((b) => (
+                    <label class="bchip">
+                      <input type="radio" name="budget" value={b} />
+                      <span>{b}</span>
+                    </label>
+                  ))
+                }
+              </div>
+              <p class="bhint">Outside Ghana? Mention your currency in the description and we’ll quote in it.</p>
+            </div>
+            <div class="bfield">
+              <p class="bfield__label" id="b-time-label">When do you need it?</p>
+              <div class="bchips" role="radiogroup" aria-labelledby="b-time-label">
+                {
+                  booking.timelines.map((b) => (
+                    <label class="bchip">
+                      <input type="radio" name="timeline" value={b} />
+                      <span>{b}</span>
+                    </label>
+                  ))
+                }
+              </div>
+            </div>
+            <div class="bfield">
+              <label for="b-link">
+                Current website or social page <span class="optional">(optional)</span>
+              </label>
+              <input id="b-link" name="link" type="url" inputmode="url" placeholder="https://" />
+            </div>
+          </fieldset>
+
+          <!-- Step 3: call time -->
+          <fieldset class="bstep" data-step="2">
+            <legend class="bstep__title" tabindex="-1">Pick a time for your free call</legend>
+            <div class="bfield">
+              <p class="bfield__label" id="b-method-label">How should we talk?</p>
+              <div class="bchips" role="radiogroup" aria-labelledby="b-method-label">
+                {
+                  booking.methods.map((m, i) => (
+                    <label class="bchip">
+                      <input type="radio" name="method" value={m} checked={i === 1} />
+                      <span>{m}</span>
+                    </label>
+                  ))
+                }
+              </div>
+            </div>
+            <div class="bfield">
+              <label class="bfield__label" for="b-date" id="b-date-label">Day</label>
+              <!-- Without JavaScript this is a normal date field. With it, it becomes the day buttons below. -->
+              <input id="b-date" class="bdate-native" name="preferred_date" type="date" required />
+              <div class="bdays" role="radiogroup" aria-labelledby="b-date-label" hidden></div>
+              <p class="berror" data-for="preferred_date" hidden>Please choose a day.</p>
+            </div>
+            <div class="bfield">
+              <p class="bfield__label" id="b-slot-label">Time <span class="optional">(Ghana time, GMT)</span></p>
+              <div class="bchips bslots" role="radiogroup" aria-labelledby="b-slot-label">
+                {
+                  booking.slots.map((s) => (
+                    <label class="bchip">
+                      <input type="radio" name="preferred_time" value={s} required />
+                      <span>
+                        {s}
+                        <small class="bslot__local" />
+                      </span>
+                    </label>
+                  ))
+                }
+              </div>
+              <p class="berror" data-for="preferred_time" hidden>Please choose a time.</p>
+            </div>
+          </fieldset>
+
+          <!-- Step 4: details -->
+          <fieldset class="bstep" data-step="3">
+            <legend class="bstep__title" tabindex="-1">Your details</legend>
+            <div class="bgrid">
+              <div class="bfield">
+                <label for="b-name">Full name</label>
+                <input id="b-name" name="name" type="text" autocomplete="name" required />
+                <p class="berror" data-for="name" hidden>Please enter your name.</p>
+              </div>
+              <div class="bfield">
+                <label for="b-org">
+                  Business or organisation <span class="optional">(optional)</span>
+                </label>
+                <input id="b-org" name="organisation" type="text" autocomplete="organization" />
+              </div>
+              <div class="bfield">
+                <label for="b-email">Email</label>
+                <input id="b-email" name="email" type="email" autocomplete="email" required />
+                <p class="berror" data-for="email" hidden>Please enter a valid email address.</p>
+              </div>
+              <div class="bfield">
+                <label for="b-phone">Phone or WhatsApp</label>
+                <input id="b-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+233" required />
+                <p class="berror" data-for="phone" hidden>Please enter a number we can reach you on.</p>
+              </div>
+            </div>
+            <div class="bfield">
+              <label for="b-source">
+                How did you hear about us? <span class="optional">(optional)</span>
+              </label>
+              <select id="b-source" name="source">
+                <option value="">Choose one</option>
+                <option>Google search</option>
+                <option>Social media</option>
+                <option>Friend or colleague</option>
+                <option>Saw our work</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <input type="hidden" name="visitor_timezone" value="" />
+            <p class="bhint">We only use your details to arrange this call. No spam, no sharing.</p>
+          </fieldset>
+
+          <div class="bnav">
+            <button type="button" class="button button--quiet bnav__back" hidden>Back</button>
+            <button type="button" class="button bnav__next" hidden>Continue</button>
+            <button type="submit" class="button bnav__submit">Request booking</button>
+          </div>
+        </form>
+
+        <aside class="bsummary" aria-labelledby="bsum-heading">
+          <h2 id="bsum-heading">Your booking</h2>
+          <dl class="bsummary__list">
+            <div><dt>Service</dt><dd data-sum="service">Not chosen yet</dd></div>
+            <div><dt>Budget</dt><dd data-sum="budget">–</dd></div>
+            <div><dt>Call</dt><dd data-sum="method">WhatsApp call</dd></div>
+            <div><dt>When</dt><dd data-sum="when">Not chosen yet</dd></div>
+          </dl>
+          <ul class="bsummary__trust">
+            <li><Icon name="check" size={16} strokeWidth={2.5} /> Free, no obligation</li>
+            <li><Icon name="check" size={16} strokeWidth={2.5} /> Confirmed within one working day</li>
+            <li><Icon name="check" size={16} strokeWidth={2.5} /> Written quote after the call</li>
+          </ul>
+          <p class="bsummary__alt">
+            Prefer to chat now?
+            <a href={site.whatsapp} rel="noopener">Message us on WhatsApp</a>
+          </p>
+        </aside>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { booking } from '../data/site';
+
+  const form = document.querySelector<HTMLFormElement>('.bform');
+  if (form) {
+    const stepsEls = Array.from(form.querySelectorAll<HTMLFieldSetElement>('.bstep'));
+    const markers = Array.from(form.querySelectorAll<HTMLElement>('.bsteps__item'));
+    const bar = form.querySelector<HTMLElement>('.bprogress span')!;
+    const back = form.querySelector<HTMLButtonElement>('.bnav__back')!;
+    const next = form.querySelector<HTMLButtonElement>('.bnav__next')!;
+    const submit = form.querySelector<HTMLButtonElement>('.bnav__submit')!;
+    const dateInput = form.querySelector<HTMLInputElement>('#b-date')!;
+    const days = form.querySelector<HTMLElement>('.bdays')!;
+    const sum = (k: string) => document.querySelector<HTMLElement>(`[data-sum="${k}"]`)!;
+    let step = 0;
+
+    form.classList.add('is-enhanced');
+
+    // ----- Day buttons: the next working days, built in the visitor's browser so they're never stale.
+    const fmtDay = new Intl.DateTimeFormat('en-GB', { weekday: 'short', timeZone: 'Africa/Accra' });
+    const fmtDate = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', timeZone: 'Africa/Accra' });
+    const fmtLong = new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Africa/Accra' });
+    const iso = (d: Date) => d.toISOString().slice(0, 10);
+    const today = new Date();
+    const options: Date[] = [];
+    for (let i = 1; options.length < 10 && i <= booking.daysAhead + 10; i++) {
+      const d = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() + i, 12));
+      if (booking.workingDays.includes(d.getUTCDay())) options.push(d);
+    }
+    days.innerHTML = options
+      .map(
+        (d) => `<label class="bday"><input type="radio" name="day-choice" value="${iso(d)}" />
+        <span><small>${fmtDay.format(d)}</small><strong>${fmtDate.format(d)}</strong></span></label>`,
+      )
+      .join('');
+    days.hidden = false;
+    dateInput.classList.add('visually-hidden');
+    dateInput.tabIndex = -1;
+    dateInput.setAttribute('aria-hidden', 'true');
+    days.addEventListener('change', (e) => {
+      dateInput.value = (e.target as HTMLInputElement).value;
+      update();
+    });
+
+    // ----- Show each slot in the visitor's own time when they're not in Ghana.
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    (form.querySelector('[name="visitor_timezone"]') as HTMLInputElement).value = tz;
+    if (new Date().getTimezoneOffset() !== 0) {
+      form.querySelectorAll<HTMLInputElement>('[name="preferred_time"]').forEach((r) => {
+        const [h, m] = r.value.split(':').map(Number);
+        const d = new Date(Date.UTC(2026, 0, 15, h, m));
+        const local = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const small = r.parentElement!.querySelector('.bslot__local');
+        if (small) small.textContent = `${local} your time`;
+      });
+    }
+
+    // ----- Preselect a service from ?service=design
+    const pre = new URLSearchParams(location.search).get('service');
+    const preInput = pre && form.querySelector<HTMLInputElement>(`[name="service"][data-id="${pre}"]`);
+    if (preInput) preInput.checked = true;
+
+    // ----- Validation per step
+    function fieldsIn(i: number) {
+      return Array.from(stepsEls[i].querySelectorAll<HTMLInputElement>('input, textarea, select')).filter(
+        (el) => el.type !== 'hidden' && el.name,
+      );
+    }
+    function showError(name: string, show: boolean) {
+      const err = form!.querySelector<HTMLElement>(`.berror[data-for="${name}"]`);
+      if (err) err.hidden = !show;
+      form!.querySelectorAll<HTMLElement>(`[name="${name}"]`).forEach((el) => {
+        if (show) el.setAttribute('aria-invalid', 'true');
+        else el.removeAttribute('aria-invalid');
+      });
+    }
+    function validate(i: number) {
+      let firstBad: HTMLElement | null = null;
+      const seen = new Set<string>();
+      for (const el of fieldsIn(i)) {
+        if (seen.has(el.name)) continue;
+        seen.add(el.name);
+        let ok = true;
+        if (el.type === 'radio') {
+          const group = form!.querySelectorAll<HTMLInputElement>(`[name="${el.name}"]`);
+          const required = Array.from(group).some((r) => r.required);
+          ok = !required || Array.from(group).some((r) => r.checked);
+        } else if (el.name === 'preferred_date') {
+          ok = !!el.value;
+        } else {
+          ok = el.checkValidity();
+        }
+        showError(el.name, !ok);
+        if (!ok && !firstBad) {
+          firstBad =
+            el.name === 'preferred_date'
+              ? days.querySelector('input')
+              : el.type === 'radio'
+                ? form!.querySelector<HTMLElement>(`[name="${el.name}"]`)
+                : el;
+        }
+      }
+      if (firstBad) firstBad.focus();
+      return !firstBad;
+    }
+
+    function go(i: number, focus = true) {
+      step = i;
+      stepsEls.forEach((s, n) => (s.hidden = n !== i));
+      markers.forEach((m, n) => {
+        m.classList.toggle('is-done', n < i);
+        m.classList.toggle('is-current', n === i);
+        if (n === i) m.setAttribute('aria-current', 'step');
+        else m.removeAttribute('aria-current');
+      });
+      bar.style.width = `${((i + 1) / stepsEls.length) * 100}%`;
+      back.hidden = i === 0;
+      next.hidden = i === stepsEls.length - 1;
+      submit.hidden = i !== stepsEls.length - 1;
+      if (focus) {
+        const title = stepsEls[i].querySelector<HTMLElement>('.bstep__title');
+        title?.focus({ preventScroll: true });
+        form!.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    next.addEventListener('click', () => {
+      if (validate(step)) go(step + 1);
+    });
+    back.addEventListener('click', () => go(step - 1));
+    form.addEventListener('submit', (e) => {
+      for (let i = 0; i < stepsEls.length; i++) {
+        if (!validate(i)) {
+          e.preventDefault();
+          go(i, false);
+          validate(i);
+          return;
+        }
+      }
+      submit.disabled = true;
+      submit.textContent = 'Sending…';
+    });
+    // Clear an error as soon as it's fixed.
+    form.addEventListener('input', (e) => {
+      const el = e.target as HTMLInputElement;
+      if (el.getAttribute('aria-invalid') && (el.type === 'radio' || el.checkValidity())) showError(el.name, false);
+    });
+    form.addEventListener('change', (e) => {
+      const el = e.target as HTMLInputElement;
+      if (el.type === 'radio') showError(el.name === 'day-choice' ? 'preferred_date' : el.name, false);
+      update();
+    });
+
+    // ----- Live summary
+    const val = (n: string) => form!.querySelector<HTMLInputElement>(`[name="${n}"]:checked`)?.value;
+    function update() {
+      sum('service').textContent = val('service') || 'Not chosen yet';
+      sum('budget').textContent = val('budget') || '–';
+      sum('method').textContent = val('method') || '–';
+      const t = val('preferred_time');
+      const d = dateInput.value ? fmtLong.format(new Date(`${dateInput.value}T12:00:00Z`)) : '';
+      sum('when').textContent = d || t ? [d, t && `${t} GMT`].filter(Boolean).join(', ') : 'Not chosen yet';
+    }
+
+    update();
+    go(0, false);
+  }
+</script>
+
+<style>
+  .book-section {
+    padding-top: 0;
+  }
+  .book {
+    display: grid;
+    gap: clamp(1.5rem, 4vw, 2.5rem);
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+    align-items: start;
+  }
+  @media (width >= 62rem) {
+    .book {
+      grid-template-columns: minmax(0, 1fr) 20rem;
+    }
+  }
+
+  .bform {
+    scroll-margin-top: 6rem;
+  }
+  /* ---------- Steps header ---------- */
+  .bsteps {
+    display: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0.5rem;
+    justify-content: space-between;
+  }
+  .bform.is-enhanced .bsteps {
+    display: flex;
+  }
+  .bsteps__item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+  .bsteps__num {
+    display: grid;
+    place-items: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 50%;
+    background: #e6edf2;
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+    transition:
+      background-color 0.3s,
+      color 0.3s;
+  }
+  .bsteps__item.is-current {
+    color: var(--ink);
+  }
+  .bsteps__item.is-current .bsteps__num {
+    background: var(--brand);
+    color: var(--white);
+  }
+  .bsteps__item.is-done .bsteps__num {
+    background: var(--accent);
+    color: var(--ink);
+  }
+  @media (width < 40rem) {
+    .bsteps__item:not(.is-current) .bsteps__label {
+      display: none;
+    }
+  }
+  .bprogress {
+    display: none;
+    height: 6px;
+    margin: 0.9rem 0 1.75rem;
+    border-radius: 999px;
+    background: #e6edf2;
+    overflow: hidden;
+  }
+  .bform.is-enhanced .bprogress {
+    display: block;
+  }
+  .bprogress span {
+    display: block;
+    height: 100%;
+    width: 25%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--brand), var(--accent));
+    transition: width 0.4s var(--card-ease, ease);
+  }
+
+  /* ---------- Steps ---------- */
+  .bstep {
+    margin: 0 0 2rem;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+  .bform.is-enhanced .bstep {
+    margin-bottom: 0;
+    animation: bstep-in 0.35s var(--card-ease, ease);
+  }
+  .bstep[hidden] {
+    display: none;
+  }
+  @keyframes bstep-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bform.is-enhanced .bstep {
+      animation: none;
+    }
+  }
+  .bstep__title {
+    padding: 0;
+    margin-bottom: 1.25rem;
+    font-size: var(--step-2);
+    font-weight: 700;
+    color: var(--ink);
+    outline: none;
+  }
+
+  /* Service cards */
+  .bservices {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  }
+  .bservice {
+    position: relative;
+    cursor: pointer;
+  }
+  .bservice input,
+  .bchip input,
+  .bdays :global(.bday input) {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+  .bservice__card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.85rem;
+    align-items: start;
+    height: 100%;
+    padding: 1rem;
+    border-radius: 16px;
+    border: 2px solid #dbe4ea;
+    background: var(--white);
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s,
+      transform 0.2s;
+  }
+  .bservice:hover .bservice__card {
+    border-color: #9ec3da;
+    transform: translateY(-2px);
+  }
+  .bservice__icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 12px;
+    background: #e6f1f8;
+    color: var(--brand);
+  }
+  .bservice__text strong {
+    display: block;
+    line-height: 1.3;
+  }
+  .bservice__text span {
+    display: block;
+    margin-top: 0.2rem;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+  .bservice__tick {
+    display: grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 2px solid #c9d6df;
+    color: transparent;
+    transition: all 0.2s;
+  }
+  .bservice input:checked + .bservice__card {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 4px #0068a11f;
+  }
+  .bservice input:checked + .bservice__card .bservice__tick {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: var(--white);
+  }
+  .bservice input:focus-visible + .bservice__card,
+  .bchip input:focus-visible + span,
+  .bdays :global(.bday input:focus-visible + span) {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* Fields */
+  .bfield {
+    display: grid;
+    gap: 0.45rem;
+    margin-bottom: 1.4rem;
+  }
+  .bfield > label,
+  .bfield__label {
+    margin: 0;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .optional {
+    font-weight: 400;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  .bfield input:not([type='radio']),
+  .bfield textarea,
+  .bfield select {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: 12px;
+    border: 2px solid #b9c9d4;
+    background: var(--white);
+    color: var(--ink);
+    font: inherit;
+  }
+  .bfield textarea {
+    resize: vertical;
+  }
+  .bfield :is(input, textarea, select):focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 1px;
+    border-color: var(--brand);
+  }
+  .bfield [aria-invalid='true']:not([type='radio']) {
+    border-color: #c0392b;
+  }
+  .bgrid {
+    display: grid;
+    gap: 0 1rem;
+  }
+  @media (width >= 40rem) {
+    .bgrid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .berror {
+    margin: 0.4rem 0 0;
+    color: #b42318;
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+  .berror[hidden] {
+    display: none;
+  }
+  .bhint {
+    margin: 0.2rem 0 0;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  /* Chips: budget, timeline, method, time */
+  .bchips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .bchip {
+    position: relative;
+    cursor: pointer;
+  }
+  .bchip span {
+    display: inline-grid;
+    place-items: center;
+    min-height: 2.75rem;
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    border: 2px solid #dbe4ea;
+    background: var(--white);
+    font-weight: 600;
+    font-size: var(--step--1);
+    text-align: center;
+    transition:
+      border-color 0.2s,
+      background-color 0.2s,
+      color 0.2s;
+  }
+  .bchip:hover span {
+    border-color: #9ec3da;
+  }
+  .bchip input:checked + span {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: var(--white);
+  }
+  .bslot__local {
+    display: block;
+    font-weight: 500;
+    font-size: 0.7rem;
+    opacity: 0.8;
+  }
+  .bslot__local:empty {
+    display: none;
+  }
+  .bslots .bchip span {
+    min-width: 5rem;
+    border-radius: 12px;
+  }
+
+  /* Day buttons */
+  .bdays {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(4.5rem, 1fr);
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.2rem 0.1rem 0.5rem;
+    scrollbar-width: thin;
+  }
+  .bdays[hidden] {
+    display: none;
+  }
+  .bdays :global(.bday) {
+    position: relative;
+    cursor: pointer;
+  }
+  .bdays :global(.bday span) {
+    display: grid;
+    place-items: center;
+    gap: 0.1rem;
+    padding: 0.6rem 0.4rem;
+    border-radius: 14px;
+    border: 2px solid #dbe4ea;
+    background: var(--white);
+    transition:
+      border-color 0.2s,
+      background-color 0.2s,
+      color 0.2s;
+  }
+  .bdays :global(.bday small) {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .bdays :global(.bday strong) {
+    font-size: var(--step-0, 1rem);
+    white-space: nowrap;
+  }
+  .bdays :global(.bday:hover span) {
+    border-color: #9ec3da;
+  }
+  .bdays :global(.bday input:checked + span) {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: var(--white);
+  }
+  .bdays :global(.bday input:checked + span small) {
+    color: #d6e9f5;
+  }
+
+  /* Navigation */
+  .bnav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e3eaf0;
+  }
+  .bnav [hidden] {
+    display: none;
+  }
+  .bnav__next,
+  .bnav__submit {
+    margin-left: auto;
+    min-width: 10rem;
+    justify-content: center;
+  }
+  .bnav__submit {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--ink);
+  }
+  .bnav__submit:hover {
+    background: #8be06a;
+    border-color: #8be06a;
+    color: var(--ink);
+  }
+  @media (width < 30rem) {
+    .bnav .button {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+  }
+
+  /* ---------- Summary ---------- */
+  .bsummary {
+    padding: 1.4rem;
+    border-radius: var(--radius-lg);
+    background: var(--brand-surface);
+    color: var(--white);
+  }
+  @media (width >= 62rem) {
+    .bsummary {
+      position: sticky;
+      top: 6rem;
+    }
+  }
+  .bsummary h2 {
+    margin: 0 0 1rem;
+    font-size: var(--step-1);
+    color: var(--white);
+  }
+  .bsummary__list {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0 0 1.25rem;
+    padding: 1rem;
+    border-radius: 14px;
+    background: #ffffff1a;
+  }
+  .bsummary__list dt {
+    font-size: 0.78rem;
+    color: #bcd6e6;
+  }
+  .bsummary__list dd {
+    margin: 0.1rem 0 0;
+    font-weight: 600;
+  }
+  .bsummary__trust {
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+    font-size: var(--step--1);
+  }
+  .bsummary__trust li {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .bsummary__trust :global(svg) {
+    color: var(--accent);
+    flex: none;
+  }
+  .bsummary__alt {
+    margin: 0;
+    font-size: var(--step--1);
+    color: #d6e9f5;
+  }
+  .bsummary__alt a {
+    color: var(--white);
+    font-weight: 600;
+  }
+</style>

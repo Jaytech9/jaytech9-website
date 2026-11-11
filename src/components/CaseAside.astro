@@ -64,7 +64,7 @@ const [main, ...thumbs] = p.gallery;
           </a>
         )
       }
-      <a class="button" href="/contact/">Book a free call</a>
+      <a class="button" href={`/book/?service=${svc.id}`}>Book a free call</a>
     </div>
   </div>
 </aside>
@@ -124,10 +124,6 @@ const [main, ...thumbs] = p.gallery;
   .tone-green { background: linear-gradient(135deg, #154f12, #2a8a1c); }
   .tone-forest { background: linear-gradient(135deg, #0f3b1f, #1e6b34); }
   .tone-ink-soft { background: linear-gradient(135deg, #2b4252, #4a6577); }
-  .shot.is-placeholder {
-    outline: 2px dashed #9fb6c6;
-    outline-offset: 4px;
-  }
   .ph-badge {
     position: absolute;
     left: 0.75rem;

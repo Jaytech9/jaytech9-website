@@ -15,7 +15,7 @@ const featured = (await getCollection('products', (p) => p.data.featured)).sort(
 
 // The six most-used actions, shown as app-style tiles under the banner.
 const tiles = [
-  { label: 'Book a Call', hint: 'Free, 30 minutes', href: '/contact/', icon: 'rocket' },
+  { label: 'Book a Call', hint: 'Free, 30 minutes', href: '/book/', icon: 'rocket' },
   { label: 'Our Services', hint: '6 ways we help', href: '/services/', icon: 'layers' },
   { label: 'Our Products', hint: 'Software we build', href: '/products/', icon: 'package' },
   { label: 'WhatsApp Us', hint: 'Quick replies', href: site.whatsapp, icon: 'chat' },

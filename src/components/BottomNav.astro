@@ -19,7 +19,7 @@ const more = [
   { label: 'Blog', href: '/blog/', icon: 'book' },
   { label: 'Careers', href: '/careers/', icon: 'users' },
   { label: 'Donate', href: '/donate/', icon: 'heart' },
-  { label: 'Book a free call', href: '/contact/', icon: 'rocket' },
+  { label: 'Book a free call', href: '/book/', icon: 'rocket' },
   { label: 'Support', href: `mailto:${site.email}`, icon: 'headset' },
 ] as const;
 ---
@@ -45,7 +45,7 @@ const more = [
           <ul class="sheet__grid">
             {more.map((m) => (
               <li>
-                <a class="sheet__tile" href={m.href} aria-current={m.href.startsWith('/') && m.href !== '/contact/' && isCurrent(m.href) ? 'page' : undefined}>
+                <a class="sheet__tile" href={m.href} aria-current={m.href.startsWith('/') && m.href !== '/book/' && isCurrent(m.href) ? 'page' : undefined}>
                   <Icon name={m.icon} size={24} strokeWidth={1.8} />
                   <span>{m.label}</span>
                 </a>

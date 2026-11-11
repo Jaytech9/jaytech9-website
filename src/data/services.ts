@@ -1,11 +1,11 @@
 // The six services, in the order they appear on the Services page. `id` matches the section anchor.
 export const services = [
-  { id: 'websites', title: 'Websites and web apps', icon: 'monitor' },
-  { id: 'systems', title: 'Business systems', icon: 'layers' },
-  { id: 'data', title: 'Data dashboards and analysis', icon: 'chart' },
-  { id: 'agritech', title: 'AgriTech and sustainability', icon: 'sprout' },
-  { id: 'design', title: 'Brand and print design', icon: 'brush' },
-  { id: 'care', title: 'Domains, hosting and care', icon: 'globe' },
+  { id: 'websites', blurb: 'Business sites, online shops and web apps.', title: 'Websites and web apps', icon: 'monitor' },
+  { id: 'systems', blurb: 'Stock, sales, donations and records in one place.', title: 'Business systems', icon: 'layers' },
+  { id: 'data', blurb: 'Dashboards and reports from your numbers.', title: 'Data dashboards and analysis', icon: 'chart' },
+  { id: 'agritech', blurb: 'Digital tools for farmers and programmes.', title: 'AgriTech and sustainability', icon: 'sprout' },
+  { id: 'design', blurb: 'Logos, flyers, banners and social media.', title: 'Brand and print design', icon: 'brush' },
+  { id: 'care', blurb: 'Domains, business email, hosting and updates.', title: 'Domains, hosting and care', icon: 'globe' },
 ] as const;
 
 export const serviceById = Object.fromEntries(services.map((s) => [s.id, s]));

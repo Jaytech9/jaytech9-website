@@ -120,6 +120,10 @@ const designs = defineCollection({
     image: picture,
     back: picture.optional(),
     spin: z.array(z.string()).optional(),
+    // Short video: an .mp4 in public/uploads/ (or https URL). `image` is used as its cover.
+    video: z.string().optional(),
+    platform: z.enum(['tiktok', 'instagram', 'youtube', 'facebook']).optional(), // where it was posted
+    postUrl: z.string().url().optional(), // link to the post, shown as "Watch on TikTok" etc.
     tags: z.array(z.string()).default([]),
     featured: z.boolean().default(false), // shows in "Recent designs" on the home page
     placeholder: z.boolean().default(false),

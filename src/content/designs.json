@@ -34,8 +34,30 @@
     "placeholder": true
   },
   {
-    "id": "box-360",
+    "id": "launch-reel",
     "order": 3,
+    "title": "Product launch reel",
+    "category": "fashion-beauty",
+    "year": 2026,
+    "note": "Placeholder: replace with your own short video and a one-line note.",
+    "alt": "Cover of a placeholder product launch reel",
+    "image": {
+      "src": "/videos/placeholder-vertical.jpg",
+      "width": 540,
+      "height": 960
+    },
+    "video": "/videos/placeholder-vertical.mp4",
+    "platform": "instagram",
+    "postUrl": "https://www.instagram.com/Jaytech9",
+    "tags": [
+      "video"
+    ],
+    "featured": true,
+    "placeholder": true
+  },
+  {
+    "id": "box-360",
+    "order": 4,
     "title": "Branded gift box",
     "category": "packaging-merch",
     "year": 2026,
@@ -78,7 +100,7 @@
   },
   {
     "id": "business-card",
-    "order": 4,
+    "order": 5,
     "title": "Business card",
     "category": "business-cards",
     "year": 2026,
@@ -99,8 +121,30 @@
     }
   },
   {
+    "id": "anniversary-highlights",
+    "order": 6,
+    "title": "Anniversary highlights",
+    "category": "church-events",
+    "year": 2026,
+    "note": "Placeholder: replace with your own short video and a one-line note.",
+    "alt": "Cover of a placeholder anniversary highlights",
+    "image": {
+      "src": "/videos/placeholder-vertical.jpg",
+      "width": 540,
+      "height": 960
+    },
+    "video": "/videos/placeholder-vertical.mp4",
+    "platform": "tiktok",
+    "postUrl": "https://www.tiktok.com/@jaytech_9",
+    "tags": [
+      "video"
+    ],
+    "featured": false,
+    "placeholder": true
+  },
+  {
     "id": "rollup-banner",
-    "order": 5,
+    "order": 7,
     "title": "Roll-up banner",
     "category": "banners",
     "year": 2026,
@@ -117,7 +161,7 @@
   },
   {
     "id": "instagram-post",
-    "order": 6,
+    "order": 8,
     "title": "Social media post",
     "category": "social-media",
     "year": 2026,
@@ -133,8 +177,30 @@
     "placeholder": true
   },
   {
+    "id": "brand-intro",
+    "order": 9,
+    "title": "Brand intro video",
+    "category": "social-media",
+    "year": 2026,
+    "note": "Placeholder: replace with your own short video and a one-line note.",
+    "alt": "Cover of a placeholder brand intro video",
+    "image": {
+      "src": "/videos/placeholder-square.jpg",
+      "width": 720,
+      "height": 720
+    },
+    "video": "/videos/placeholder-square.mp4",
+    "platform": "youtube",
+    "postUrl": "https://www.youtube.com/@JayTech9-9",
+    "tags": [
+      "video"
+    ],
+    "featured": false,
+    "placeholder": true
+  },
+  {
     "id": "anniversary-programme",
-    "order": 7,
+    "order": 10,
     "title": "Anniversary programme",
     "category": "church-events",
     "year": 2026,
@@ -151,7 +217,7 @@
   },
   {
     "id": "launch-post",
-    "order": 8,
+    "order": 11,
     "title": "Product launch post",
     "category": "fashion-beauty",
     "year": 2026,
@@ -167,8 +233,30 @@
     "placeholder": true
   },
   {
+    "id": "flyer-animation",
+    "order": 12,
+    "title": "Animated flyer",
+    "category": "flyers",
+    "year": 2026,
+    "note": "Placeholder: replace with your own short video and a one-line note.",
+    "alt": "Cover of a placeholder animated flyer",
+    "image": {
+      "src": "/videos/placeholder-square.jpg",
+      "width": 720,
+      "height": 720
+    },
+    "video": "/videos/placeholder-square.mp4",
+    "platform": "facebook",
+    "postUrl": "https://www.facebook.com/Jaytech9",
+    "tags": [
+      "video"
+    ],
+    "featured": false,
+    "placeholder": true
+  },
+  {
     "id": "shop-banner",
-    "order": 9,
+    "order": 13,
     "title": "Shop-front banner",
     "category": "banners",
     "year": 2026,
@@ -185,7 +273,7 @@
   },
   {
     "id": "story",
-    "order": 10,
+    "order": 14,
     "title": "Instagram story",
     "category": "social-media",
     "year": 2026,
@@ -202,7 +290,7 @@
   },
   {
     "id": "price-list",
-    "order": 11,
+    "order": 15,
     "title": "Price list flyer",
     "category": "flyers",
     "year": 2026,
@@ -219,7 +307,7 @@
   },
   {
     "id": "evangelism-poster",
-    "order": 12,
+    "order": 16,
     "title": "Evangelism poster",
     "category": "church-events",
     "year": 2026,

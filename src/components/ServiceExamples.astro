@@ -13,6 +13,7 @@ const examples = (await getCollection('products', (p) => p.data.service === serv
 ---
 
 <div class="examples">
+  <a class="examples__book" href={`/book/?service=${service}`}>Book this service</a>
   {
     service === 'design' ? (
       <>
@@ -40,9 +41,7 @@ const examples = (await getCollection('products', (p) => p.data.service === serv
         </ul>
       </>
     ) : (
-      <a class="examples__ask" href="/contact/">
-        Ask us about this <span aria-hidden="true">→</span>
-      </a>
+      null
     )
   }
 </div>
@@ -50,6 +49,28 @@ const examples = (await getCollection('products', (p) => p.data.service === serv
 <style>
   .examples {
     margin-top: 1.25rem;
+  }
+  .examples__book {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1.2rem;
+    border-radius: 999px;
+    background: var(--brand);
+    color: var(--white);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s, transform 0.2s;
+  }
+  .examples__book:hover {
+    background: var(--brand-deep);
+    color: var(--white);
+    transform: translateY(-2px);
+  }
+  .examples__book:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
   }
   .examples__label {
     margin: 0 0 0.5rem;
@@ -65,8 +86,7 @@ const examples = (await getCollection('products', (p) => p.data.service === serv
     flex-wrap: wrap;
     gap: 0.5rem;
   }
-  .examples__list a,
-  .examples__ask {
+  .examples__list a {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
@@ -80,8 +100,7 @@ const examples = (await getCollection('products', (p) => p.data.service === serv
     text-decoration: none;
     transition: background-color 0.2s, color 0.2s;
   }
-  .examples__list a:hover,
-  .examples__ask:hover {
+  .examples__list a:hover {
     background: var(--brand);
     color: var(--white);
   }
