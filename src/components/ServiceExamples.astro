@@ -14,7 +14,18 @@ const examples = (await getCollection('products', (p) => p.data.service === serv
 
 <div class="examples">
   {
-    examples.length > 0 ? (
+    service === 'design' ? (
+      <>
+        <p class="examples__label">See it in action</p>
+        <ul class="examples__list">
+          <li>
+            <a href="/design/">
+              Browse the design gallery <span aria-hidden="true">→</span>
+            </a>
+          </li>
+        </ul>
+      </>
+    ) : examples.length > 0 ? (
       <>
         <p class="examples__label">See it in action</p>
         <ul class="examples__list">

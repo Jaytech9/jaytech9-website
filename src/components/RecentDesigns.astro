@@ -1,0 +1,107 @@
+---
+// "Recent designs" strip for the home page: featured pieces from the design gallery.
+// Hidden on the live site until at least one real (non-placeholder) piece is featured.
+import { getCollection } from 'astro:content';
+import { designCategoryLabels, showPlaceholders } from '../data/services';
+
+const pieces = (await getCollection('designs'))
+  .filter((d) => d.data.featured && (showPlaceholders || !d.data.placeholder))
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 6);
+---
+
+{
+  pieces.length > 0 && (
+    <section class="section" aria-labelledby="designs-heading">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="designs-heading">Recent designs</h2>
+          <a href="/design/">View gallery</a>
+        </div>
+        <ul class="rd">
+          {pieces.map((p) => (
+            <li class:list={{ 'is-placeholder': p.data.placeholder }}>
+              <a href={`/design/?open=${p.id}`}>
+                <img src={p.data.image.src} alt={p.data.alt} loading="lazy" decoding="async" />
+                <span class="rd__label">
+                  <strong>{p.data.title}</strong>
+                  <span>{designCategoryLabels[p.data.category]}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .rd {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (width >= 40rem) {
+    .rd {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (width >= 64rem) {
+    .rd {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+  .rd a {
+    position: relative;
+    display: block;
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    box-shadow: var(--shadow-card);
+    color: var(--white);
+    text-decoration: none;
+    transition:
+      transform 0.25s var(--card-ease, ease),
+      box-shadow 0.25s;
+  }
+  .rd a:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-card-hover);
+  }
+  .rd a:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .rd img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s var(--card-ease, ease);
+  }
+  .rd a:hover img {
+    transform: scale(1.05);
+  }
+  .rd__label {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 2rem 0.75rem 0.7rem;
+    background: linear-gradient(transparent, #06111ad9);
+    font-size: 0.8rem;
+    line-height: 1.3;
+  }
+  .rd__label strong {
+    display: block;
+    font-size: var(--step--1);
+  }
+  .rd__label span {
+    color: #d6e6ef;
+  }
+  .is-placeholder a {
+    outline: 2px dashed #9fb6c6;
+    outline-offset: 3px;
+  }
+</style>

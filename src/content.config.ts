@@ -94,4 +94,36 @@ const clients = defineCollection({
   }),
 });
 
-export const collections = { products, banners, testimonials, clients };
+// Design gallery (/design/). Each piece needs one image. Add `back` for a front/back flip
+// (business cards, two-sided flyers) or `spin` (24–36 photos taken as the item turns) for a 360° view.
+export const designCategories = [
+  'logos',
+  'flyers',
+  'banners',
+  'social-media',
+  'church-events',
+  'business-cards',
+  'fashion-beauty',
+  'packaging-merch',
+] as const;
+const picture = z.object({ src: z.string(), width: z.number(), height: z.number() });
+const designs = defineCollection({
+  loader: file('src/content/designs.json'),
+  schema: z.object({
+    order: z.number(), // lower shows first
+    title: z.string(),
+    category: z.enum(designCategories),
+    year: z.number(),
+    client: z.string().optional(), // only with the client's permission
+    note: z.string().optional(), // one or two sentences about the brief
+    alt: z.string(), // describes the image for people using screen readers
+    image: picture,
+    back: picture.optional(),
+    spin: z.array(z.string()).optional(),
+    tags: z.array(z.string()).default([]),
+    featured: z.boolean().default(false), // shows in "Recent designs" on the home page
+    placeholder: z.boolean().default(false),
+  }),
+});
+
+export const collections = { products, banners, testimonials, clients, designs };

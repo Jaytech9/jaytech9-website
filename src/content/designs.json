@@ -1,0 +1,237 @@
+[
+  {
+    "id": "logo-mark",
+    "order": 1,
+    "title": "Logo design",
+    "category": "logos",
+    "year": 2026,
+    "note": "Placeholder: replace with your own work and a one-line note about the brief.",
+    "alt": "Placeholder for a logo design",
+    "image": {
+      "src": "/images/design/logo-mark.svg",
+      "width": 1000,
+      "height": 1000
+    },
+    "tags": [],
+    "featured": true,
+    "placeholder": true
+  },
+  {
+    "id": "event-flyer",
+    "order": 2,
+    "title": "Event flyer",
+    "category": "flyers",
+    "year": 2026,
+    "note": "Placeholder: replace with your own work and a one-line note about the brief.",
+    "alt": "Placeholder for a event flyer",
+    "image": {
+      "src": "/images/design/event-flyer.svg",
+      "width": 800,
+      "height": 1000
+    },
+    "tags": [],
+    "featured": true,
+    "placeholder": true
+  },
+  {
+    "id": "box-360",
+    "order": 3,
+    "title": "Branded gift box",
+    "category": "packaging-merch",
+    "year": 2026,
+    "note": "Placeholder: replace with your own work and a one-line note about the brief.",
+    "alt": "Placeholder for a branded gift box",
+    "image": {
+      "src": "/images/design/box-cover.svg",
+      "width": 1000,
+      "height": 1000
+    },
+    "tags": [],
+    "featured": true,
+    "placeholder": true,
+    "spin": [
+      "/images/design/box-360/00.svg",
+      "/images/design/box-360/01.svg",
+      "/images/design/box-360/02.svg",
+      "/images/design/box-360/03.svg",
+      "/images/design/box-360/04.svg",
+      "/images/design/box-360/05.svg",
+      "/images/design/box-360/06.svg",
+      "/images/design/box-360/07.svg",
+      "/images/design/box-360/08.svg",
+      "/images/design/box-360/09.svg",
+      "/images/design/box-360/10.svg",
+      "/images/design/box-360/11.svg",
+      "/images/design/box-360/12.svg",
+      "/images/design/box-360/13.svg",
+      "/images/design/box-360/14.svg",
+      "/images/design/box-360/15.svg",
+      "/images/design/box-360/16.svg",
+      "/images/design/box-360/17.svg",
+      "/images/design/box-360/18.svg",
+      "/images/design/box-360/19.svg",
+      "/images/design/box-360/20.svg",
+      "/images/design/box-360/21.svg",
+      "/images/design/box-360/22.svg",
+      "/images/design/box-360/23.svg"
+    ]
+  },
+  {
+    "id": "business-card",
+    "order": 4,
+    "title": "Business card",
+    "category": "business-cards",
+    "year": 2026,
+    "note": "Placeholder: replace with your own work and a one-line note about the brief.",
+    "alt": "Placeholder for a business card",
+    "image": {
+      "src": "/images/design/business-card-front.svg",
+      "width": 1050,
+      "height": 600
+    },
+    "tags": [],
+    "featured": true,
+    "placeholder": true,
+    "back": {
+      "src": "/images/design/business-card-back.svg",
+      "width": 1050,
+      "height": 600
+    }
+  },
+  {
+    "id": "rollup-banner",
+    "order": 5,
+    "title": "Roll-up banner",
+    "category": "banners",
+    "year": 2026,
+    "note": "Placeholder: replace with your own work and a one-line note about the brief.",
+    "alt": "Placeholder for a roll-up banner",
+    "image": {
+      "src": "/images/design/rollup-banner.svg",
+      "width": 600,
+      "height": 1500
+    },
+    "tags": [],
+    "featured": true,
+    "placeholder": true
+  },
+  {
+    "id": "instagram-post",
+    "order": 6,
+    "title": "Social media post",
+    "category": "social-media",
+    "year": 2026,
+    "note": "Placeholder: replace with your own work and a one-line note about the brief.",
+    "alt": "Placeholder for a social media post",
+    "image": {
+      "src": "/images/design/instagram-post.svg",
+      "width": 1000,
+      "height": 1000
+    },
+    "tags": [],
+    "featured": true,
+    "placeholder": true
+  },
+  {
+    "id": "anniversary-programme",
+    "order": 7,
+    "title": "Anniversary programme",
+    "category": "church-events",
+    "year": 2026,
+    "note": "Placeholder: replace with your own work and a one-line note about the brief.",
+    "alt": "Placeholder for a anniversary programme",
+    "image": {
+      "src": "/images/design/anniversary-programme.svg",
+      "width": 800,
+      "height": 1000
+    },
+    "tags": [],
+    "featured": false,
+    "placeholder": true
+  },
+  {
+    "id": "launch-post",
+    "order": 8,
+    "title": "Product launch post",
+    "category": "fashion-beauty",
+    "year": 2026,
+    "note": "Placeholder: replace with your own work and a one-line note about the brief.",
+    "alt": "Placeholder for a product launch post",
+    "image": {
+      "src": "/images/design/launch-post.svg",
+      "width": 800,
+      "height": 1000
+    },
+    "tags": [],
+    "featured": false,
+    "placeholder": true
+  },
+  {
+    "id": "shop-banner",
+    "order": 9,
+    "title": "Shop-front banner",
+    "category": "banners",
+    "year": 2026,
+    "note": "Placeholder: replace with your own work and a one-line note about the brief.",
+    "alt": "Placeholder for a shop-front banner",
+    "image": {
+      "src": "/images/design/shop-banner.svg",
+      "width": 1500,
+      "height": 500
+    },
+    "tags": [],
+    "featured": false,
+    "placeholder": true
+  },
+  {
+    "id": "story",
+    "order": 10,
+    "title": "Instagram story",
+    "category": "social-media",
+    "year": 2026,
+    "note": "Placeholder: replace with your own work and a one-line note about the brief.",
+    "alt": "Placeholder for a instagram story",
+    "image": {
+      "src": "/images/design/story.svg",
+      "width": 540,
+      "height": 960
+    },
+    "tags": [],
+    "featured": false,
+    "placeholder": true
+  },
+  {
+    "id": "price-list",
+    "order": 11,
+    "title": "Price list flyer",
+    "category": "flyers",
+    "year": 2026,
+    "note": "Placeholder: replace with your own work and a one-line note about the brief.",
+    "alt": "Placeholder for a price list flyer",
+    "image": {
+      "src": "/images/design/price-list.svg",
+      "width": 800,
+      "height": 1130
+    },
+    "tags": [],
+    "featured": false,
+    "placeholder": true
+  },
+  {
+    "id": "evangelism-poster",
+    "order": 12,
+    "title": "Evangelism poster",
+    "category": "church-events",
+    "year": 2026,
+    "note": "Placeholder: replace with your own work and a one-line note about the brief.",
+    "alt": "Placeholder for a evangelism poster",
+    "image": {
+      "src": "/images/design/evangelism-poster.svg",
+      "width": 800,
+      "height": 1130
+    },
+    "tags": [],
+    "featured": false,
+    "placeholder": true
+  }
+]

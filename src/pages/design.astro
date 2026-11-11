@@ -1,0 +1,917 @@
+---
+// Design gallery. Every piece comes from the "designs" collection (src/content/designs.json, later the CRM).
+// Visitors filter by category or search; tapping a piece opens a viewer with zoom, a front/back flip
+// (when the piece has a back image) or a 360° spin (when it has a set of spin photos).
+import Base from '../layouts/Base.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { getCollection } from 'astro:content';
+import { designCategories } from '../content.config';
+import { designCategoryLabels, showPlaceholders } from '../data/services';
+
+const pieces = (await getCollection('designs'))
+  .filter((d) => showPlaceholders || !d.data.placeholder)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const counts = Object.fromEntries(
+  designCategories.map((c) => [c, pieces.filter((p) => p.data.category === c).length]),
+);
+const categories = designCategories.filter((c) => counts[c] > 0);
+
+// What the viewer script needs, in the same order as the grid.
+const viewerData = pieces.map((p) => ({
+  id: p.id,
+  title: p.data.title,
+  category: designCategoryLabels[p.data.category],
+  year: p.data.year,
+  client: p.data.client ?? '',
+  note: p.data.note ?? '',
+  alt: p.data.alt,
+  image: p.data.image.src,
+  back: p.data.back?.src ?? '',
+  spin: p.data.spin ?? [],
+  placeholder: p.data.placeholder,
+}));
+---
+
+<Base
+  title="Design gallery | JayTech9"
+  description="Logos, flyers, banners, business cards and social media designs by JayTech9 for businesses, churches and brands in Ghana."
+>
+  <header class="page-head">
+    <div class="wrap">
+      <h1>Design gallery</h1>
+      <p class="lede">Logos, flyers, banners and social media designs for businesses, churches and brands.</p>
+    </div>
+  </header>
+
+  <section class="section gallery-section" aria-label="Designs">
+    <div class="wrap">
+      <div class="sheet overlap gallery">
+        {
+          pieces.length === 0 ? (
+            <div class="gempty gempty--soon">
+              <h2>New work coming soon</h2>
+              <p>We’re adding our latest designs. In the meantime, tell us what you need.</p>
+              <a class="button" href="/contact/">Book a free call</a>
+            </div>
+          ) : (
+            <>
+              <div class="gtools">
+                <div class="gchips" role="group" aria-label="Filter by category">
+                  <button type="button" class="gchip" data-cat="all" aria-pressed="true">
+                    All <span class="gchip__n">{pieces.length}</span>
+                  </button>
+                  {categories.map((c) => (
+                    <button type="button" class="gchip" data-cat={c} aria-pressed="false">
+                      {designCategoryLabels[c]} <span class="gchip__n">{counts[c]}</span>
+                    </button>
+                  ))}
+                </div>
+                <div class="gsearch">
+                  <label class="visually-hidden" for="gsearch">
+                    Search designs
+                  </label>
+                  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2" />
+                    <path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                  <input id="gsearch" type="search" placeholder="Search designs" autocomplete="off" />
+                </div>
+              </div>
+              <p class="gcount" aria-live="polite">
+                Showing {pieces.length} designs
+              </p>
+
+              <ul class="masonry">
+                {pieces.map((p, i) => (
+                  <li
+                    class:list={['gitem', { 'is-placeholder': p.data.placeholder }]}
+                    data-cat={p.data.category}
+                    data-text={[p.data.title, p.data.client, designCategoryLabels[p.data.category], ...p.data.tags]
+                      .filter(Boolean)
+                      .join(' ')
+                      .toLowerCase()}
+                    data-index={i}
+                    id={`d-${p.id}`}
+                  >
+                    <button type="button" class="gitem__open" data-index={i} aria-haspopup="dialog">
+                      <span class="gitem__frame">
+                        <img
+                          src={p.data.image.src}
+                          width={p.data.image.width}
+                          height={p.data.image.height}
+                          alt={p.data.alt}
+                          loading={i < 6 ? 'eager' : 'lazy'}
+                          decoding="async"
+                        />
+                        {p.data.spin && <span class="gbadge">360°</span>}
+                        {!p.data.spin && p.data.back && <span class="gbadge">Front & back</span>}
+                        {p.data.placeholder && <span class="gbadge gbadge--ph">Placeholder</span>}
+                      </span>
+                      <span class="gitem__text">
+                        <span class="gitem__title">{p.data.title}</span>
+                        <span class="gitem__cat">{designCategoryLabels[p.data.category]}</span>
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+
+              <div class="gempty" hidden>
+                <p>No designs match your search.</p>
+                <button type="button" class="button button--quiet gempty__reset">
+                  Show all designs
+                </button>
+              </div>
+            </>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <dialog class="viewer" aria-labelledby="viewer-title">
+    <div class="viewer__top">
+      <div>
+        <h2 id="viewer-title" class="viewer__title"></h2>
+        <p class="viewer__meta"></p>
+      </div>
+      <button type="button" class="viewer__icon viewer__close" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" /></svg>
+      </button>
+    </div>
+
+    <div class="viewer__stage">
+      <button type="button" class="viewer__icon viewer__nav viewer__prev" aria-label="Previous design">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="m15 5-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </button>
+      <div class="viewer__canvas">
+        <div class="viewer__pan">
+          <div class="flip">
+            <img class="flip__face flip__front" alt="" draggable="false" />
+            <img class="flip__face flip__back" alt="" draggable="false" />
+          </div>
+        </div>
+      </div>
+      <button type="button" class="viewer__icon viewer__nav viewer__next" aria-label="Next design">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </button>
+    </div>
+
+    <div class="viewer__bar">
+      <div class="viewer__tools">
+        <button type="button" class="viewer__tool" data-act="zoom-out" aria-label="Zoom out">−</button>
+        <button type="button" class="viewer__tool" data-act="zoom-reset">Fit</button>
+        <button type="button" class="viewer__tool" data-act="zoom-in" aria-label="Zoom in">+</button>
+        <button type="button" class="viewer__tool viewer__flipbtn" data-act="flip" aria-pressed="false">Show back</button>
+        <label class="viewer__spin">
+          <span>Rotate</span>
+          <input type="range" min="0" value="0" class="viewer__range" />
+        </label>
+      </div>
+      <p class="viewer__counter" aria-live="polite"></p>
+    </div>
+    <div class="viewer__foot">
+      <p class="viewer__note"></p>
+      <a class="button viewer__cta" href="/contact/">Want something like this? Book a free call</a>
+    </div>
+  </dialog>
+
+  <script type="application/json" id="gdata" set:html={JSON.stringify(viewerData)} />
+
+  <CtaBand
+    heading="Need a design that gets noticed?"
+    text="Tell us what it’s for. We’ll share ideas and a clear price."
+  />
+</Base>
+
+<script>
+  type Piece = {
+    id: string;
+    title: string;
+    category: string;
+    year: number;
+    client: string;
+    note: string;
+    alt: string;
+    image: string;
+    back: string;
+    spin: string[];
+    placeholder: boolean;
+  };
+
+  const dataEl = document.getElementById('gdata');
+  const pieces: Piece[] = dataEl ? JSON.parse(dataEl.textContent || '[]') : [];
+  const items = Array.from(document.querySelectorAll<HTMLLIElement>('.gitem'));
+  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('.gchip'));
+  const search = document.getElementById('gsearch') as HTMLInputElement | null;
+  const countEl = document.querySelector('.gcount');
+  const emptyEl = document.querySelector<HTMLElement>('.gempty:not(.gempty--soon)');
+
+  // ---------- Filtering ----------
+  let cat = 'all';
+  let query = '';
+
+  function visibleIndexes() {
+    return items.filter((li) => !li.hidden).map((li) => Number(li.dataset.index));
+  }
+
+  function applyFilter(updateUrl = true) {
+    const q = query.trim().toLowerCase();
+    let shown = 0;
+    for (const li of items) {
+      const ok = (cat === 'all' || li.dataset.cat === cat) && (!q || (li.dataset.text || '').includes(q));
+      li.hidden = !ok;
+      if (ok) shown++;
+    }
+    chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.cat === cat)));
+    if (countEl) countEl.textContent = `Showing ${shown} design${shown === 1 ? '' : 's'}`;
+    if (emptyEl) emptyEl.hidden = shown > 0;
+    if (updateUrl) {
+      const url = new URL(location.href);
+      if (cat === 'all') url.searchParams.delete('type');
+      else url.searchParams.set('type', cat);
+      history.replaceState(null, '', url);
+    }
+  }
+
+  chips.forEach((chip) =>
+    chip.addEventListener('click', () => {
+      cat = chip.dataset.cat || 'all';
+      applyFilter();
+    }),
+  );
+  search?.addEventListener('input', () => {
+    query = search.value;
+    applyFilter(false);
+  });
+  document.querySelector('.gempty__reset')?.addEventListener('click', () => {
+    cat = 'all';
+    query = '';
+    if (search) search.value = '';
+    applyFilter();
+  });
+
+  // ---------- Viewer ----------
+  const dialog = document.querySelector<HTMLDialogElement>('.viewer');
+  if (dialog && pieces.length) {
+    const $ = <T extends Element>(s: string) => dialog.querySelector(s) as T;
+    const titleEl = $<HTMLElement>('.viewer__title');
+    const metaEl = $<HTMLElement>('.viewer__meta');
+    const noteEl = $<HTMLElement>('.viewer__note');
+    const counterEl = $<HTMLElement>('.viewer__counter');
+    const canvas = $<HTMLElement>('.viewer__canvas');
+    const pan = $<HTMLElement>('.viewer__pan');
+    const flip = $<HTMLElement>('.flip');
+    const front = $<HTMLImageElement>('.flip__front');
+    const back = $<HTMLImageElement>('.flip__back');
+    const flipBtn = $<HTMLButtonElement>('.viewer__flipbtn');
+    const spinWrap = $<HTMLElement>('.viewer__spin');
+    const range = $<HTMLInputElement>('.viewer__range');
+    let current = 0;
+    let scale = 1;
+    let tx = 0;
+    let ty = 0;
+    let flipped = false;
+    let opener: HTMLElement | null = null;
+
+    const setTransform = () => {
+      pan.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+      canvas.classList.toggle('is-zoomed', scale > 1);
+    };
+    const zoomTo = (s: number) => {
+      scale = Math.min(4, Math.max(1, s));
+      if (scale === 1) {
+        tx = 0;
+        ty = 0;
+      }
+      setTransform();
+    };
+
+    function show(index: number) {
+      const p = pieces[index];
+      current = index;
+      flipped = false;
+      flip.classList.remove('is-flipped');
+      zoomTo(1);
+      titleEl.textContent = p.title;
+      metaEl.textContent = [p.category, String(p.year), p.client].filter(Boolean).join(' · ');
+      noteEl.textContent = p.note;
+      front.src = p.image;
+      front.alt = p.alt;
+      back.src = p.back || '';
+      back.alt = p.back ? `${p.alt} (back)` : '';
+      flipBtn.hidden = !p.back || p.spin.length > 0;
+      flipBtn.setAttribute('aria-pressed', 'false');
+      flipBtn.textContent = 'Show back';
+      spinWrap.hidden = p.spin.length === 0;
+      canvas.classList.toggle('is-spin', p.spin.length > 0);
+      if (p.spin.length) {
+        range.max = String(p.spin.length - 1);
+        range.value = '0';
+        range.setAttribute('aria-label', 'Rotate the design');
+        front.src = p.spin[0];
+        p.spin.forEach((src) => {
+          const im = new Image();
+          im.src = src;
+        });
+      }
+      const vis = visibleIndexes();
+      const pos = vis.indexOf(index);
+      counterEl.textContent = `${pos + 1} of ${vis.length}`;
+      const url = new URL(location.href);
+      url.searchParams.set('open', p.id);
+      history.replaceState(null, '', url);
+    }
+
+    function step(dir: number) {
+      const vis = visibleIndexes();
+      if (!vis.length) return;
+      const pos = vis.indexOf(current);
+      show(vis[(pos + dir + vis.length) % vis.length]);
+    }
+
+    function open(index: number, from?: HTMLElement) {
+      opener = from ?? null;
+      show(index);
+      dialog!.showModal();
+      document.documentElement.classList.add('viewer-open');
+    }
+
+    dialog.addEventListener('close', () => {
+      document.documentElement.classList.remove('viewer-open');
+      const url = new URL(location.href);
+      url.searchParams.delete('open');
+      history.replaceState(null, '', url);
+      opener?.focus();
+    });
+
+    document.querySelectorAll<HTMLButtonElement>('.gitem__open').forEach((b) =>
+      b.addEventListener('click', () => open(Number(b.dataset.index), b)),
+    );
+    $<HTMLButtonElement>('.viewer__close').addEventListener('click', () => dialog.close());
+    $<HTMLButtonElement>('.viewer__prev').addEventListener('click', () => step(-1));
+    $<HTMLButtonElement>('.viewer__next').addEventListener('click', () => step(1));
+    // Clicking the dark backdrop closes the viewer.
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+
+    dialog.querySelectorAll<HTMLButtonElement>('.viewer__tool').forEach((b) =>
+      b.addEventListener('click', () => {
+        const act = b.dataset.act;
+        if (act === 'zoom-in') zoomTo(scale + 0.75);
+        if (act === 'zoom-out') zoomTo(scale - 0.75);
+        if (act === 'zoom-reset') zoomTo(1);
+        if (act === 'flip') {
+          flipped = !flipped;
+          flip.classList.toggle('is-flipped', flipped);
+          b.setAttribute('aria-pressed', String(flipped));
+          b.textContent = flipped ? 'Show front' : 'Show back';
+        }
+      }),
+    );
+
+    range.addEventListener('input', () => {
+      const p = pieces[current];
+      front.src = p.spin[Number(range.value)];
+    });
+
+    dialog.addEventListener('keydown', (e) => {
+      if ((e.target as HTMLElement).matches('input')) return;
+      if (e.key === 'ArrowRight') step(1);
+      if (e.key === 'ArrowLeft') step(-1);
+      if (e.key === '+' || e.key === '=') zoomTo(scale + 0.75);
+      if (e.key === '-') zoomTo(scale - 0.75);
+    });
+
+    // Wheel to zoom, double-click to toggle zoom.
+    canvas.addEventListener(
+      'wheel',
+      (e) => {
+        if (pieces[current].spin.length) return;
+        e.preventDefault();
+        zoomTo(scale * (e.deltaY < 0 ? 1.15 : 1 / 1.15));
+      },
+      { passive: false },
+    );
+    canvas.addEventListener('dblclick', () => zoomTo(scale > 1 ? 1 : 2.5));
+
+    // Pointer gestures: drag to pan (zoomed), drag to rotate (360), swipe to change, pinch to zoom.
+    const pointers = new Map<number, { x: number; y: number }>();
+    let startX = 0;
+    let startY = 0;
+    let startTx = 0;
+    let startTy = 0;
+    let startFrame = 0;
+    let pinchStart = 0;
+    let pinchScale = 1;
+
+    canvas.addEventListener('pointerdown', (e) => {
+      canvas.setPointerCapture(e.pointerId);
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      startX = e.clientX;
+      startY = e.clientY;
+      startTx = tx;
+      startTy = ty;
+      startFrame = Number(range.value);
+      if (pointers.size === 2) {
+        const [a, b] = Array.from(pointers.values());
+        pinchStart = Math.hypot(a.x - b.x, a.y - b.y);
+        pinchScale = scale;
+      }
+    });
+    canvas.addEventListener('pointermove', (e) => {
+      if (!pointers.has(e.pointerId)) return;
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      const p = pieces[current];
+      if (pointers.size === 2 && !p.spin.length) {
+        const [a, b] = Array.from(pointers.values());
+        zoomTo(pinchScale * (Math.hypot(a.x - b.x, a.y - b.y) / pinchStart));
+        return;
+      }
+      const dx = e.clientX - startX;
+      if (p.spin.length) {
+        const n = p.spin.length;
+        const frame = (((startFrame - Math.round(dx / 12)) % n) + n) % n;
+        range.value = String(frame);
+        front.src = p.spin[frame];
+      } else if (scale > 1) {
+        tx = startTx + dx;
+        ty = startTy + (e.clientY - startY);
+        setTransform();
+      }
+    });
+    const end = (e: PointerEvent) => {
+      if (!pointers.has(e.pointerId)) return;
+      const p = pieces[current];
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      if (pointers.size === 1 && !p.spin.length && scale === 1 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
+        step(dx < 0 ? 1 : -1);
+      }
+      pointers.delete(e.pointerId);
+    };
+    canvas.addEventListener('pointerup', end);
+    canvas.addEventListener('pointercancel', end);
+
+    // Shared links: ?type=flyers filters, ?open=<id> opens a piece.
+    const params = new URLSearchParams(location.search);
+    const type = params.get('type');
+    if (type && chips.some((c) => c.dataset.cat === type)) {
+      cat = type;
+      applyFilter(false);
+    }
+    const openId = params.get('open');
+    const openIndex = pieces.findIndex((p) => p.id === openId);
+    if (openIndex >= 0) open(openIndex);
+  }
+</script>
+
+<style>
+  .gallery-section {
+    padding-top: 0;
+  }
+  .gallery {
+    padding: clamp(1rem, 3vw, 2rem);
+  }
+
+  /* ---------- Filters ---------- */
+  .gtools {
+    display: grid;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  @media (width >= 60rem) {
+    .gtools {
+      grid-template-columns: 1fr 16rem;
+    }
+  }
+  .gchips {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.25rem 0.1rem 0.5rem;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  @media (width >= 60rem) {
+    .gchips {
+      flex-wrap: wrap;
+      overflow: visible;
+    }
+  }
+  .gchip {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.5rem;
+    padding: 0.4rem 0.95rem;
+    border-radius: 999px;
+    border: 1.5px solid #c9d6df;
+    background: var(--white);
+    color: var(--ink);
+    font-weight: 600;
+    font-size: var(--step--1);
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+  }
+  .gchip:hover {
+    border-color: var(--brand);
+  }
+  .gchip[aria-pressed='true'] {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: var(--white);
+  }
+  .gchip__n {
+    min-width: 1.4rem;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    background: #e6f1f8;
+    color: var(--brand-deep);
+    font-size: 0.75rem;
+    text-align: center;
+  }
+  .gchip[aria-pressed='true'] .gchip__n {
+    background: var(--brand-deep);
+    color: var(--white);
+  }
+  .gchip:focus-visible,
+  .gitem__open:focus-visible,
+  .viewer button:focus-visible,
+  .viewer input:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .gsearch {
+    position: relative;
+    color: var(--ink-soft);
+  }
+  .gsearch svg {
+    position: absolute;
+    left: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .gsearch input {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.9rem 0.5rem 2.5rem;
+    border-radius: 999px;
+    border: 1.5px solid #c9d6df;
+    background: var(--white);
+    color: var(--ink);
+  }
+  .gsearch input:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 1px;
+    border-color: var(--brand);
+  }
+  .gcount {
+    margin: 0.75rem 0 1rem;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  /* ---------- Masonry grid ---------- */
+  .masonry {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    columns: 10rem 5;
+    column-gap: 1rem;
+  }
+  .gitem {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+  .gitem[hidden] {
+    display: none;
+  }
+  .gitem__open {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    text-align: left;
+    cursor: zoom-in;
+    color: inherit;
+    font: inherit;
+  }
+  .gitem__frame {
+    position: relative;
+    display: block;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--paper-deep);
+    box-shadow: var(--shadow-card);
+    transition:
+      transform 0.25s var(--card-ease, ease),
+      box-shadow 0.25s;
+  }
+  .gitem__open:hover .gitem__frame {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-card-hover);
+  }
+  .gitem__frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 0.4s var(--card-ease, ease);
+  }
+  .gitem__open:hover .gitem__frame img {
+    transform: scale(1.03);
+  }
+  .gitem.is-placeholder .gitem__frame {
+    outline: 2px dashed #9fb6c6;
+    outline-offset: 3px;
+  }
+  .gbadge {
+    position: absolute;
+    left: 0.6rem;
+    top: 0.6rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: #10293acc;
+    color: var(--white);
+    font-size: 0.72rem;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+  }
+  .gbadge--ph {
+    left: auto;
+    right: 0.6rem;
+    background: #fff4d6;
+    color: #6b4e00;
+  }
+  .gitem__text {
+    display: block;
+    padding: 0.55rem 0.2rem 0;
+  }
+  .gitem__title {
+    display: block;
+    font-weight: 600;
+    font-size: var(--step--1);
+    line-height: 1.3;
+  }
+  .gitem__cat {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+  .gempty {
+    text-align: center;
+    padding: 2.5rem 1rem;
+  }
+  .gempty[hidden] {
+    display: none;
+  }
+  .gempty p {
+    color: var(--ink-soft);
+  }
+
+  /* ---------- Viewer ---------- */
+  :global(html.viewer-open) {
+    overflow: hidden;
+  }
+  .viewer {
+    width: min(100vw - 1rem, 72rem);
+    max-width: none;
+    height: min(100dvh - 1rem, 56rem);
+    max-height: none;
+    margin: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 20px;
+    background: #0c1e2b;
+    color: var(--white);
+    overflow: hidden;
+  }
+  .viewer[open] {
+    display: flex;
+    flex-direction: column;
+  }
+  .viewer::backdrop {
+    background: #06111acc;
+    backdrop-filter: blur(4px);
+  }
+  .viewer__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1rem 0.5rem 1.25rem;
+  }
+  .viewer__title {
+    margin: 0;
+    font-size: var(--step-1);
+    color: var(--white);
+  }
+  .viewer__meta {
+    margin: 0.2rem 0 0;
+    font-size: var(--step--1);
+    color: #a9c3d4;
+  }
+  .viewer__icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    border: 0;
+    background: #ffffff1a;
+    color: var(--white);
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  .viewer__icon:hover {
+    background: #ffffff33;
+  }
+  .viewer__stage {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+  .viewer__canvas {
+    position: relative;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    touch-action: none;
+    cursor: zoom-in;
+    perspective: 1600px;
+    border-radius: 12px;
+  }
+  .viewer__canvas.is-zoomed {
+    cursor: grab;
+  }
+  .viewer__canvas.is-spin {
+    cursor: ew-resize;
+  }
+  .viewer__pan {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    transition: transform 0.15s ease-out;
+    transform-origin: center;
+  }
+  .flip {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.7s var(--card-ease, cubic-bezier(0.2, 0.7, 0.2, 1));
+  }
+  .flip.is-flipped {
+    transform: rotateY(180deg);
+  }
+  .flip__face {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    backface-visibility: hidden;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  .flip__back {
+    transform: rotateY(180deg);
+  }
+  .flip__back:not([src]),
+  .flip__back[src=''] {
+    display: none;
+  }
+  .viewer__bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1.25rem;
+  }
+  .viewer__tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .viewer__tool {
+    min-width: 2.75rem;
+    min-height: 2.5rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    border: 0;
+    background: #ffffff1a;
+    color: var(--white);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .viewer__tool:hover {
+    background: #ffffff33;
+  }
+  .viewer__tool[hidden],
+  .viewer__spin[hidden] {
+    display: none;
+  }
+  .viewer__spin {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--step--1);
+    color: #cfe1ec;
+  }
+  .viewer__range {
+    width: min(14rem, 40vw);
+    accent-color: var(--accent);
+  }
+  .viewer__counter {
+    margin: 0;
+    font-size: var(--step--1);
+    color: #a9c3d4;
+  }
+  .viewer__foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    padding: 0.75rem 1.25rem 1.25rem;
+    border-top: 1px solid #ffffff1a;
+  }
+  .viewer__note {
+    margin: 0;
+    flex: 1 1 18rem;
+    color: #cfe1ec;
+    font-size: var(--step--1);
+  }
+  .viewer__cta {
+    background: var(--accent);
+    color: var(--ink);
+  }
+  .viewer__cta:hover {
+    background: #8be06a;
+    color: var(--ink);
+  }
+  /* Phones: arrows sit over the image so it gets the full width. */
+  @media (width < 40rem) {
+    .viewer {
+      width: 100vw;
+      height: 100dvh;
+      border-radius: 0;
+    }
+    .viewer__stage {
+      grid-template-columns: 1fr;
+      padding: 0;
+    }
+    .viewer__nav {
+      position: absolute;
+      z-index: 2;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #0c1e2bb3;
+    }
+    .viewer__prev {
+      left: 0.5rem;
+    }
+    .viewer__next {
+      right: 0.5rem;
+    }
+    .viewer__canvas {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .viewer__prev,
+    .viewer__next {
+      grid-row: 1;
+    }
+    .viewer__cta {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .flip,
+    .viewer__pan,
+    .gitem__frame,
+    .gitem__frame img {
+      transition: none;
+    }
+  }
+</style>
