@@ -54,7 +54,6 @@ import { site } from '../data/site';
       }
     </div>
     <div class="wrap about-hero__content">
-      <p class="about-hero__eyebrow">About JayTech9</p>
       <h1>Technology that fits how your business works</h1>
     </div>
     <button type="button" class="about-hero__pause" aria-label="Pause background slideshow" hidden>
@@ -186,7 +185,7 @@ import { site } from '../data/site';
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(90deg, #04182bf2 0%, #06264ad9 40%, #06264a99 75%, #06264a80 100%),
+      radial-gradient(ellipse 70% 60% at 50% 45%, #04182bd9 0%, #06264ab3 55%, #06264a8c 100%),
       linear-gradient(to top, #06223a 0%, #06223a00 45%);
   }
   .about-hero__slide {
@@ -229,9 +228,16 @@ import { site } from '../data/site';
     color: var(--white);
     backdrop-filter: blur(6px);
   }
+  /* Title centred in the visible part of the header, above the card. */
+  .about-hero__content {
+    text-align: center;
+  }
   .about-hero h1 {
-    max-width: 16ch;
-    margin: 0;
+    max-width: 18ch;
+    margin: 0 auto;
+    font-size: clamp(2.25rem, 1.4rem + 3.6vw, 4.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
     color: var(--white);
     text-wrap: balance;
     text-shadow: 0 2px 24px #0006;
