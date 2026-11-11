@@ -54,5 +54,5 @@ export const booking = {
   daysAhead: 14, // how far ahead visitors can pick a day
   methods: ['Phone call', 'WhatsApp call', 'Google Meet', 'In person (Accra)'],
   budgets: ['Under GH₵ 5,000', 'GH₵ 5,000 – 15,000', 'GH₵ 15,000 – 50,000', 'Over GH₵ 50,000', 'Not sure yet'],
-  timelines: ['As soon as possible', 'Within a month', '1–3 months', 'Flexible'],
+  timelines: ['Urgent (express)', 'Within a month', '1–3 months', 'Flexible'],
 };
