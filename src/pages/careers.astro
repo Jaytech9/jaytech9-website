@@ -6,7 +6,16 @@ import Base from '../layouts/Base.astro';
   title="Careers | JayTech9"
   description="Work at JayTech9. See open roles in support, engineering, design and data, or send your CV for future vacancies."
 >
-  <header class="page-head">
+  <header class="page-head careers-head">
+    <img
+      class="careers-head__art"
+      src="/images/careers-tech.webp"
+      width="736"
+      height="630"
+      alt=""
+      loading="eager"
+      decoding="async"
+    />
     <div class="wrap">
       <h1>Careers</h1>
       <p class="lede">
@@ -184,6 +193,46 @@ import Base from '../layouts/Base.astro';
   }
   .empty__actions {
     margin-top: 1.25rem;
+  }
+  /* Header picture: a hand on a tablet with floating icons, faded into the blue on every side so
+     it reads as part of the header. Sits behind the text and behind his head. */
+  .careers-head {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .careers-head > .wrap {
+    position: relative;
+    z-index: 1;
+  }
+  .careers-head__art {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    right: max(0px, calc((100% - var(--wrap, 75rem)) / 2 - 6rem));
+    height: 100%;
+    width: auto;
+    max-width: 60%;
+    object-fit: cover;
+    object-position: left center;
+    pointer-events: none;
+    opacity: 0.95;
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0%, #000 30%, #000 80%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, #000 20%, #000 70%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(to right, transparent 0%, #000 30%, #000 80%, transparent 100%),
+      linear-gradient(to bottom, transparent 0%, #000 20%, #000 70%, transparent 100%);
+    mask-composite: intersect;
+  }
+  @media (width < 48rem) {
+    .careers-head__art {
+      max-width: none;
+      height: 70%;
+      right: -3rem;
+      opacity: 0.35;
+    }
   }
   /* Phones: his head rises above the card, so the header text needs room above it. */
   @media (width < 48rem) {
