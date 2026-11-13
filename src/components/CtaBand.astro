@@ -1,35 +1,25 @@
 ---
 // The closing call-to-action shown at the foot of most pages.
 // One component, so every page gets the same design. Pass a page-specific heading and text.
+// Left: heading, buttons and promises. Right: every way to reach us, so visitors never have to look.
 import Icon from './Icon.astro';
 import { site } from '../data/site';
+import { glyphs } from '../data/brand-glyphs';
 
 interface Props {
   heading?: string;
   text?: string;
-  eyebrow?: string;
 }
 const {
   heading = 'Tell us what slows your business down',
   text = 'Book a free 30-minute call. We’ll listen, then send a clear quote.',
-  eyebrow = 'Let’s build it together',
 } = Astro.props;
-
-const steps = [
-  { icon: 'headset', title: 'Free 30-minute call', text: 'We listen first.' },
-  { icon: 'wallet', title: 'Written quote', text: 'Clear price and timeline.' },
-  { icon: 'rocket', title: 'We build, you launch', text: 'You own the code.' },
-] as const;
 ---
 
 <section class="cta" aria-labelledby="cta-heading">
   <div class="wrap">
     <div class="cta__panel">
-      <div class="cta__glow cta__glow--green" aria-hidden="true"></div>
-      <div class="cta__glow cta__glow--blue" aria-hidden="true"></div>
-
       <div class="cta__text">
-        <p class="cta__eyebrow">{eyebrow}</p>
         <h2 id="cta-heading">{heading}</h2>
         <p class="cta__lead">{text}</p>
         <div class="cta__actions">
@@ -43,34 +33,40 @@ const steps = [
           </a>
         </div>
         <ul class="cta__trust" aria-label="What you can expect">
-          <li><Icon name="check" size={16} strokeWidth={2.5} /> Reply within one working day</li>
           <li><Icon name="check" size={16} strokeWidth={2.5} /> No obligation</li>
+          <li><Icon name="check" size={16} strokeWidth={2.5} /> Urgent jobs fast-tracked</li>
+          <li><Icon name="check" size={16} strokeWidth={2.5} /> You own the code</li>
         </ul>
       </div>
 
-      <div class="cta__card">
-        <p class="cta__card-title">How we start</p>
-        <ol class="cta__steps">
-          {
-            steps.map((step, i) => (
-              <li class="cta__step">
-                <span class="cta__step-icon">
-                  <Icon name={step.icon} size={20} />
-                  <span class="cta__step-num" aria-hidden="true">{i + 1}</span>
-                </span>
-                <span>
-                  <strong>{step.title}</strong>
-                  <span class="cta__step-text">{step.text}</span>
-                </span>
-              </li>
-            ))
-          }
-        </ol>
-        <a class="cta__mail" href={`mailto:${site.email}`}>
-          <Icon name="mail" size={18} />
-          {site.email}
-        </a>
-      </div>
+      <ul class="cta__contacts" aria-label="Contact details">
+        <li>
+          <a href={`tel:${site.phone}`}>
+            <span class="cta__ic"><Icon name="headset" size={20} /></span>
+            <span><small>Call us</small><strong>{site.phoneDisplay}</strong></span>
+          </a>
+        </li>
+        <li>
+          <a href={site.whatsapp} rel="noopener">
+            <span class="cta__ic cta__ic--wa">
+              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d={glyphs.WhatsApp} /></svg>
+            </span>
+            <span><small>WhatsApp</small><strong>Chat with us</strong></span>
+          </a>
+        </li>
+        <li>
+          <a href={`mailto:${site.email}`}>
+            <span class="cta__ic"><Icon name="mail" size={20} /></span>
+            <span><small>Email</small><strong>{site.email}</strong></span>
+          </a>
+        </li>
+        <li>
+          <span class="cta__row">
+            <span class="cta__ic"><Icon name="pin" size={20} /></span>
+            <span><small>Based in</small><strong>{site.city}, {site.country} · Worldwide</strong></span>
+          </span>
+        </li>
+      </ul>
     </div>
   </div>
 </section>
@@ -79,6 +75,8 @@ const steps = [
   .cta {
     padding-block: clamp(2.5rem, 6vw, 4.5rem);
   }
+  /* Deep green at the top fading through teal into navy, a soft blue glow low on the right,
+     and a teal disc tucked into the top-left corner. */
   .cta__panel {
     position: relative;
     isolation: isolate;
@@ -86,68 +84,41 @@ const steps = [
     display: grid;
     gap: clamp(1.75rem, 4vw, 3rem);
     align-items: center;
-    padding: clamp(1.5rem, 5vw, 3.5rem);
+    padding: clamp(4rem, 7vw, 5rem) clamp(1.5rem, 5vw, 3.25rem) clamp(1.5rem, 5vw, 3.25rem);
     border-radius: calc(var(--radius-lg) + 6px);
-    background: var(--brand-surface);
+    background:
+      radial-gradient(ellipse 45% 55% at 78% 72%, #11608acc 0%, #0b4a6e66 45%, transparent 75%),
+      linear-gradient(172deg, #087d18 0%, #077226 22%, #08594a 45%, #0a3a4f 68%, #0a2638 85%, #08161d 100%);
     color: var(--white);
-    box-shadow: 0 30px 60px -30px #00507c80;
+    box-shadow: 0 30px 60px -30px #0a263880;
   }
-  /* Soft light pools instead of lines: brand green and a lighter blue. */
-  .cta__glow {
+  .cta__panel::before {
+    content: '';
     position: absolute;
     z-index: -1;
+    width: clamp(7rem, 12vw, 10rem);
+    aspect-ratio: 1;
+    left: -4rem;
+    top: -4.5rem;
     border-radius: 50%;
-    filter: blur(60px);
-    pointer-events: none;
+    background: #06a0a0;
+    box-shadow: 14px 16px 34px #000000b3;
   }
-  .cta__glow--green {
-    width: 22rem;
-    height: 22rem;
-    right: -6rem;
-    top: -8rem;
-    background: #6fd04a59;
-    animation: cta-float 12s ease-in-out infinite alternate;
-  }
-  .cta__glow--blue {
-    width: 26rem;
-    height: 26rem;
-    left: -10rem;
-    bottom: -14rem;
-    background: #4fb4ec66;
-    animation: cta-float 14s ease-in-out infinite alternate-reverse;
-  }
-  @keyframes cta-float {
-    to {
-      transform: translate(-2.5rem, 2rem) scale(1.1);
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .cta__glow {
-      animation: none;
+  @media (width >= 56rem) {
+    .cta__panel {
+      grid-template-columns: 1.15fr 1fr;
     }
   }
 
-  .cta__eyebrow {
-    display: inline-block;
-    margin: 0 0 1rem;
-    padding: 0.35rem 0.8rem;
-    border-radius: 999px;
-    background: #ffffff1f;
-    border: 1px solid #ffffff33;
-    font-size: var(--step--1);
-    font-weight: 600;
-    color: var(--white);
-  }
   .cta h2 {
     margin: 0;
-    max-width: 18ch;
+    max-width: 16ch;
     color: var(--white);
     text-wrap: balance;
   }
   .cta__lead {
     margin: 1rem 0 1.75rem;
     max-width: 30rem;
-    text-wrap: pretty;
     font-size: var(--step-1);
     line-height: 1.5;
     color: #dcecf5;
@@ -179,7 +150,6 @@ const steps = [
   }
   .cta__btn--primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 16px 30px -14px #00000080;
     color: var(--brand-deep);
   }
   .cta__btn--primary :global(svg) {
@@ -199,11 +169,10 @@ const steps = [
     transform: translateY(-2px);
   }
   .cta__btn:focus-visible,
-  .cta__mail:focus-visible {
+  .cta__contacts a:focus-visible {
     outline: 3px solid var(--accent);
     outline-offset: 3px;
   }
-
   .cta__trust {
     list-style: none;
     margin: 1.5rem 0 0;
@@ -224,101 +193,53 @@ const steps = [
     flex: none;
   }
 
-  /* Glass card on the right: how a project starts, in three steps. */
-  .cta__card {
-    padding: clamp(1.25rem, 3vw, 1.75rem);
-    border-radius: var(--radius-lg);
-    background: #ffffff17;
-    border: 1px solid #ffffff2e;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
-  .cta__card-title {
-    margin: 0 0 1rem;
-    font-size: var(--step--1);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: #cfe6f3;
-  }
-  .cta__steps {
+  /* Contact cards */
+  .cta__contacts {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
     gap: 0.75rem;
   }
-  .cta__step {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.9rem;
+  .cta__contacts a,
+  .cta__row {
+    display: flex;
     align-items: center;
-    padding: 0.85rem;
+    gap: 0.9rem;
+    padding: 0.9rem 1rem;
     border-radius: 16px;
     background: var(--white);
     color: var(--ink);
+    text-decoration: none;
     box-shadow: 0 10px 22px -16px #0000004d;
     transition: transform 0.2s var(--card-ease, ease);
   }
-  .cta__step:hover {
+  .cta__contacts a:hover {
     transform: translateX(4px);
+    color: var(--ink);
   }
-  .cta__step strong {
+  .cta__contacts small {
     display: block;
-    font-size: var(--step-0, 1rem);
-    line-height: 1.3;
-  }
-  .cta__step-text {
-    display: block;
-    margin-top: 0.15rem;
-    font-size: var(--step--1);
-    line-height: 1.4;
+    font-size: 0.78rem;
     color: var(--ink-soft);
   }
-  .cta__step-icon {
-    position: relative;
+  .cta__contacts strong {
+    display: block;
+    overflow-wrap: anywhere;
+  }
+  .cta__ic {
     display: grid;
     place-items: center;
+    flex: none;
     width: 2.75rem;
     height: 2.75rem;
-    border-radius: 14px;
+    border-radius: 12px;
     background: #e6f1f8;
     color: var(--brand);
   }
-  .cta__step-num {
-    position: absolute;
-    top: -0.4rem;
-    right: -0.4rem;
-    display: grid;
-    place-items: center;
-    width: 1.25rem;
-    height: 1.25rem;
-    border-radius: 50%;
-    background: var(--accent);
-    color: var(--ink);
-    font-size: 0.7rem;
-    font-weight: 700;
-    box-shadow: 0 0 0 2px var(--white);
-  }
-  .cta__mail {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 1rem;
-    color: var(--white);
-    font-weight: 600;
-    text-decoration: none;
-    overflow-wrap: anywhere;
-  }
-  .cta__mail:hover {
-    color: var(--white);
-    text-decoration: underline;
-  }
-
-  @media (width >= 56rem) {
-    .cta__panel {
-      grid-template-columns: 1.2fr 1fr;
-    }
+  .cta__ic--wa {
+    background: #e3f7e9;
+    color: #1e7a3c;
   }
   @media (width < 30rem) {
     .cta__btn {
