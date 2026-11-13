@@ -18,9 +18,10 @@ import Base from '../layouts/Base.astro';
     />
     <div class="wrap">
       <h1 class="visually-hidden">Careers</h1>
-      <p class="lede">
-        JayTech9 is growing. As we take on more clients, we’ll be adding support agents, developers, designers
-        and more.
+      <p class="lede careers-intro">
+        <span class="careers-intro__big">JayTech9 is <em>growing.</em></span>
+        As we take on more clients, we’ll be adding
+        <strong>support agents, developers, designers</strong> and more.
       </p>
     </div>
   </header>
@@ -347,5 +348,27 @@ import Base from '../layouts/Base.astro';
   .job__meta dd {
     margin: 0.1rem 0 0;
     font-weight: 600;
+  }
+  /* Header intro: a bold first line, with the key words in the site's light green. */
+  .careers-intro {
+    max-width: 34rem;
+    color: #e3eff6;
+  }
+  .careers-intro__big {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: clamp(1.75rem, 1.2rem + 2.4vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--white);
+  }
+  .careers-intro em {
+    font-style: normal;
+    color: #9be870;
+  }
+  .careers-intro strong {
+    font-weight: 600;
+    color: #9be870;
   }
 </style>
