@@ -16,3 +16,14 @@
 :where(.feature-grid, .skill-grid, [class*='--center'], .is-centered) :is(p, li) {
   text-align: center;
 }
+
+/* ---------- Green highlight in headers ----------
+   Wrap key words in <em class="hl"> inside any blue or photo header to show them in the site's
+   light green. One colour everywhere, tested for readability on the blue and dark photo headers. */
+:is(.page-head, .about-hero, .donate-hero, .app-home) .hl {
+  font-style: normal;
+  color: #9be870;
+}
+:is(.page-head, .about-hero, .donate-hero) .lede .hl {
+  font-weight: 600;
+}
