@@ -4,6 +4,7 @@
 // quotes only, and hides this whole section when there are none yet.
 import { getCollection } from 'astro:content';
 import { showPlaceholders } from '../data/services';
+import { getReviews, getSections } from '../lib/crm';
 
 interface Props {
   heading?: string;
@@ -12,11 +13,20 @@ interface Props {
 }
 const { heading = 'What our clients say', product, limit = 3 } = Astro.props;
 
-const items = (await getCollection('testimonials'))
-  .filter((t) => showPlaceholders || !t.data.placeholder)
+const sections = await getSections();
+// Real quotes first: the JSON file, then reviews approved in the CRM. Placeholders only fill gaps in the preview.
+const fromFile = (await getCollection('testimonials'))
   .filter((t) => !product || t.data.product === product)
   .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, limit);
+  .map((t) => ({ id: t.id, ...t.data }));
+const fromCrm = (await getReviews())
+  .filter((r) => !product || r.product === product)
+  .map((r) => ({ id: r.id, quote: r.message, name: r.name, role: r.role ?? '', organisation: r.organisation ?? '', photo: undefined, placeholder: false }));
+const real = [...fromFile.filter((t) => !t.placeholder), ...fromCrm];
+const items = sections.testimonials
+  ? [...real, ...(showPlaceholders ? fromFile.filter((t) => t.placeholder) : [])].slice(0, limit).map((data) => ({ id: data.id, data }))
+  : [];
+const askForReview = sections.accept_reviews && !product;
 
 const initials = (name: string) =>
   name
@@ -55,13 +65,18 @@ const initials = (name: string) =>
                 <span>
                   <strong>{t.data.name}</strong>
                   <span class="quote__role">
-                    {t.data.role}, {t.data.organisation}
+                    {[t.data.role, t.data.organisation].filter(Boolean).join(', ')}
                   </span>
                 </span>
               </footer>
             </li>
           ))}
         </ul>
+        {askForReview && (
+          <p class="quotes__ask">
+            Worked with us? <a href="/review/">Share your experience</a>
+          </p>
+        )}
       </div>
     </section>
   )
@@ -122,6 +137,13 @@ const initials = (name: string) =>
   }
   .quote__by strong {
     display: block;
+  }
+  .quotes__ask {
+    margin: 1.25rem 0 0;
+    color: var(--ink-soft);
+  }
+  .quotes__ask a {
+    font-weight: 700;
   }
   .quote__role {
     display: block;

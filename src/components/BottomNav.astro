@@ -1,6 +1,7 @@
 ---
 import Icon from './Icon.astro';
 import { site } from '../data/site';
+import { getSections } from '../lib/crm';
 
 // App-style tab bar for phones and tablets. Hidden on wide screens, where the top bar has the full menu.
 const path = Astro.url.pathname.replace(/\/?$/, '/');
@@ -13,7 +14,7 @@ const tabs = [
   { label: 'Contact', href: '/contact/', icon: 'mail' },
 ] as const;
 
-const more = [
+const allMore = [
   { label: 'Design gallery', href: '/design/', icon: 'brush' },
   { label: 'About us', href: '/about/', icon: 'info' },
   { label: 'Blog', href: '/blog/', icon: 'book' },
@@ -22,6 +23,8 @@ const more = [
   { label: 'Book a free call', href: '/book/', icon: 'rocket' },
   { label: 'Support', href: `mailto:${site.email}`, icon: 'headset' },
 ] as const;
+const sections = await getSections();
+const more = allMore.filter((m) => !(m.href === '/blog/' && !sections.blog) && !(m.href === '/donate/' && !sections.donate));
 ---
 
 <nav class="tabbar" aria-label="App navigation">

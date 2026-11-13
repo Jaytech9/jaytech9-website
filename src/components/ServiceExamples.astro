@@ -2,6 +2,7 @@
 // Under each service on the Services page: links to the products and projects that show it in action.
 // Comes from the "service" field on each product, so new work appears here automatically.
 import { getCollection } from 'astro:content';
+import { getProjects, getSections, serviceIdFromTitle } from '../lib/crm';
 
 interface Props {
   service: string;
@@ -10,6 +11,12 @@ const { service } = Astro.props;
 const examples = (await getCollection('products', (p) => p.data.service === service)).sort(
   (a, b) => a.data.order - b.data.order,
 );
+const sections = await getSections();
+// Projects you switch on in the CRM ("Show on the website") join the list for their service.
+const projects = sections.service_examples
+  ? (await getProjects()).filter((p) => p.service && serviceIdFromTitle[p.service] === service)
+  : [];
+const showExamples = sections.service_examples;
 ---
 
 <div class="examples">
@@ -26,7 +33,7 @@ const examples = (await getCollection('products', (p) => p.data.service === serv
           </li>
         </ul>
       </>
-    ) : examples.length > 0 ? (
+    ) : showExamples && examples.length + projects.length > 0 ? (
       <>
         <p class="examples__label">See it in action</p>
         <ul class="examples__list">
@@ -36,6 +43,21 @@ const examples = (await getCollection('products', (p) => p.data.service === serv
                 {e.data.title}
                 <span aria-hidden="true">→</span>
               </a>
+            </li>
+          ))}
+          {projects.map((p) => (
+            <li>
+              {p.live_url ? (
+                <a href={p.live_url} rel="noopener" target="_blank">
+                  {p.title}
+                  <span aria-hidden="true">↗</span>
+                </a>
+              ) : (
+                <span class="examples__project" title={p.summary ?? undefined}>
+                  {p.title}
+                  {p.outcome && <small>{p.outcome}</small>}
+                </span>
+              )}
             </li>
           ))}
         </ul>
@@ -103,5 +125,23 @@ const examples = (await getCollection('products', (p) => p.data.service === serv
   .examples__list a:hover {
     background: var(--brand);
     color: var(--white);
+  }
+  .examples__project {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 2.5rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    background: var(--white);
+    box-shadow: inset 0 0 0 1.5px #d6e0e7;
+    color: var(--ink);
+    font-size: var(--step--1);
+    font-weight: 600;
+    line-height: 1.25;
+  }
+  .examples__project small {
+    font-weight: 400;
+    color: var(--ink-soft);
   }
 </style>

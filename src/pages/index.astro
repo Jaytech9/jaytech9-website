@@ -25,6 +25,8 @@ const tiles = [
 import CtaBand from '../components/CtaBand.astro';
 import Testimonials from '../components/Testimonials.astro';
 import RecentDesigns from '../components/RecentDesigns.astro';
+import { getSections } from '../lib/crm';
+const sections = await getSections();
 ---
 
 <Base
@@ -246,7 +248,7 @@ import RecentDesigns from '../components/RecentDesigns.astro';
       </ul>
     </div>
   </section>
-  <RecentDesigns />
+  {sections.recent_designs && <RecentDesigns />}
   <Testimonials />
   <section class="section section--band" aria-labelledby="why-heading">
     <div class="wrap">

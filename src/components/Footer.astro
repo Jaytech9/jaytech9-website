@@ -2,6 +2,9 @@
 import { Image } from 'astro:assets';
 import logo from '../assets/logo.png';
 import { footerLinks, footerServices, site } from '../data/site';
+import { getSections } from '../lib/crm';
+const sections = await getSections();
+const links = footerLinks.filter((l) => !(l.href === '/blog/' && !sections.blog) && !(l.href === '/donate/' && !sections.donate));
 import { glyphs } from '../data/brand-glyphs';
 const year = new Date().getFullYear();
 
@@ -113,7 +116,7 @@ const year = new Date().getFullYear();
     <nav aria-label="Useful links">
       <h2 class="site-footer__heading">Useful links</h2>
       <ul>
-        {footerLinks.map((item) => (
+        {links.map((item) => (
           <li>
             <a href={item.href}>{item.label}</a>
           </li>

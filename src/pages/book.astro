@@ -9,6 +9,9 @@ import { services } from '../data/services';
 import { booking, site } from '../data/site';
 
 const steps = ['Service', 'Project', 'Call time', 'Your details'];
+import { getSections } from '../lib/crm';
+const sections = await getSections();
+const timelines = booking.timelines.filter((t) => sections.urgent_booking || !t.startsWith('Urgent'));
 ---
 
 <Base
@@ -129,7 +132,7 @@ const steps = ['Service', 'Project', 'Call time', 'Your details'];
               <p class="bfield__label" id="b-time-label">When do you need it?</p>
               <div class="bchips" role="radiogroup" aria-labelledby="b-time-label">
                 {
-                  booking.timelines.map((b) => (
+                  timelines.map((b) => (
                     <label class="bchip">
                       <input type="radio" name="timeline" value={b} />
                       <span>{b}</span>
@@ -248,7 +251,7 @@ const steps = ['Service', 'Project', 'Call time', 'Your details'];
           </dl>
           <ul class="bsummary__trust">
             <li><Icon name="check" size={16} strokeWidth={2.5} /> Free, no obligation</li>
-            <li><Icon name="check" size={16} strokeWidth={2.5} /> Urgent jobs fast-tracked</li>
+            {sections.urgent_booking && <li><Icon name="check" size={16} strokeWidth={2.5} /> Urgent jobs fast-tracked</li>}
             <li><Icon name="check" size={16} strokeWidth={2.5} /> Written quote after the call</li>
           </ul>
           <p class="bsummary__alt">

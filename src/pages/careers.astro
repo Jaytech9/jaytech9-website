@@ -1,5 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
+import { getSections } from '../lib/crm';
+const sections = await getSections();
 ---
 
 <Base
@@ -25,6 +27,7 @@ import Base from '../layouts/Base.astro';
       </p>
     </div>
   </header>
+  {sections.careers && (
   <section class="section openings-section" aria-labelledby="openings-heading">
     <div class="wrap overlap sheet careers-sheet">
       <div class="careers-visual" aria-hidden="true">
@@ -72,6 +75,7 @@ import Base from '../layouts/Base.astro';
       </div>
     </div>
   </section>
+  )}
   <section class="section section--band" aria-labelledby="teams-heading">
     <div class="wrap">
       <h2 id="teams-heading">Teams we’re building</h2>

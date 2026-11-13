@@ -6,6 +6,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BottomNav from '../components/BottomNav.astro';
 import HelpWidget from '../components/HelpWidget.astro';
+import { getSections } from '../lib/crm';
 import { site } from '../data/site';
 
 interface Props {
@@ -33,6 +34,7 @@ const org = {
   areaServed: 'Worldwide',
   sameAs: site.social.map((s) => s.href),
 };
+const sections = await getSections();
 ---
 
 <!doctype html>
@@ -83,7 +85,7 @@ const org = {
     </main>
     <Footer />
     <BottomNav />
-    <HelpWidget />
+    {sections.help_widget && <HelpWidget />}
     <script is:inline>
       // Fade sections and cards in as they scroll into view.
       if (document.documentElement.classList.contains('motion')) {

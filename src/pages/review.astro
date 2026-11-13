@@ -1,0 +1,245 @@
+---
+// "Share your experience": clients leave a review here. It goes to the CRM and waits for approval;
+// nothing appears on the site until it is approved there. The form can be closed from the CRM.
+import Base from '../layouts/Base.astro';
+import { getSections } from '../lib/crm';
+import { site } from '../data/site';
+
+const sections = await getSections();
+const open = sections.accept_reviews;
+---
+
+<Base
+  title="Share your experience | JayTech9"
+  description="Worked with JayTech9? Tell others how it went. Every review is read before it appears on the site."
+>
+  <header class="page-head review-head">
+    <div class="wrap">
+      <h1>Worked with us? <em class="hl">Tell others.</em></h1>
+    </div>
+  </header>
+
+  <section class="section review-section">
+    <div class="wrap overlap">
+      {
+        open ? (
+          <form
+            class="sheet review-form"
+            name="review"
+            method="POST"
+            action="/review/thanks/"
+            data-netlify="true"
+            netlify-honeypot="company-website"
+          >
+            <input type="hidden" name="form-name" value="review" />
+            <p class="visually-hidden">
+              <label>
+                Leave this empty: <input name="company-website" tabindex="-1" autocomplete="off" />
+              </label>
+            </p>
+            <p class="review-form__intro">Share your experience in a few words.</p>
+            <div class="review-form__row">
+              <div class="rfield">
+                <label for="r-name">Your name</label>
+                <input id="r-name" name="name" type="text" autocomplete="name" required maxlength="80" />
+              </div>
+              <div class="rfield">
+                <label for="r-org">
+                  Business <span>(optional)</span>
+                </label>
+                <input id="r-org" name="organisation" type="text" autocomplete="organization" maxlength="80" />
+              </div>
+            </div>
+            <div class="rfield">
+              <label for="r-role">
+                Your role <span>(optional)</span>
+              </label>
+              <input id="r-role" name="role" type="text" placeholder="e.g. Director" maxlength="60" />
+            </div>
+            <fieldset class="rstars">
+              <legend>Rating</legend>
+              <div class="rstars__set">
+                {[5, 4, 3, 2, 1].map((n) => (
+                  <>
+                    <input type="radio" id={`r-star-${n}`} name="rating" value={n} checked={n === 5} />
+                    <label for={`r-star-${n}`} title={`${n} out of 5`}>
+                      <span class="visually-hidden">{n} out of 5</span>★
+                    </label>
+                  </>
+                ))}
+              </div>
+            </fieldset>
+            <div class="rfield">
+              <label for="r-msg">Your review</label>
+              <textarea
+                id="r-msg"
+                name="message"
+                rows="5"
+                required
+                minlength="20"
+                maxlength="300"
+                placeholder="What did we help you with, and how did it go?"
+              />
+              <span class="rcount" aria-live="polite">
+                <span data-count>0</span>/300
+              </span>
+            </div>
+            <label class="rcheck">
+              <input type="checkbox" name="consent" value="yes" required />
+              JayTech9 may show my name and review on its website.
+            </label>
+            <button class="button" type="submit">
+              Send review
+            </button>
+            <p class="review-form__note">We read every review before it appears on the site.</p>
+          </form>
+        ) : (
+          <div class="sheet review-closed">
+            <p>We are not collecting reviews online right now.</p>
+            <p>
+              To share feedback, message us on <a href={site.whatsapp}>WhatsApp</a> or email{' '}
+              <a href={`mailto:${site.email}`}>{site.email}</a>.
+            </p>
+            {/* Keeps the form registered with Netlify while reviews are closed. */}
+            <form name="review" data-netlify="true" netlify-honeypot="company-website" hidden>
+              <input name="company-website" />
+              <input name="name" />
+              <input name="organisation" />
+              <input name="role" />
+              <input name="rating" />
+              <textarea name="message" />
+              <input name="consent" />
+            </form>
+          </div>
+        )
+      }
+    </div>
+  </section>
+</Base>
+
+<script>
+  const msg = document.querySelector<HTMLTextAreaElement>('#r-msg');
+  const count = document.querySelector('[data-count]');
+  msg?.addEventListener('input', () => {
+    if (count) count.textContent = String(msg.value.length);
+  });
+</script>
+
+<style>
+  .review-head h1 {
+    max-width: none;
+  }
+  .review-head h1 .hl {
+    display: block;
+  }
+  .review-form,
+  .review-closed {
+    max-width: 40rem;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+  .review-closed p {
+    margin: 0;
+  }
+  .review-form__intro {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+  .review-form__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1rem;
+  }
+  .rfield {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .rfield label,
+  .rstars legend {
+    font-weight: 600;
+  }
+  .rfield label span {
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+  .rfield input,
+  .rfield textarea {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.7rem 0.85rem;
+    border: 2px solid #c9d6df;
+    border-radius: 0.75rem;
+    background: var(--white);
+    font: inherit;
+    color: var(--ink);
+  }
+  .rfield textarea {
+    resize: vertical;
+  }
+  .rfield input:focus,
+  .rfield textarea:focus {
+    outline: none;
+    border-color: var(--brand);
+  }
+  .rcount {
+    align-self: flex-end;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+  .rstars {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+  .rstars legend {
+    margin-bottom: 0.35rem;
+  }
+  /* Stars are listed 5→1 and shown reversed, so "this and every star before it" lights up with plain CSS. */
+  .rstars__set {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    gap: 0.15rem;
+  }
+  .rstars__set input {
+    position: absolute;
+    opacity: 0;
+  }
+  .rstars__set label {
+    font-size: 2rem;
+    line-height: 1;
+    color: #c9d6df;
+    cursor: pointer;
+  }
+  .rstars__set input:checked ~ label,
+  .rstars__set label:hover,
+  .rstars__set label:hover ~ label {
+    color: #c98a00;
+  }
+  .rstars__set input:focus-visible + label {
+    outline: 3px solid var(--brand);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  .rcheck {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+  .rcheck input {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.2rem;
+    accent-color: var(--brand);
+  }
+  .review-form .button {
+    align-self: flex-start;
+  }
+  .review-form__note {
+    margin: 0;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+</style>
