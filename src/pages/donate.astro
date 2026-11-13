@@ -126,7 +126,7 @@ import Base from '../layouts/Base.astro';
             and we’ll share the details.
           </p>
           <div class="button-row">
-            <a class="button" href="https://wa.me/233203651974">
+            <a class="button" href="https://wa.me/233506181501">
               Message us on WhatsApp
             </a>
             <a class="button button--quiet" href="mailto:info@jaytech9.com?subject=Donation">
@@ -243,6 +243,11 @@ import Base from '../layouts/Base.astro';
   }
   .donate-hero__content {
     position: relative;
+  }
+  @media (width < 48rem) {
+    .donate-hero::before {
+      background: linear-gradient(180deg, #04182be6 0%, #06264ad9 60%, #06223a 100%);
+    }
   }
   /* Wide screens: mirror the photo so the farmers stand to the right of the text. */
   @media (width >= 48rem) {
