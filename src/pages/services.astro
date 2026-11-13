@@ -9,6 +9,7 @@ const slides = (await getCollection('banners', (b) => b.data.page === 'services'
   .sort((a, b) => a.data.order - b.data.order)
   .map((b) => ({ ...b.data, tag: b.data.tag ?? '', art: visual(b.data.visual) }));
 import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
 import ServiceExamples from '../components/ServiceExamples.astro';
 ---
 
@@ -289,18 +290,42 @@ import ServiceExamples from '../components/ServiceExamples.astro';
     </section>
   </div>
   <section class="section pricing" id="pricing" aria-labelledby="pricing-heading">
-    <div class="wrap pricing__inner">
-      <h2 id="pricing-heading">How pricing works</h2>
-      <div class="prose">
+    <div class="wrap">
+      <div class="pricing__head">
+        <h2 id="pricing-heading">Clear pricing. No surprises.</h2>
         <p>
-          Every project is different, so we don’t guess at prices on a web page. After a free call, you get a
-          written quote in your currency (cedis, dollars or other) with the scope, timeline and payment stages
-          spelled out.
+          After a free call, you get a written quote in GH₵, US dollars or your own currency, with scope,
+          timeline and payment stages spelled out.
         </p>
-        <p>
-          Larger projects are usually paid in stages: a deposit to start, a payment at the halfway review, and
-          the balance at launch. Hosting and care are billed yearly.
-        </p>
+      </div>
+      <ol class="pricing__steps">
+        <li class="card pstep">
+          <span class="pstep__num" aria-hidden="true">1</span>
+          <span class="pstep__icon"><Icon name="headset" size={24} /></span>
+          <h3>Free call</h3>
+          <p>We understand what you need.</p>
+        </li>
+        <li class="card pstep">
+          <span class="pstep__num" aria-hidden="true">2</span>
+          <span class="pstep__icon"><Icon name="file" size={24} /></span>
+          <h3>Written quote</h3>
+          <p>Fixed scope, timeline and price.</p>
+        </li>
+        <li class="card pstep">
+          <span class="pstep__num" aria-hidden="true">3</span>
+          <span class="pstep__icon"><Icon name="wallet" size={24} /></span>
+          <h3>Pay in stages</h3>
+          <p>Larger projects are split into three payments.</p>
+          <ol class="pstep__stages" aria-label="Payment stages">
+            <li>Deposit</li>
+            <li>Halfway review</li>
+            <li>Launch</li>
+          </ol>
+        </li>
+      </ol>
+      <div class="pricing__foot">
+        <p>Hosting and care plans are billed yearly.</p>
+        <a class="button" href="/book/">Get your free quote</a>
       </div>
     </div>
   </section>
@@ -363,14 +388,110 @@ import ServiceExamples from '../components/ServiceExamples.astro';
   .service__fit strong {
     color: var(--ink);
   }
-  .pricing__inner {
-    gap: 1.5rem 4rem;
-    display: grid;
-  }
   @media (width>=52rem) {
-    .service,
-    .pricing__inner {
+    .service {
       grid-template-columns: 1fr 1fr;
     }
+  }
+
+  /* ---------- Pricing: three steps in cards ---------- */
+  .pricing__head {
+    max-width: 40rem;
+    margin-bottom: clamp(1.5rem, 4vw, 2.25rem);
+  }
+  .pricing__head h2 {
+    margin: 0 0 0.75rem;
+  }
+  .pricing__head p {
+    margin: 0;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--ink-soft);
+    text-align: left;
+    hyphens: manual;
+  }
+  .pricing__steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  }
+  .pstep {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .pstep__num {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--ink);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+  .pstep__icon {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 0.5rem;
+    border-radius: 14px;
+    background: #e6f1f8;
+    color: var(--brand);
+  }
+  .pstep h3 {
+    margin: 0;
+    font-size: var(--step-1);
+  }
+  .pstep p {
+    margin: 0;
+    color: var(--ink-soft);
+    text-align: left;
+    hyphens: manual;
+  }
+  .pstep__stages {
+    list-style: none;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.3rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .pstep__stages li {
+    padding-top: 0.55rem;
+    border-top: 5px solid var(--brand);
+    border-radius: 2px;
+    line-height: 1.3;
+  }
+  .pstep__stages li:nth-child(2) {
+    border-top-color: #2f8fc4;
+  }
+  .pstep__stages li:nth-child(3) {
+    border-top-color: var(--accent);
+  }
+  .pricing__foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .pricing__foot p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
   }
 </style>
