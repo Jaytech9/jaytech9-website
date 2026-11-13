@@ -9,10 +9,12 @@ import { glyphs } from '../data/brand-glyphs';
 interface Props {
   heading?: string;
   text?: string;
+  highlight?: string; // optional second line of the heading, shown in brand green
 }
 const {
   heading = 'Tell us what slows your business down',
   text = 'Book a free 30-minute call. We’ll listen, then send a clear quote.',
+  highlight,
 } = Astro.props;
 ---
 
@@ -20,7 +22,10 @@ const {
   <div class="wrap">
     <div class="cta__panel">
       <div class="cta__text">
-        <h2 id="cta-heading">{heading}</h2>
+        <h2 id="cta-heading">
+          {heading}
+          {highlight && <span class="cta__hl">{highlight}</span>}
+        </h2>
         <p class="cta__lead">{text}</p>
         <div class="cta__actions">
           <a class="cta__btn cta__btn--primary" href="/book/">
@@ -110,6 +115,15 @@ const {
     max-width: 16ch;
     color: var(--white);
     text-wrap: balance;
+  }
+  /* Second line of the heading: brand green so the invitation stands out. */
+  .cta__hl {
+    display: block;
+    margin-top: 0.15em;
+    color: var(--accent);
+  }
+  .cta h2:has(.cta__hl) {
+    max-width: 20ch;
   }
   .cta__lead {
     margin: 1rem 0 1.75rem;
