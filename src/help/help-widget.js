@@ -9,7 +9,19 @@ import { answer, saveUnanswered } from './bot';
     var seen = false;
     try { seen = sessionStorage.getItem('jt9_help_seen') === '1'; } catch (e) {}
     var hideHello = function () { if (hello) { hello.hidden = true; } try { sessionStorage.setItem('jt9_help_seen', '1'); } catch (e) {} };
-    if (hello && !seen) { setTimeout(function () { if (helpPanel.hidden) { hello.hidden = false; } }, 4000); }
+    // Greeting: once per visit, after 20 seconds, and it tucks itself away after 12 seconds.
+    if (hello && !seen) {
+      setTimeout(function () {
+        if (!helpPanel.hidden) { return; }
+        hello.hidden = false;
+        try { sessionStorage.setItem('jt9_help_seen', '1'); } catch (e) {}
+        setTimeout(function () {
+          if (hello.hidden) { return; }
+          hello.classList.add('is-leaving');
+          setTimeout(function () { hello.hidden = true; hello.classList.remove('is-leaving'); }, 320);
+        }, 12000);
+      }, 20000);
+    }
     if (hello) { hello.querySelector('.jt9-help-hello-x').addEventListener('click', hideHello); }
     var chatOpen = false, chatInput = null;
     var setOpen = function (open) {
