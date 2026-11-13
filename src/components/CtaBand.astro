@@ -32,11 +32,6 @@ const {
             Chat on WhatsApp
           </a>
         </div>
-        <ul class="cta__trust" aria-label="What you can expect">
-          <li><Icon name="check" size={16} strokeWidth={2.5} /> No obligation</li>
-          <li><Icon name="check" size={16} strokeWidth={2.5} /> Urgent jobs fast-tracked</li>
-          <li><Icon name="check" size={16} strokeWidth={2.5} /> You own the code</li>
-        </ul>
       </div>
 
       <ul class="cta__contacts" aria-label="Contact details">
@@ -172,25 +167,6 @@ const {
   .cta__contacts a:focus-visible {
     outline: 3px solid var(--accent);
     outline-offset: 3px;
-  }
-  .cta__trust {
-    list-style: none;
-    margin: 1.5rem 0 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 1.25rem;
-    font-size: var(--step--1);
-    color: #dcecf5;
-  }
-  .cta__trust li {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-  .cta__trust :global(svg) {
-    color: var(--accent);
-    flex: none;
   }
 
   /* Contact cards */
