@@ -1,6 +1,7 @@
 // The chat bot's brain, moved from jt9-help/help-bot.php so it runs in the visitor's browser on a static site.
 // It answers from the question list only, with no server or API key. Questions it can't answer are saved
-// through Netlify Forms so the team can add them to src/data/help.ts. Everything else stays in the browser.
+// to the database (functions/api/help-question.ts) and listed in CRM → Enquiries, so the team can add
+// answers to src/data/help.ts. Everything else stays in the browser.
 import { helpFaq, helpHandoff } from '../data/help';
 
 const SKIP = new Set(
@@ -112,13 +113,9 @@ export function saveUnanswered(message: string): void {
   try {
     sessionStorage.setItem('jt9_help_saved', JSON.stringify([...saved, question]));
   } catch {}
-  fetch('/', {
+  fetch('/api/help-question', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({
-      'form-name': 'help-questions',
-      question,
-      page: location.pathname,
-    }).toString(),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ question, page: location.pathname }),
   }).catch(() => {});
 }

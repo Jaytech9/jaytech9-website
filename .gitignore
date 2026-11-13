@@ -5,4 +5,9 @@ dist/
 .env
 .env.*
 npm-debug.log*
+
+# Cloudflare local files
+.wrangler/
+.dev.vars
 !.env.example
+backup-*.sql

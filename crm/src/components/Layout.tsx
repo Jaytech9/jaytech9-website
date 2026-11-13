@@ -87,7 +87,7 @@ export default function Layout() {
         </header>
         <main className="content" id="main">
           {db.mode === 'demo' && (
-            <p className="demo-bar"><Icon name="help" size={16} />Demo mode: you are looking at sample data. Connect Supabase to use your real records (see Settings).</p>
+            <p className="demo-bar"><Icon name="help" size={16} />Demo mode: you are looking at sample data. Nothing here is saved.</p>
           )}
           <Outlet />
         </main>

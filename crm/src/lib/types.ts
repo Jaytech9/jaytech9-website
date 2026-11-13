@@ -40,11 +40,12 @@ export interface Campaign {
   error?: string | null; created_at: string;
 }
 export interface Activity { id: Id; entity: string; entity_id?: Id | null; action: string; detail?: string | null; created_at: string }
-export interface Staff { id: Id; name: string; role: 'admin' | 'staff'; created_at: string }
+export interface HelpQuestion { id: Id; question: string; page?: string | null; done: boolean; created_at: string }
+export interface Staff { id: Id; email: string; name: string; role: 'admin' | 'staff'; created_at: string }
 
 export interface Tables {
   clients: Client; bookings: Booking; enquiries: Enquiry; deals: Deal; projects: Project; reviews: Review;
-  site_sections: Section; campaigns: Campaign; activity: Activity; staff: Staff;
+  site_sections: Section; campaigns: Campaign; activity: Activity; staff: Staff; help_questions: HelpQuestion;
 }
 export type TableName = keyof Tables;
 

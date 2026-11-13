@@ -1,6 +1,6 @@
 ---
 // Booking page: a four-step request for a free 30-minute call about a service.
-// Sent with Netlify Forms (form name "booking"). Works without JavaScript as one long form;
+// Saved to the database by functions/_middleware.ts (form name "booking") and shown in CRM → Bookings. Works without JavaScript as one long form;
 // with JavaScript it becomes a step-by-step form with a live summary.
 // Days, times, budgets and call methods are set in src/data/site.ts (booking).
 import Base from '../layouts/Base.astro';
@@ -32,8 +32,6 @@ const timelines = booking.timelines.filter((t) => sections.urgent_booking || !t.
           name="booking"
           method="POST"
           action="/book/thanks/"
-          data-netlify="true"
-          netlify-honeypot="company-website"
           novalidate
         >
           <input type="hidden" name="form-name" value="booking" />

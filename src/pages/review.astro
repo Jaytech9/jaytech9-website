@@ -1,6 +1,7 @@
 ---
-// "Share your experience": clients leave a review here. It goes to the CRM and waits for approval;
-// nothing appears on the site until it is approved there. The form can be closed from the CRM.
+// "Share your experience": clients leave a review here. functions/_middleware.ts saves it to the
+// database, where it waits in CRM → Reviews. Nothing appears on the site until it is approved there.
+// The form can be closed from CRM → Website sections → "Accept new reviews".
 import Base from '../layouts/Base.astro';
 import { getSections } from '../lib/crm';
 import { site } from '../data/site';
@@ -28,8 +29,6 @@ const open = sections.accept_reviews;
             name="review"
             method="POST"
             action="/review/thanks/"
-            data-netlify="true"
-            netlify-honeypot="company-website"
           >
             <input type="hidden" name="form-name" value="review" />
             <p class="visually-hidden">
@@ -100,16 +99,6 @@ const open = sections.accept_reviews;
               To share feedback, message us on <a href={site.whatsapp}>WhatsApp</a> or email{' '}
               <a href={`mailto:${site.email}`}>{site.email}</a>.
             </p>
-            {/* Keeps the form registered with Netlify while reviews are closed. */}
-            <form name="review" data-netlify="true" netlify-honeypot="company-website" hidden>
-              <input name="company-website" />
-              <input name="name" />
-              <input name="organisation" />
-              <input name="role" />
-              <input name="rating" />
-              <textarea name="message" />
-              <input name="consent" />
-            </form>
           </div>
         )
       }

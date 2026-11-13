@@ -1,5 +1,5 @@
 // Sample data for demo mode. Every date is worked out from the moment the CRM opens,
-// so the dashboard always looks current. None of this is real; it disappears once Supabase is connected.
+// so the dashboard always looks current. None of this is real; the live CRM never uses it.
 import { SERVICES } from './types';
 
 const first = ['Ama', 'Kwame', 'Akosua', 'Kofi', 'Efua', 'Yaw', 'Abena', 'Kwesi', 'Adwoa', 'Kojo', 'Esi', 'Kwabena', 'Afia', 'Fiifi', 'Akua', 'Nana', 'Selorm', 'Dzifa', 'Elikem', 'Mawuli', 'Naa', 'Nii', 'Aisha', 'Ibrahim'];
@@ -150,5 +150,8 @@ export function makeDemoData(now: Date) {
     ...reviews.filter((r) => r.status === 'pending').map((r) => ({ id: id(), entity: 'review', entity_id: r.id, action: 'New review', detail: r.name, created_at: r.created_at })),
   ];
 
-  return { clients, bookings, enquiries, deals, projects, reviews, site_sections, campaigns, activity, staff: [] } as Record<string, Record<string, unknown>[]>;
+  return { clients, bookings, enquiries, deals, projects, reviews, site_sections, campaigns, activity, staff: [], help_questions: [
+    { id: id(), question: 'Do you build mobile apps?', page: '/services/', done: false, created_at: at(0.3) },
+    { id: id(), question: 'Can I pay in instalments?', page: '/book/', done: false, created_at: at(2.2) },
+  ] } as Record<string, Record<string, unknown>[]>;
 }

@@ -1,8 +1,14 @@
-// Reads what the JayTech9 CRM controls, once per build: section switches, approved reviews and
-// projects marked "Show on the website". Without CRM keys (or if the CRM is down) the site builds
-// with everything switched on and no CRM content, exactly as it did before the CRM existed.
-const URL_ = import.meta.env.SUPABASE_URL ?? process.env.SUPABASE_URL;
-const KEY = import.meta.env.SUPABASE_ANON_KEY ?? process.env.SUPABASE_ANON_KEY;
+// What the JayTech9 CRM controls on the website, read once per build:
+//   - section switches (CRM → Website sections)
+//   - approved reviews (CRM → Reviews)
+//   - projects marked "Show on the website" (CRM → Projects)
+// It comes from the live site's /api/site-data (functions/api/site-data.ts), which reads the database.
+// If that can't be reached (first deploy, local preview offline), every section stays ON and the site
+// simply shows no CRM content. Nothing breaks.
+//
+// To use a different address (e.g. a preview site), set SITE_DATA_URL in the build settings.
+const SITE_DATA_URL =
+  import.meta.env.SITE_DATA_URL ?? process.env.SITE_DATA_URL ?? 'https://jaytech9.com/api/site-data';
 
 export type SectionKey =
   | 'help_widget'
@@ -32,41 +38,38 @@ export interface CrmProject {
   outcome: string | null;
   live_url: string | null;
 }
-
-async function get<T>(path: string): Promise<T[]> {
-  if (!URL_ || !KEY) return [];
-  try {
-    const res = await fetch(`${URL_}/rest/v1/${path}`, {
-      headers: { apikey: KEY, authorization: `Bearer ${KEY}` },
-      signal: AbortSignal.timeout(8000),
-    });
-    if (!res.ok) throw new Error(`${res.status}`);
-    return (await res.json()) as T[];
-  } catch (e) {
-    console.warn(`[crm] could not read ${path.split('?')[0]}: ${(e as Error).message}. Using defaults.`);
-    return [];
-  }
+interface SiteData {
+  sections: { key: SectionKey; enabled: boolean }[];
+  reviews: CrmReview[];
+  projects: CrmProject[];
 }
 
-let sectionsP: Promise<Record<SectionKey, boolean>> | undefined;
-export function getSections() {
-  sectionsP ??= get<{ key: SectionKey; enabled: boolean }>('site_sections?select=key,enabled').then((rows) => {
-    const on = new Proxy({} as Record<SectionKey, boolean>, { get: (t, k: string) => (k in t ? t[k as SectionKey] : true) });
-    rows.forEach((r) => (on[r.key] = r.enabled));
-    return on;
-  });
-  return sectionsP;
+let dataP: Promise<SiteData> | undefined;
+function siteData() {
+  dataP ??= (async () => {
+    try {
+      const res = await fetch(SITE_DATA_URL, { signal: AbortSignal.timeout(8000) });
+      if (!res.ok || !res.headers.get('content-type')?.includes('json')) throw new Error(`${res.status}`);
+      return (await res.json()) as SiteData;
+    } catch (e) {
+      console.warn(`[crm] site data not available (${(e as Error).message}); building with defaults.`);
+      return { sections: [], reviews: [], projects: [] };
+    }
+  })();
+  return dataP;
 }
 
-let reviewsP: Promise<CrmReview[]> | undefined;
-export const getReviews = () =>
-  (reviewsP ??= get<CrmReview>('website_reviews?select=id,name,organisation,role,rating,message,product&order=created_at.desc'));
+// Every switch is ON unless the CRM says otherwise.
+export async function getSections() {
+  const { sections } = await siteData();
+  const off = new Set(sections.filter((s) => !s.enabled).map((s) => s.key));
+  return new Proxy({} as Record<SectionKey, boolean>, { get: (_t, k: string) => !off.has(k as SectionKey) });
+}
 
-let projectsP: Promise<CrmProject[]> | undefined;
-export const getProjects = () =>
-  (projectsP ??= get<CrmProject>('website_projects?select=id,title,service,summary,outcome,live_url&order=updated_at.desc'));
+export const getReviews = async () => (await siteData()).reviews;
+export const getProjects = async () => (await siteData()).projects;
 
-// CRM services are stored by title; the site uses short ids.
+// The CRM stores services by their full title; the site uses short ids.
 export const serviceIdFromTitle: Record<string, string> = {
   'Websites and web applications': 'websites',
   'Business systems': 'systems',

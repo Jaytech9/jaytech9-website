@@ -164,13 +164,6 @@ const helpIcon = (size: number, id: string) =>
   </button>
 </div>
 
-<!-- Netlify reads this hidden form at build time. It's how unanswered questions reach the Forms page. -->
-<form name="help-questions" data-netlify="true" netlify-honeypot="company-website" hidden>
-  <input name="company-website" />
-  <input name="question" />
-  <input name="page" />
-</form>
-
 <script>
   import '../help/help-widget.js';
 </script>

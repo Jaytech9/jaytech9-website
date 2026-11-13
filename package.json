@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "db:local": "wrangler d1 execute jaytech9 --local --persist-to .wrangler/state --file=database/schema.sql",
+    "dev:full": "astro build && wrangler pages dev dist --port 8789 --persist-to .wrangler/state",
+    "check:functions": "tsc -p functions/tsconfig.json"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
@@ -14,7 +17,9 @@
     "astro": "^5.18.2"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261113.1",
     "prettier": "^3.9.10",
-    "prettier-plugin-astro": "^1.1.2"
+    "prettier-plugin-astro": "^1.1.2",
+    "wrangler": "^4.161.0"
   }
 }

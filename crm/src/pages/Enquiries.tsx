@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { logActivity, updateRow, useTable } from '../lib/store';
+import { Icon } from '../components/Icon';
 import { Avatar, Button, Card, Empty, Modal, PageHead, Pill, SearchBox, Segmented, Skeleton, useNow, useToast } from '../components/ui';
 import ContactButtons from '../components/ContactButtons';
 import { ago } from '../lib/format';
@@ -44,6 +45,7 @@ export default function Enquiries() {
           </ul>
         )}
       </Card>
+      <HelpQuestions />
       <Modal open={!!open} title={open?.name ?? ''} onClose={() => setOpenId(null)} footer={open && (
         <>
           {open.status !== 'closed' && <Button variant="secondary" onClick={() => set(open, 'closed')}>Close</Button>}
@@ -61,5 +63,26 @@ export default function Enquiries() {
         )}
       </Modal>
     </>
+  );
+}
+
+// Questions the website help bubble could not answer. Add answers in src/data/help.ts, then tick them off.
+function HelpQuestions() {
+  const { rows } = useTable('help_questions');
+  const now = useNow();
+  const open = rows.filter((q) => !q.done);
+  if (!open.length) return null;
+  return (
+    <Card title="Questions the help bubble could not answer" action={<span className="muted" style={{ fontWeight: 500 }}>{open.length}</span>}>
+      <ul className="list">
+        {open.slice(0, 10).map((q) => (
+          <li key={q.id}>
+            <span className="nav__ic" style={{ background: 'var(--amber-soft)', color: 'var(--amber-text)' }}><Icon name="help" /></span>
+            <div className="list__main"><strong>“{q.question}”</strong><small>{q.page} · {ago(q.created_at, now)}</small></div>
+            <Button size="sm" variant="secondary" icon="check" onClick={() => updateRow('help_questions', q.id, { done: true })}>Answered</Button>
+          </li>
+        ))}
+      </ul>
+    </Card>
   );
 }

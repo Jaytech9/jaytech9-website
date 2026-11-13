@@ -1,57 +1,70 @@
-# JayTech9 website
+# JayTech9
 
-The company website for **JayTech9** (Jay Tech 9 Enterprise), built with [Astro](https://astro.build) for **jaytech9.com**.
+Everything for **jaytech9.com** in one private repository:
+
+| Folder | What it is | Lives at |
+| --- | --- | --- |
+| `/` (`src/`, `public/`) | The public website, built with [Astro](https://astro.build) | jaytech9.com |
+| `functions/` | The website's small server parts: saving form posts, sharing CRM content with the site | jaytech9.com/api/… |
+| `crm/` | The private CRM (React app + its API in `crm/functions/`) | crm.jaytech9.com |
+| `database/` | The one database both use (Cloudflare D1). `schema.sql` + later changes in `migrations/` | Cloudflare D1 |
+
+Hosting is Cloudflare (Pages, D1, Access), all on free plans. **To go live, follow [DEPLOY.md](DEPLOY.md).**
 
 ## Run it on your computer
 
 ```bash
-npm install        # first time only
-npm run dev        # open http://localhost:4321 — changes show instantly
-npm run build      # makes the finished site in dist/
-npm run preview    # check the built site before going live
+npm install          # first time only
+npm run dev          # website at http://localhost:4321, changes show instantly
+npm run build        # makes the finished site in dist/
+
+cd crm
+npm install          # first time only
+npm run dev          # CRM with sample data (demo mode), nothing is saved
 ```
 
-## Where things are
+Testing the website and CRM together with a real (local) database is explained in DEPLOY.md, "Test everything on your computer".
+
+## Where things are (website)
 
 | What you want to change | File |
 | --- | --- |
-| Phone, email, WhatsApp, social links, menu | `src/data/site.ts` |
-| A page's words | `src/pages/…` (e.g. `src/pages/about.astro`, `src/pages/work/buildsmart.astro`) |
-| Header / footer | `src/components/Header.astro`, `src/components/Footer.astro` |
+| Phone, email, WhatsApp, social links, menu, booking times | `src/data/site.ts` |
+| A page's words | `src/pages/…` (e.g. `src/pages/about.astro`) |
+| Header / footer / phone tab bar | `src/components/Header.astro`, `Footer.astro`, `BottomNav.astro` |
 | Colours, fonts, buttons, cards | `src/styles/global.css` (colours are the `--` tokens at the top) |
 | Page title, SEO, social sharing, PWA tags | `src/layouts/Base.astro` |
-| Logo in the header | `src/assets/logo.png` |
-| Icons, favicon, share image | `public/` |
-| Help button and assistant answers | `src/data/help.ts` (answers), `src/components/HelpWidget.astro` (menu), `src/help/` (behaviour and look) |
+| Help button and assistant answers | `src/data/help.ts` (answers), `src/components/HelpWidget.astro`, `src/help/` |
+| What the CRM can switch on/off on the site | `src/lib/crm.ts` + the `site_sections` rows in `database/schema.sql` |
+| What happens when a form is sent | `functions/_lib/forms.ts` |
 | Installable app + offline support | `public/manifest.webmanifest`, `public/sw.js` |
 
-To add a page, copy an existing one in `src/pages/` and change its `title`, `description` and content. The file path becomes the web address (`src/pages/pricing.astro` → `/pricing/`).
+To add a page, copy one in `src/pages/` and change its `title`, `description` and content. The file path becomes the web address (`src/pages/pricing.astro` → `/pricing/`).
 
-## Pages
+## Where things are (CRM)
 
-Home, Services, Work (7 case studies), About, Blog, Careers, Donate, Contact (+ thank-you), Offline, 404.
+| What | File |
+| --- | --- |
+| Screens (Dashboard, Bookings, Projects, Messages…) | `crm/src/pages/` |
+| Menu, top bar | `crm/src/components/Layout.tsx` |
+| Colours, sizes, card styles | `crm/src/index.css` (tokens at the top) |
+| Services list, pipeline stages, project statuses | `crm/src/lib/types.ts` |
+| Sample data for demo mode | `crm/src/lib/demo.ts` |
+| API (reading and saving data) | `crm/functions/api/` |
+| Which columns the CRM may change | `crm/functions/_lib/tables.ts` |
+| SMS and email sending | `crm/functions/_lib/messaging.ts` |
+| Scheduled messages (every 15 min) | `crm/workers/scheduler/` |
 
-## Content (cards and banners) — ready for the CRM
+## Content still kept in files
 
-Every card and banner is **data**, not page code:
-
-| What | File | Shown on |
-| --- | --- | --- |
-| Product / project cards | `src/content/products.json` | Products page (all), Home (`"featured": true`) |
-| Banner cards | `src/content/banners.json` | Home, Services and Products headers (`"page"` field) |
-
-- **Add, edit, reorder or hide** an entry by editing the JSON (`order` sets position, `"active": false` hides a banner).
-- **Use a real image** instead of the drawn illustration: put the file in `public/uploads/` and add
-  `"image": { "src": "/uploads/name.webp", "alt": "What it shows" }`. Drawn illustrations are listed in `src/lib/visuals.ts`.
-- The allowed fields are defined in `src/content.config.ts`. The build stops with a clear error if an entry is wrong.
-
-**When the CRM is built:** keep the same fields, and in `src/content.config.ts` replace each
-`file('src/content/....json')` loader with one that fetches the entries from the CRM's API. No page code changes.
-Rebuild (or trigger a deploy hook from the CRM) to publish changes.
+Product cards, banners, the design gallery and client logos are still JSON files in `src/content/`
+(fields defined in `src/content.config.ts`). Editing them from the CRM is the next step.
 
 ## Notes
 
-- **Contact form** uses Netlify Forms (`data-netlify="true"`). It only receives messages when the site is hosted on Netlify. If hosting moves elsewhere (e.g. Cloudflare Pages), switch the form to a service such as Formspree or Web3Forms.
-- **Teaching the help assistant:** questions it can't answer appear in Netlify under Forms → `help-questions`, with emails and phone numbers removed. Add the good ones to `src/data/help.ts` as a question and answer, then deploy. Only add facts that are true and on the website. The form shares Netlify's submission allowance with the contact form.
-- **Offline / app:** after a deploy that changes content, bump `VERSION` in `public/sw.js` so returning visitors get the update straight away.
-- **History:** this source was recovered on 5 Nov 2026 from the October 2026 build (the original source files were lost). `tools/convert.py` is the one-off script that did the recovery; it is kept for reference only.
+- **Forms** (booking, contact, review) post to their thank-you page. `functions/_middleware.ts` saves them to the
+  database and the CRM shows them. Only the paths in `public/_routes.json` run server code; every other page is plain static.
+- **Teaching the help assistant:** questions it can't answer appear in CRM → Enquiries. Add the good ones to
+  `src/data/help.ts`, then tick them off.
+- **Offline / app:** after a deploy that changes content, bump `VERSION` in `public/sw.js`.
+- **History:** this source was recovered on 5 Nov 2026 from the October 2026 build. `tools/convert.py` did the recovery; kept for reference only.

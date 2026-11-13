@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "include": [
+    "/api/*",
+    "/book/thanks",
+    "/book/thanks/",
+    "/contact/thanks",
+    "/contact/thanks/",
+    "/review/thanks",
+    "/review/thanks/"
+  ],
+  "exclude": []
+}
