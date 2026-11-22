@@ -59,15 +59,15 @@ Save and deploy. Then:
 
 ## 4. The CRM (crm.jaytech9.com) and its sign-in
 
-**a. Create the Pages project**: Workers & Pages → Create → Pages → Connect to Git → same repository.
+**a. Create and upload the Pages project** (Cloudflare only lets one Pages project connect to a GitHub repo,
+and the website already uses it, so the CRM is uploaded from your Mac). In Terminal, in this folder:
 
-| Setting | Value |
-| --- | --- |
-| Project name | `jaytech9-crm` |
-| Framework preset | None |
-| Build command | `npm run build` |
-| Build output directory | `dist` |
-| Root directory | `crm` |
+```bash
+bash crm/deploy.sh
+```
+
+The first time, wrangler opens your browser to connect to Cloudflare. Run the same command again whenever
+you change the CRM.
 
 **b. Turn on Cloudflare Access (the sign-in)**: open **Zero Trust** from the dashboard.
 
