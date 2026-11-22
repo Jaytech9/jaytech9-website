@@ -1,29 +1,13 @@
 ---
-import Base from '../../layouts/Base.astro';
+import ThanksCard from '../../components/ThanksCard.astro';
+import { site } from '../../data/site';
 ---
 
-<Base title="Message sent | JayTech9" description="Thanks for contacting JayTech9." noindex>
-  <section class="section">
-    <div class="wrap thanks">
-      <h1>Message <em class="hl">sent</em></h1>
-      <p class="lede">
-        Thanks for getting in touch. We’ll reply within one working day. If it’s urgent, message us on{' '}
-        <a href="https://wa.me/233506181501">WhatsApp</a>.
-      </p>
-      <div class="button-row">
-        <a class="button" href="/products/">
-          See our products
-        </a>
-        <a class="button button--quiet" href="/">
-          Back to home
-        </a>
-      </div>
-    </div>
-  </section>
-</Base>
-
-<style>
-  .thanks .lede {
-    margin-block: 1.5rem 2.25rem;
-  }
-</style>
+<ThanksCard
+  pageTitle="Message sent | JayTech9"
+  heading="Thanks, we’ve got your message"
+  text="We’ll reply within one working day."
+  steps={['We read your message and reply', 'A free 30-minute call, if it helps', 'A written quote with price and timeline']}
+  primary={{ label: 'Chat on WhatsApp now', href: site.whatsapp, whatsapp: true }}
+  secondary={{ label: 'See our products', href: '/products/' }}
+/>

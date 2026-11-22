@@ -1,67 +1,13 @@
 ---
-import Base from '../../layouts/Base.astro';
+import ThanksCard from '../../components/ThanksCard.astro';
 import { site } from '../../data/site';
 ---
 
-<Base title="Booking received | JayTech9" description="Thanks for booking a call with JayTech9." noindex>
-  <header class="page-head">
-    <div class="wrap">
-      <h1>Booking <em class="hl">received</em></h1>
-      <p class="lede">Thank you. We’ll be in touch by email or WhatsApp shortly. Urgent requests are handled first.</p>
-    </div>
-  </header>
-  <section class="section">
-    <div class="wrap">
-      <div class="sheet overlap thanks">
-        <h2>What happens next</h2>
-        <ol class="thanks__steps">
-          <li><span>1</span><div><strong>We confirm your time</strong> or suggest the nearest free slot.</div></li>
-          <li><span>2</span><div><strong>Free 30-minute call</strong> to understand what you need.</div></li>
-          <li><span>3</span><div><strong>Written quote</strong> with a clear price and timeline.</div></li>
-        </ol>
-        <div class="button-row">
-          <a class="button" href="/products/">See our work</a>
-          <a class="button button--quiet" href={site.whatsapp} rel="noopener">Message us on WhatsApp</a>
-        </div>
-      </div>
-    </div>
-  </section>
-</Base>
-
-<style>
-  .thanks {
-    max-width: 44rem;
-    padding: clamp(1.5rem, 4vw, 2.5rem);
-  }
-  .thanks h2 {
-    margin-top: 0;
-    font-size: var(--step-1);
-  }
-  .thanks__steps {
-    list-style: none;
-    margin: 1rem 0 2rem;
-    padding: 0;
-    display: grid;
-    gap: 0.9rem;
-  }
-  .thanks__steps li {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.8rem;
-    align-items: center;
-    color: var(--ink-soft);
-  }
-  .thanks__steps strong {
-    color: var(--ink);
-  }
-  .thanks__steps span {
-    display: grid;
-    place-items: center;
-    width: 2.1rem;
-    height: 2.1rem;
-    border-radius: 50%;
-    background: var(--accent);
-    color: var(--ink);
-    font-weight: 700;
-  }
-</style>
+<ThanksCard
+  pageTitle="Booking received | JayTech9"
+  heading="Thanks, your call request is in"
+  text="We’ll confirm your time within one working day."
+  steps={['We confirm your time or suggest the nearest free slot', 'A free 30-minute call to understand what you need', 'A written quote with price and timeline']}
+  primary={{ label: 'Chat on WhatsApp now', href: site.whatsapp, whatsapp: true }}
+  secondary={{ label: 'See our products', href: '/products/' }}
+/>

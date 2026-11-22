@@ -1,0 +1,150 @@
+---
+// Confirmation page shown after a form is sent (contact, booking, review).
+// One centred card: check mark, plain heading, one short line, optional next steps, and clear next actions.
+import Base from '../layouts/Base.astro';
+import Icon from './Icon.astro';
+
+interface Action { label: string; href: string; whatsapp?: boolean }
+interface Props {
+  pageTitle: string;
+  heading: string;
+  text: string;
+  steps?: string[];
+  primary: Action;
+  secondary?: Action;
+  home?: boolean;
+}
+const { pageTitle, heading, text, steps = [], primary, secondary, home = true } = Astro.props;
+---
+
+<Base title={pageTitle} description={text} noindex>
+  <section class="section thanks-wrap">
+    <div class="wrap">
+      <div class="thanks-card">
+        <span class="thanks-card__check" aria-hidden="true">
+          <Icon name="check" size={30} strokeWidth={2.5} />
+        </span>
+        <h1>{heading}</h1>
+        <p class="thanks-card__text">{text}</p>
+        {
+          steps.length > 0 && (
+            <div class="thanks-card__next">
+              <h2>What happens next</h2>
+              <ol>
+                {steps.map((s, i) => (
+                  <li>
+                    <span>{i + 1}</span>
+                    {s}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )
+        }
+        <div class="thanks-card__actions">
+          <a class:list={['button', { 'thanks-card__wa': primary.whatsapp }]} href={primary.href} rel={primary.whatsapp ? 'noopener' : undefined}>
+            {primary.whatsapp && <Icon name="chat" size={18} />}
+            {primary.label}
+          </a>
+          {secondary && <a class="button button--quiet" href={secondary.href}>{secondary.label}</a>}
+        </div>
+        {home && <a class="thanks-card__home" href="/">Back to home</a>}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .thanks-wrap {
+    padding-block: clamp(2.5rem, 7vw, 5rem);
+  }
+  .thanks-card {
+    max-width: 34rem;
+    margin-inline: auto;
+    padding: clamp(1.75rem, 5vw, 2.75rem);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    box-shadow: var(--shadow-card, 0 10px 30px #10293a14);
+    text-align: center;
+  }
+  .thanks-card__check {
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto 1.25rem;
+    border-radius: 50%;
+    background: #e7f6df;
+    color: var(--green-deep);
+  }
+  .thanks-card h1 {
+    margin: 0;
+    font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.25rem);
+    font-style: normal;
+    letter-spacing: -0.02em;
+  }
+  .thanks-card__text {
+    margin: 0.75rem 0 0;
+    color: var(--ink-soft);
+    font-size: var(--step-0);
+  }
+  .thanks-card__next {
+    margin-top: 1.75rem;
+    padding: 1.1rem 1.25rem;
+    border-radius: var(--radius);
+    background: var(--paper, #f2f5f8);
+    text-align: left;
+  }
+  .thanks-card__next h2 {
+    margin: 0 0 0.75rem;
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+  .thanks-card__next ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.65rem;
+  }
+  .thanks-card__next li {
+    display: flex;
+    gap: 0.7rem;
+    align-items: center;
+    color: var(--ink);
+  }
+  .thanks-card__next li span {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background: #e3eff8;
+    color: var(--blue);
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+  .thanks-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+  }
+  .thanks-card__wa {
+    background: var(--green-deep);
+    border-color: var(--green-deep);
+  }
+  .thanks-card__wa:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+  .thanks-card__home {
+    display: inline-block;
+    margin-top: 1rem;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+</style>
