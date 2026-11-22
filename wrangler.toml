@@ -7,4 +7,4 @@ compatibility_date = "2026-10-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "jaytech9"
-database_id = "PASTE-YOUR-D1-DATABASE-ID-HERE"   # same id as in crm/wrangler.toml
+database_id = "5be947cb-075e-4828-9dc7-ac63b403da8e"   # same id as in crm/wrangler.toml
