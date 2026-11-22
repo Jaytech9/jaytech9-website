@@ -11,3 +11,6 @@ npm-debug.log*
 .dev.vars
 !.env.example
 backup-*.sql
+
+# Files waiting to be deleted by hand
+_to_delete/

@@ -8,7 +8,7 @@ import Base from '../layouts/Base.astro';
 >
   <header class="page-head">
     <div class="wrap">
-      <h1>Let’s talk about your project</h1>
+      <h1>Let’s talk about <em class="hl">your project</em></h1>
       <p class="lede">
         Tell us a little about what you need. We reply within one working day, usually sooner.
       </p>
@@ -22,8 +22,6 @@ import Base from '../layouts/Base.astro';
         name="contact"
         method="POST"
         action="/contact/thanks/"
-        data-netlify="true"
-        netlify-honeypot="company-website"
       >
         <input type="hidden" name="form-name" value="contact" />
         <p class="visually-hidden">
@@ -122,9 +120,9 @@ import Base from '../layouts/Base.astro';
             </span>
             <div>
               <h3>
-                <a href="https://wa.me/233203651974">WhatsApp or call</a>
+                <a href="https://wa.me/233506181501">WhatsApp or call</a>
               </h3>
-              <p>+233 20 365 1974</p>
+              <p>+233 50 618 1501</p>
             </div>
           </li>
           <li class="card card--link direct__card">
@@ -208,6 +206,14 @@ import Base from '../layouts/Base.astro';
             </div>
           </li>
         </ul>
+        <div class="next-steps">
+          <h2 id="next-heading">What happens next</h2>
+          <ol aria-labelledby="next-heading">
+            <li><span>1</span><div><strong>We reply</strong> within one working day.</div></li>
+            <li><span>2</span><div><strong>Free 30-minute call</strong> to understand the problem.</div></li>
+            <li><span>3</span><div><strong>Written quote</strong> with a clear price and timeline.</div></li>
+          </ol>
+        </div>
       </aside>
     </div>
   </section>
@@ -260,9 +266,10 @@ import Base from '../layouts/Base.astro';
     width: 100%;
     font: inherit;
     color: var(--ink);
-    background: var(--white);
+    background: var(--field-bg);
+    box-shadow: var(--shadow-inset);
     border-radius: var(--radius);
-    border: 2px solid #a9bcb0;
+    border: 2px solid var(--field-border);
     padding: 0.7rem 0.85rem;
   }
   input:focus-visible,
@@ -293,7 +300,8 @@ import Base from '../layouts/Base.astro';
   .choice span {
     background: var(--white);
     font-size: var(--step--1);
-    border: 2px solid #a9bcb0;
+    border: 2px solid var(--field-border);
+    box-shadow: var(--shadow-card);
     border-radius: 999px;
     padding: 0.45rem 0.9rem;
     transition:
@@ -350,5 +358,40 @@ import Base from '../layouts/Base.astro';
       position: sticky;
       top: 6.5rem;
     }
+  }
+  .next-steps {
+    margin-top: 2rem;
+  }
+  .next-steps h2 {
+    font-size: var(--step-1);
+    margin-bottom: 1rem;
+  }
+  .next-steps ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .next-steps li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem;
+    align-items: center;
+    color: var(--ink-soft);
+  }
+  .next-steps li strong {
+    color: var(--ink);
+  }
+  .next-steps li > span {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: var(--step--1);
   }
 </style>
