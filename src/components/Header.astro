@@ -12,7 +12,7 @@ const current = (href: string) => (path.startsWith(href) ? 'page' : undefined);
   <div class="wrap app-bar__inner">
     <a class="brand" href="/" aria-label={`${site.name} home`}>
       <span class="brand__seal">
-        <Image src={logo} alt="" width={30} height={30} loading="eager" format="webp" />
+        <Image src={logo} alt="" width={30} height={30} densities={[1, 2, 3]} loading="eager" format="webp" />
       </span>
       <span class="brand__name">{site.name}</span>
     </a>
