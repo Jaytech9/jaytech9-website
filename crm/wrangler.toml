@@ -8,9 +8,9 @@ compatibility_date = "2026-10-01"
 SMS_SENDER_ID = "JayTech9"
 EMAIL_FROM = "JayTech9 <hello@jaytech9.com>"
 # Fill these two in after setting up Cloudflare Access (DEPLOY.md, step 4):
-ACCESS_TEAM_DOMAIN = ""        # e.g. "https://jaytech9.cloudflareaccess.com"
-ACCESS_AUD = ""                # the Application Audience (AUD) Tag
-ADMIN_EMAILS = ""              # e.g. "you@jaytech9.com" (comma-separate several)
+ACCESS_TEAM_DOMAIN = "https://spring-waterfall-b082.cloudflareaccess.com"
+ACCESS_AUD = "e778dea96e2cd4531b52689e3ca3d01cc59192910a12e4fe19b2e7c95cb2499f"
+ADMIN_EMAILS = "joneskwamehene@gmail.com"
 
 [[d1_databases]]
 binding = "DB"
