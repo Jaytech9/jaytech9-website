@@ -1,0 +1,118 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+const updated = '22 November 2026';
+---
+
+<Base
+  title="Privacy policy | JayTech9"
+  description="How JayTech9 collects, uses, stores and protects the personal details you share through our website, and your rights under Ghana's Data Protection Act."
+>
+  <article>
+    <header class="page-head">
+      <div class="wrap">
+        <h1>Privacy <em class="hl">policy</em></h1>
+        <p class="lede">What we collect, why, where it is kept, and how you stay in control of it.</p>
+      </div>
+    </header>
+    <div class="wrap section post-body overlap sheet">
+      <div class="prose">
+        <p><strong>Last updated:</strong> {updated}</p>
+
+        <h2 id="who">Who we are</h2>
+        <p>
+          This website is run by {site.legalName} (“JayTech9”, “we”), {site.city}, {site.country}. We decide how
+          the personal details collected here are used. Questions about your data:
+          <a href={`mailto:${site.email}`}>{site.email}</a> or WhatsApp <a href={site.whatsapp}>{site.phoneDisplay}</a>.
+        </p>
+
+        <h2 id="what">What we collect</h2>
+        <ul>
+          <li>
+            <strong>Contact and booking forms:</strong> your name, email, phone or WhatsApp number (optional),
+            business name (optional), what you need help with, your message, and for bookings your preferred date
+            and time.
+          </li>
+          <li>
+            <strong>Reviews:</strong> your name, organisation and role (optional), rating, your message, and whether
+            you agree to it being shown on our website.
+          </li>
+          <li>
+            <strong>Help bubble:</strong> questions it could not answer, and the page you asked from. Email
+            addresses and phone numbers are removed before a question is sent.
+          </li>
+          <li>
+            <strong>Visit statistics:</strong> we use Cloudflare Web Analytics, which counts visits without cookies
+            and without identifying you.
+          </li>
+          <li>
+            <strong>Spam protection:</strong> a scrambled (hashed) version of your internet address is kept for up
+            to one hour to stop repeated automated form posts. It cannot be turned back into your address.
+          </li>
+        </ul>
+        <p>Our public website does not use advertising or tracking cookies.</p>
+
+        <h2 id="why">Why we use it</h2>
+        <ul>
+          <li>To reply to your enquiry, arrange the call you booked, and prepare a quote.</li>
+          <li>To deliver and support work you ask us to do.</li>
+          <li>To show your review on our website, only if you agreed.</li>
+          <li>
+            To send you news or offers, <strong>only if you have agreed</strong>. You can stop these at any time by
+            emailing or messaging us.
+          </li>
+        </ul>
+        <p>We do not sell your personal details, and we do not share them for other companies' marketing.</p>
+
+        <h2 id="where">Where it is kept and who helps us</h2>
+        <p>
+          Your details are stored in our private database on Cloudflare, which only signed-in JayTech9 staff can
+          open. We use a small number of trusted service providers, who process data for us under their own
+          security and privacy commitments:
+        </p>
+        <ul>
+          <li><strong>Cloudflare</strong> — website hosting, database, security and visit statistics.</li>
+          <li><strong>Google (Gmail)</strong> — receiving emails sent to our jaytech9.com addresses.</li>
+          <li><strong>Arkesel</strong> — sending SMS messages, when we text you.</li>
+          <li><strong>Resend</strong> — sending emails from our CRM, when we email you.</li>
+        </ul>
+        <p>
+          Some of these providers store data on servers outside Ghana. We only use providers that protect data to a
+          high standard.
+        </p>
+
+        <h2 id="how-long">How long we keep it</h2>
+        <ul>
+          <li>Enquiries and bookings that do not lead to work: up to 24 months, then deleted.</li>
+          <li>Client records: for as long as we work together, then up to 6 years for tax and accounting records.</li>
+          <li>Reviews: until you ask us to remove them.</li>
+          <li>Spam-protection records: up to one hour.</li>
+        </ul>
+
+        <h2 id="rights">Your rights</h2>
+        <p>Under Ghana's Data Protection Act, 2012 (Act 843) you can:</p>
+        <ul>
+          <li>ask what personal details we hold about you and get a copy;</li>
+          <li>ask us to correct details that are wrong;</li>
+          <li>ask us to delete your details, where we have no legal reason to keep them;</li>
+          <li>object to marketing, or withdraw your consent, at any time.</li>
+        </ul>
+        <p>
+          Email <a href={`mailto:${site.email}`}>{site.email}</a> and we will reply within 21 days. If you are not
+          happy with how we handle your data, you can complain to the
+          <a href="https://dataprotection.org.gh/">Data Protection Commission of Ghana</a>.
+        </p>
+
+        <h2 id="security">How we protect it</h2>
+        <p>
+          The website and CRM are served only over encrypted connections (HTTPS). The CRM can only be opened by
+          approved staff who sign in with a one-time code, every request is checked, and only an admin can change who has
+          access. We keep backups and review who has access regularly.
+        </p>
+
+        <h2 id="changes">Changes to this policy</h2>
+        <p>If we change how we use your details, we will update this page and the date at the top.</p>
+      </div>
+    </div>
+  </article>
+</Base>

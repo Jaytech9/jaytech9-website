@@ -94,6 +94,7 @@ import Base from '../layouts/Base.astro';
         <button class="button" type="submit">
           Send message
         </button>
+        <p class="form-note">We use your details only to reply to you. See our <a href="/privacy/">privacy policy</a>.</p>
       </form>
       <aside class="direct" aria-labelledby="direct-heading">
         <h2 id="direct-heading">Prefer to reach us directly?</h2>
@@ -358,6 +359,11 @@ import Base from '../layouts/Base.astro';
       position: sticky;
       top: 6.5rem;
     }
+  }
+  .form-note {
+    margin-top: 0.75rem;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
   }
   .next-steps {
     margin-top: 2rem;

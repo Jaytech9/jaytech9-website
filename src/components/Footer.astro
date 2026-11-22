@@ -139,6 +139,7 @@ const year = new Date().getFullYear();
       <p>
         &copy; {year} {site.legalName}. All rights reserved.
       </p>
+      <p><a href="/privacy/">Privacy policy</a></p>
     </div>
   </div>
 </footer>
@@ -260,6 +261,11 @@ const year = new Date().getFullYear();
     background: #0b1e2b;
     padding-block: 1.25rem calc(1.25rem + env(safe-area-inset-bottom, 0px));
     margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  }
+  .site-footer__base-inner a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
   .site-footer__base-inner {
     flex-wrap: wrap;
