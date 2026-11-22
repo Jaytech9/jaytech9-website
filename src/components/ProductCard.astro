@@ -12,6 +12,11 @@ interface Props {
 const { product, wide } = Astro.props;
 const p = product.data;
 const isWide = wide ?? p.wide;
+// Finished work links to its page or live site. Work still being built gets a clear next step instead.
+// The tech stack is listed on each product's own page, not on the card.
+const isDone = p.status === 'Live' || p.status === 'Delivered';
+const nextLabel = product.id === 'buildsmart' ? 'Join early access' : 'Request a walkthrough';
+const nextHref = `/book/?service=${p.service ?? 'systems'}&product=${product.id}`;
 ---
 
 <li class:list={['card card--link work-card', { 'work-card--wide': isWide }]}>
@@ -47,12 +52,10 @@ const isWide = wide ?? p.wide;
       )
     }
     {
-      p.stack.length > 0 && (
-        <ul class="work-card__stack" aria-label="Built with">
-          {p.stack.map((t) => (
-            <li>{t}</li>
-          ))}
-        </ul>
+      !isDone && (
+        <a class="work-card__next" href={nextHref}>
+          {nextLabel} <span aria-hidden="true">→</span>
+        </a>
       )
     }
   </div>
@@ -231,5 +234,22 @@ const isWide = wide ?? p.wide;
     .work-card:hover .work-card__shot {
       transform: translateX(-50%);
     }
+  }
+</style>
+
+<style>
+  .work-card__next {
+    display: inline-flex;
+    gap: 0.35rem;
+    margin-top: 0.75rem;
+    font-weight: 600;
+    font-size: var(--step--1);
+    color: var(--blue);
+    text-decoration: none;
+    position: relative;
+    z-index: 2;
+  }
+  .work-card__next:hover {
+    text-decoration: underline;
   }
 </style>

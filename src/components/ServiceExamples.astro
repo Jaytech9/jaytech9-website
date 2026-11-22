@@ -6,8 +6,9 @@ import { getProjects, getSections, serviceIdFromTitle } from '../lib/crm';
 
 interface Props {
   service: string;
+  cta?: string;
 }
-const { service } = Astro.props;
+const { service, cta = 'Book this service' } = Astro.props;
 const examples = (await getCollection('products', (p) => p.data.service === service)).sort(
   (a, b) => a.data.order - b.data.order,
 );
@@ -20,7 +21,7 @@ const showExamples = sections.service_examples;
 ---
 
 <div class="examples">
-  <a class="examples__book" href={`/book/?service=${service}`}>Book this service</a>
+  <a class="examples__book" href={`/book/?service=${service}`}>{cta}</a>
   {
     service === 'design' ? (
       <>

@@ -7,6 +7,10 @@ import { visual } from '../lib/visuals';
 
 // All content comes from the content collections (src/content/*.json today, the CRM later).
 const products = (await getCollection('products')).sort((a, b) => a.data.order - b.data.order);
+// Finished work first, so visitors see proof before plans.
+const isDone = (p: (typeof products)[number]) => p.data.status === 'Live' || p.data.status === 'Delivered';
+const done = products.filter(isDone);
+const building = products.filter((p) => !isDone(p));
 const heroCards = (await getCollection('banners', (b) => b.data.page === 'products' && b.data.active))
   .sort((a, b) => a.data.order - b.data.order)
   .map((b) => b.data);
@@ -204,11 +208,18 @@ import Testimonials from '../components/Testimonials.astro';
   <section class="section section--band work-section" aria-labelledby="all-heading">
     <div class="wrap">
       <div class="section-head">
-        <h2 id="all-heading">All products and projects</h2>
-        <p>Delivered client projects, work in progress and our own products. Some clients aren’t named until they’ve agreed to it.</p>
+        <h2 id="all-heading">Live and delivered</h2>
+        <p>Work clients are using today. Some clients aren’t named until they’ve agreed to it.</p>
       </div>
       <ul class="card-grid work-cards">
-        {products.map((p) => <ProductCard product={p} />)}
+        {done.map((p) => <ProductCard product={p} />)}
+      </ul>
+      <div class="section-head work-section__next">
+        <h2 id="building-heading">In development and in progress</h2>
+        <p>Our own products and client projects being built now. Ask for a walkthrough or early access.</p>
+      </div>
+      <ul class="card-grid work-cards">
+        {building.map((p) => <ProductCard product={p} />)}
       </ul>
     </div>
   </section>
@@ -668,5 +679,8 @@ import Testimonials from '../components/Testimonials.astro';
     .work-card:hover .work-card__shot {
       transform: translateX(-50%);
     }
+  }
+  .work-section__next {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
   }
 </style>

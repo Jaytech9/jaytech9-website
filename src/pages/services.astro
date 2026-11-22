@@ -50,11 +50,12 @@ import ServiceExamples from '../components/ServiceExamples.astro';
           </svg>
         </span>
         <h2 id="websites-heading">Websites and web applications</h2>
+        <p class="service__tag">Websites that load fast on mobile data and turn visitors into enquiries.</p>
         <p>
           Most of your customers will find you on a phone, often on mobile data. We build websites that load
           quickly, look right on small screens and turn visitors into enquiries.
         </p>
-        <ServiceExamples service="websites" />
+        <ServiceExamples service="websites" cta="Book a website call" />
       </div>
       <div class="card service__detail">
         <h3>What’s included</h3>
@@ -94,11 +95,12 @@ import ServiceExamples from '../components/ServiceExamples.astro';
           </svg>
         </span>
         <h2 id="systems-heading">Business systems</h2>
+        <p class="service__tag">Custom systems built around how your team actually works.</p>
         <p>
           If your team spends hours copying figures between notebooks, spreadsheets and messages, a simple
           system can do it for them. We build tools around how you already work.
         </p>
-        <ServiceExamples service="systems" />
+        <ServiceExamples service="systems" cta="Book a systems call" />
       </div>
       <div class="card service__detail">
         <h3>What’s included</h3>
@@ -138,11 +140,12 @@ import ServiceExamples from '../components/ServiceExamples.astro';
           </svg>
         </span>
         <h2 id="data-heading">Data dashboards and analysis</h2>
+        <p class="service__tag">Live numbers and clear reports, without waiting days for answers.</p>
         <p>
           We turn the data you already collect into live dashboards and clear reports, so you can spot what’s
           working, what isn’t, and where money is leaking.
         </p>
-        <ServiceExamples service="data" />
+        <ServiceExamples service="data" cta="Book a data review" />
       </div>
       <div class="card service__detail">
         <h3>What’s included</h3>
@@ -182,11 +185,12 @@ import ServiceExamples from '../components/ServiceExamples.astro';
           </svg>
         </span>
         <h2 id="agritech-heading">AgriTech and sustainability</h2>
+        <p class="service__tag">Field tools and farm records built from real agricultural roots.</p>
         <p>
           Our founder trained farmers in sustainable and regenerative agriculture before moving into tech. We
           build tools that work in the field, not just in the office.
         </p>
-        <ServiceExamples service="agritech" />
+        <ServiceExamples service="agritech" cta="Book an AgriTech call" />
       </div>
       <div class="card service__detail">
         <h3>What’s included</h3>
@@ -226,11 +230,12 @@ import ServiceExamples from '../components/ServiceExamples.astro';
           </svg>
         </span>
         <h2 id="design-heading">Brand and print design</h2>
+        <p class="service__tag">Branding and print materials that make you look established.</p>
         <p>
           A consistent look makes a small business seem established. We design the pieces you need for print
           and online, ready to use.
         </p>
-        <ServiceExamples service="design" />
+        <ServiceExamples service="design" cta="Book a design call" />
       </div>
       <div class="card service__detail">
         <h3>What’s included</h3>
@@ -268,11 +273,12 @@ import ServiceExamples from '../components/ServiceExamples.astro';
           </svg>
         </span>
         <h2 id="care-heading">Domains, hosting and care</h2>
+        <p class="service__tag">Domains, business email and hosting set up right and kept running.</p>
         <p>
           We register domains in your name, set up professional email, host your site and keep it updated and
           backed up, so you can focus on your business.
         </p>
-        <ServiceExamples service="care" />
+        <ServiceExamples service="care" cta="Get hosting and care" />
       </div>
       <div class="card service__detail">
         <h3>What’s included</h3>
@@ -351,5 +357,11 @@ import ServiceExamples from '../components/ServiceExamples.astro';
     .service {
       grid-template-columns: 1fr 1fr;
     }
+  }
+  .service__tag {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: var(--step-0);
+    margin-top: 0.25rem;
   }
 </style>

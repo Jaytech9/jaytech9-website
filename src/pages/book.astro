@@ -12,15 +12,29 @@ const steps = ['Service', 'Project', 'Call time', 'Your details'];
 import { getSections } from '../lib/crm';
 const sections = await getSections();
 const timelines = booking.timelines.filter((t) => sections.urgent_booking || !t.startsWith('Urgent'));
+
+// One-tap WhatsApp starters for visitors who would rather chat than fill in a form.
+const waStarters = [
+  { label: 'Business system or BuildSmart', text: 'Hi JayTech9, I’d like to chat about a business system (stock, sales and VAT, or replacing paper and WhatsApp records).' },
+  { label: 'Website or online payments', text: 'Hi JayTech9, I’m looking for a fast website for my business or organisation (with Paystack or easy updates).' },
+  { label: 'Dashboard or reports', text: 'Hi JayTech9, I need help turning spreadsheets or branch and field reports into a clear dashboard.' },
+  { label: 'AgriTech or field data', text: 'Hi JayTech9, I’d like to discuss field data collection, farmer records or sustainability reporting.' },
+  { label: 'Design, domain or hosting', text: 'Hi JayTech9, I need help with branding and print design, or with my domain, email and hosting.' },
+];
 ---
 
 <Base
-  title="Book a service | JayTech9"
-  description="Book JayTech9 for a website, business system, dashboard, AgriTech tool or design project, including urgent jobs."
+  title="Book a free call | JayTech9"
+  description="Book a free 30-minute call about your website, business system or data. We map out a practical next step and send a written quote, with no pressure."
 >
   <header class="page-head">
     <div class="wrap">
-      <h1>Book a <em class="hl">service</em></h1>
+      <p class="eyebrow">Free 30-minute discovery call</p>
+      <h1>Book a free call about your <em class="hl">website, system or data</em></h1>
+      <p class="lede">
+        Tell us what your team uses today (paper books, spreadsheets, WhatsApp reports or an outdated site) and we’ll
+        map out a practical next step. No pressure, no jargon.
+      </p>
     </div>
   </header>
 
@@ -235,11 +249,19 @@ const timelines = booking.timelines.filter((t) => sections.urgent_booking || !t.
           <div class="bnav">
             <button type="button" class="button button--quiet bnav__back" hidden>Back</button>
             <button type="button" class="button bnav__next" hidden>Continue</button>
-            <button type="submit" class="button bnav__submit">Request booking</button>
+            <button type="submit" class="button bnav__submit">Request my free call</button>
           </div>
         </form>
 
         <aside class="bsummary" aria-labelledby="bsum-heading">
+          <div class="bcall">
+            <h2 class="bcall__title">What happens on the call</h2>
+            <ol class="bcall__steps">
+              <li><strong>You show us how you work today.</strong> Stock and VAT, daily field updates, Paystack payments, a slow website: whatever is slowing you down.</li>
+              <li><strong>We suggest practical options.</strong> An existing product, or something built around how your staff already work.</li>
+              <li><strong>You get next steps and a written quote.</strong> A plain-English summary, timeline options and a price, so you can decide at your own pace.</li>
+            </ol>
+          </div>
           <h2 id="bsum-heading">Your booking</h2>
           <dl class="bsummary__list">
             <div><dt>Service</dt><dd data-sum="service">Not chosen yet</dd></div>
@@ -251,11 +273,16 @@ const timelines = booking.timelines.filter((t) => sections.urgent_booking || !t.
             <li><Icon name="check" size={16} strokeWidth={2.5} /> Free, no obligation</li>
             {sections.urgent_booking && <li><Icon name="check" size={16} strokeWidth={2.5} /> Urgent jobs fast-tracked</li>}
             <li><Icon name="check" size={16} strokeWidth={2.5} /> Written quote after the call</li>
+            <li><Icon name="check" size={16} strokeWidth={2.5} /> You own your code, data and logins</li>
           </ul>
           <p class="bsummary__alt">
-            Prefer to chat now?
-            <a href={site.whatsapp} rel="noopener">Message us on WhatsApp</a>
+            Prefer to chat now? Tap a topic to start a WhatsApp message:
           </p>
+          <ul class="bwa">
+            {waStarters.map((w) => (
+              <li><a href={`${site.whatsapp}?text=${encodeURIComponent(w.text)}`} rel="noopener">{w.label}</a></li>
+            ))}
+          </ul>
         </aside>
       </div>
     </div>
@@ -323,6 +350,13 @@ const timelines = booking.timelines.filter((t) => sections.urgent_booking || !t.
     const pre = new URLSearchParams(location.search).get('service');
     const preInput = pre && form.querySelector<HTMLInputElement>(`[name="service"][data-id="${pre}"]`);
     if (preInput) preInput.checked = true;
+    // ?product=buildsmart (from a product page) starts the description for them.
+    const preProduct = new URLSearchParams(location.search).get('product');
+    const detailsBox = form.querySelector<HTMLTextAreaElement>('[name="details"]');
+    const productNames: Record<string, string> = { buildsmart: 'BuildSmart', 'field-reporting-dashboard': 'the field reporting dashboard', 'donation-management': 'the donation management system', 'carbon-credits': 'the carbon credits project' };
+    if (preProduct && productNames[preProduct] && detailsBox && !detailsBox.value) {
+      detailsBox.value = `I’d like a walkthrough of ${productNames[preProduct]}. `;
+    }
 
     // ----- Validation per step
     function fieldsIn(i: number) {
@@ -889,6 +923,56 @@ const timelines = booking.timelines.filter((t) => sections.urgent_booking || !t.
   .bsummary__trust :global(svg) {
     color: var(--accent);
     flex: none;
+  }
+  .page-head .eyebrow {
+    margin: 0 0 0.5rem;
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .bcall {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid #ffffff33;
+  }
+  .bsummary h2.bcall__title {
+    font-size: var(--step-0);
+    margin-bottom: 0.75rem;
+  }
+  .bcall__steps {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: grid;
+    gap: 0.6rem;
+    font-size: var(--step--1);
+    color: #d6e9f5;
+    line-height: 1.45;
+  }
+  .bcall__steps strong {
+    color: var(--white);
+  }
+  .bwa {
+    list-style: none;
+    margin: 0.6rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .bwa a {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: #ffffff1f;
+    color: var(--white);
+    font-size: var(--step--1);
+    text-decoration: none;
+  }
+  .bwa a:hover {
+    background: var(--accent);
+    color: var(--ink);
   }
   .bsummary__alt {
     margin: 0;

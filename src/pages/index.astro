@@ -31,12 +31,23 @@ const sections = await getSections();
 
 <Base
   title="JayTech9 | Websites, business systems & data tools"
-  description="Websites, business systems and data tools for businesses and organisations worldwide"
+  description="Replace paper books, spreadsheets and WhatsApp reports with simple business systems, dashboards and fast websites. Built in Accra for mobile data and local payments."
 >
   <section class="app-home" aria-labelledby="home-heading">
     <div class="app-home__band">
       <div class="wrap app-home__intro">
-        <h1 id="home-heading">Simple software for <em class="hl">growing businesses</em></h1>
+        <h1 id="home-heading">Swap paper books and WhatsApp reports for <em class="hl">one clear system</em></h1>
+        <p class="app-home__lede">
+          Business systems, dashboards and fast websites for growing teams, built for mobile data, local payments
+          and the way your staff already work.
+        </p>
+        <div class="app-home__ctas">
+          <a class="button app-home__cta" href="/book/">Book a free call</a>
+          <a class="button app-home__cta app-home__cta--wa" href={`${site.whatsapp}?text=${encodeURIComponent('Hi JayTech9, I’d like to talk about my business.')}`}>Chat on WhatsApp</a>
+        </div>
+        <p class="app-home__trust">
+          <span>You own your code and data</span><span>Built for mobile data and Paystack</span><span>Based in Accra, Ghana</span>
+        </p>
       </div>
     </div>
     <div class="wrap app-home__grid">
@@ -383,8 +394,50 @@ const sections = await getSections();
     z-index: 1;
     position: relative;
   }
+  .app-home__lede {
+    max-width: 44rem;
+    margin-top: 0.75rem;
+    color: #e6f1f8;
+    font-size: clamp(1rem, 0.95rem + 0.3vw, 1.1875rem);
+    line-height: 1.5;
+  }
+  .app-home__ctas {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+    display: flex;
+  }
+  .app-home__cta {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .app-home__cta:hover {
+    background: var(--white);
+    border-color: var(--white);
+    color: var(--ink);
+  }
+  .app-home__cta--wa {
+    background: transparent;
+    border-color: #ffffffb3;
+    color: var(--white);
+  }
+  .app-home__trust {
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    margin-top: 1rem;
+    color: #d3e6f2;
+    font-size: var(--step--1);
+    display: flex;
+  }
+  .app-home__trust span:before {
+    content: '✓ ';
+    color: var(--accent);
+    font-weight: 700;
+  }
   .app-home h1 {
-    max-width: 20ch;
+    max-width: 24ch;
     margin-top: 0.25rem;
     font-size: clamp(1.625rem, 1rem + 2.6vw, 3.25rem);
     letter-spacing: -0.03em;

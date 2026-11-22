@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { site } from '../../data/site';
 import CtaBand from '../../components/CtaBand.astro';
 import CaseAside from '../../components/CaseAside.astro';
 import Testimonials from '../../components/Testimonials.astro';
@@ -83,6 +84,19 @@ import Testimonials from '../../components/Testimonials.astro';
           quotations, customer records, Paystack billing and the full web interface, ahead of pilots with
           partner stores.
         </p>
+        <div class="walkthrough">
+          <p class="walkthrough__eyebrow">Early access and pilot stores</p>
+          <h2 id="walkthrough">See how BuildSmart handles stock, sales and Ghana VAT before launch</h2>
+          <p>
+            For hardware stores and building material suppliers tired of paper books, guesswork stock counts and slow
+            VAT preparation. Book a free walkthrough and we’ll show you the system and add you to the pilot list.
+          </p>
+          <div class="walkthrough__ctas">
+            <a class="button" href="/book/?service=systems&product=buildsmart">Book a BuildSmart walkthrough</a>
+            <a class="button button--quiet" href={`${site.whatsapp}?text=${encodeURIComponent('Hi JayTech9, I’d like to know more about BuildSmart for my shop.')}`} rel="noopener">Ask on WhatsApp</a>
+          </div>
+          <p class="walkthrough__note">Free walkthrough · Pilot spots and early-access updates · You own your business data</p>
+        </div>
       </div>
       <CaseAside id="buildsmart" />
     </div>
@@ -154,5 +168,51 @@ import Testimonials from '../../components/Testimonials.astro';
   .next a:hover {
     color: var(--blue);
     text-decoration: underline;
+  }
+</style>
+
+<style>
+  .walkthrough {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    background: var(--brand-surface);
+    color: var(--white);
+  }
+  .walkthrough h2 {
+    color: var(--white);
+    margin: 0.25rem 0 0.75rem;
+  }
+  .walkthrough p {
+    color: #d6e9f5;
+  }
+  .walkthrough__eyebrow {
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent) !important;
+    margin: 0;
+  }
+  .walkthrough__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  .walkthrough .button {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .walkthrough .button--quiet {
+    background: transparent;
+    border-color: #ffffffb3;
+    color: var(--white);
+  }
+  .walkthrough__note {
+    margin-top: 0.75rem;
+    font-size: var(--step--1);
   }
 </style>

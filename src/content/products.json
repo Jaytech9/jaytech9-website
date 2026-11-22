@@ -1,12 +1,12 @@
 [
   {
     "id": "buildsmart",
-    "order": 1,
+    "order": 4,
     "title": "BuildSmart",
     "client": "Our own product",
     "sector": "Product",
     "status": "In development",
-    "summary": "Inventory, sales and accounting software for hardware stores and building material suppliers in Ghana, with Ghana VAT, NHIL and GETFund built in.",
+    "summary": "Inventory, sales and GRA tax reporting for hardware stores and building material suppliers in Ghana, with permanent stock history, four access levels, and VAT, NHIL and GETFund built in. Pilot waitlist open.",
     "stack": [
       "Node.js",
       "Express",
@@ -23,12 +23,12 @@
   },
   {
     "id": "donation-management",
-    "order": 2,
+    "order": 1,
     "title": "Donation management system",
     "client": "A Ghanaian nonprofit",
     "sector": "Nonprofit",
     "status": "Delivered",
-    "summary": "Online giving through Paystack, with a private dashboard that shows who gave, how much and when.",
+    "summary": "Online giving through Paystack, with a private dashboard so nonprofit leaders see who gave, how much came in and when, without manual tallying.",
     "stack": [
       "PHP",
       "MySQL",
@@ -45,12 +45,12 @@
   },
   {
     "id": "field-reporting-dashboard",
-    "order": 3,
+    "order": 5,
     "title": "Field reporting dashboard",
     "client": "A susu and microfinance platform",
     "sector": "Finance",
     "status": "In progress",
-    "summary": "Replacing daily WhatsApp reports from branch field officers with a live dashboard that managers can filter by branch and date.",
+    "summary": "Replaces daily WhatsApp branch updates for a susu and microfinance team with one dashboard managers can filter by branch and date.",
     "stack": [
       "PHP",
       "MySQL"
@@ -64,7 +64,7 @@
   },
   {
     "id": "agency-website-crm",
-    "order": 4,
+    "order": 6,
     "title": "Website and CRM",
     "client": "A creative media agency in Accra",
     "sector": "Business",
@@ -82,7 +82,7 @@
   },
   {
     "id": "green-hatch-investments",
-    "order": 5,
+    "order": 2,
     "title": "Green Hatch Investments website",
     "client": "Green Hatch Investments",
     "sector": "Investment",
@@ -101,12 +101,12 @@
   },
   {
     "id": "carbon-credits",
-    "order": 6,
+    "order": 7,
     "title": "Carbon credits for smallholder farmers",
     "client": "AgriTech initiative",
     "sector": "AgriTech",
     "status": "In development",
-    "summary": "Helping smallholder farmers who use sustainable methods find out whether they qualify for carbon credits, and earn from it if they do.",
+    "summary": "Field data and analysis to help smallholder farmers who use sustainable practices check whether they qualify for carbon credits, and document their impact for partners.",
     "stack": [
       "Field data collection",
       "Data analysis"
@@ -119,7 +119,7 @@
   },
   {
     "id": "logalyzer",
-    "order": 7,
+    "order": 3,
     "title": "Logalyzer",
     "client": "Open-source tool",
     "sector": "Open source",
