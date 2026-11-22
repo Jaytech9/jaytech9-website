@@ -10,7 +10,7 @@ EMAIL_FROM = "JayTech9 <hello@jaytech9.com>"
 # Fill these two in after setting up Cloudflare Access (DEPLOY.md, step 4):
 ACCESS_TEAM_DOMAIN = "https://spring-waterfall-b082.cloudflareaccess.com"
 ACCESS_AUD = "e778dea96e2cd4531b52689e3ca3d01cc59192910a12e4fe19b2e7c95cb2499f"
-ADMIN_EMAILS = "joneskwamehene@gmail.com"
+ADMIN_EMAILS = "joneskwamehene@gmail.com,jaytech9.official@gmail.com"
 
 [[d1_databases]]
 binding = "DB"
