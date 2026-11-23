@@ -8,7 +8,7 @@ const items: { value: string; label: string }[] = [];
 if (stats && stats.delivered >= 3) items.push({ value: `${stats.delivered}+`, label: 'projects delivered' });
 if (stats && stats.clients >= 3) items.push({ value: `${stats.clients}+`, label: 'happy clients' });
 if (stats && stats.rating && stats.ratings >= 3) items.push({ value: `${stats.rating.toFixed(1)}★`, label: `average from ${stats.ratings} reviews` });
-if (items.length) items.push({ value: '1 day', label: 'to get your quote' });
+if (items.length) items.push({ value: 'Hours', label: 'to get your quote' });
 ---
 
 {items.length >= 2 && (

@@ -49,7 +49,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       .bind(id, ref, token, clientId, name, email, phone, clean(f.get('organisation'), 160), service, clean(f.get('title'), 160), brief, link,
         wanted && /^\d{4}-\d{2}-\d{2}$/.test(wanted) ? wanted : null, t, t));
     stmts.push(db.prepare("INSERT INTO order_updates (id, order_id, author, message, created_at) VALUES (?, ?, 'system', ?, ?)")
-      .bind(uuid(), id, 'Request received. We will review your brief and send you a quote, usually within one working day.', t));
+      .bind(uuid(), id, 'Request received. We will review your brief and send you a quote, usually within a few hours.', t));
 
     for (const file of files) {
       const key = `orders/${id}/${uuid()}`;
