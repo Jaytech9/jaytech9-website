@@ -15,6 +15,7 @@ export type Order = {
 const root = document.getElementById('t-root')!;
 const STEPS: Step[] = JSON.parse(root.dataset.steps!);
 const WA = root.dataset.wa!;
+const BANK = JSON.parse(root.dataset.bank ?? '{}') as { bankName: string; accountName: string; accountNumber: string; branch: string; swift: string };
 const $ = (id: string) => document.getElementById(id)!;
 const params = new URLSearchParams(location.search);
 const KEY = 'jt9-pay-token';
@@ -137,8 +138,31 @@ function payPanel(o: Order, kind: 'deposit' | 'balance') {
     out.push(h('p', {}, 'Online payment is being switched on. For now, message us and we will share the Mobile Money details.'),
       h('a', { class: 'button of-button-wide', href: `${WA}?text=${encodeURIComponent(`Hi JayTech9, I'd like to pay the ${kind} for order ${o.ref}.`)}` }, 'Pay through WhatsApp'));
   }
-  out.push(box);
+  out.push(bankPanel(o, kind, kind === 'deposit' ? o.deposit : o.balance), box);
   return out;
+}
+
+/** "Pay by bank transfer instead": the business account, with the order number as the reference. */
+function bankPanel(o: Order, kind: 'deposit' | 'balance', amount: number) {
+  const copy = (value: string) => btn('Copy', 'linkish', async (b) => {
+    try { await navigator.clipboard.writeText(value); b.textContent = 'Copied'; } catch { b.textContent = 'Select to copy'; }
+    setTimeout(() => (b.textContent = 'Copy'), 2000);
+  });
+  const row = (k: string, v: string, withCopy = false, cls = '') => h('div', { class: cls }, h('dt', {}, k), h('dd', {}, v, withCopy ? copy(v) : null));
+  const box = errBox();
+  return h('details', { class: 't-bank' },
+    h('summary', {}, 'Or pay by bank transfer'),
+    h('dl', {},
+      row('Bank', `${BANK.bankName}, ${BANK.branch} branch`),
+      row('Account name', BANK.accountName),
+      row('Account number', BANK.accountNumber, true),
+      row('Amount', ghs(amount)),
+      row('Reference', o.ref, true, 't-bank__ref'),
+      row('SWIFT (from abroad)', BANK.swift, true)),
+    h('p', { class: 'of-hint' }, 'Use your order number as the reference so we can match your payment. We confirm it on this page once it reaches us, usually the same working day.'),
+    btn("I've paid by bank transfer", 'button button--quiet of-button-wide', (b) =>
+      act(b, box, "I've paid by bank transfer", { action: 'message', message: `I've paid the ${kind} of ${ghs(amount)} by bank transfer to ${BANK.bankName} (reference ${o.ref}).` })),
+    box);
 }
 
 function reviewForm() {

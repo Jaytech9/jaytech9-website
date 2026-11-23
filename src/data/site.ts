@@ -24,6 +24,16 @@ export const site = {
   ],
 };
 
+// Direct bank transfer, offered next to Paystack (orders and donations). Clients use their order number as
+// the reference; you confirm the money arrived in CRM → Orders → "Paid directly".
+export const bank = {
+  bankName: 'CalBank PLC',
+  accountName: 'Jay Tech 9 Enterprise',
+  accountNumber: '1400008665976',
+  branch: 'Ho',
+  swift: 'ACCCGHACXXX', // for payments from outside Ghana
+};
+
 export const nav = [
   { label: 'Services', href: '/services/' },
   { label: 'Products', href: '/products/' },

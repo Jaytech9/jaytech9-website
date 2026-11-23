@@ -5,7 +5,7 @@
 // The page logic lives in src/scripts/track.ts.
 import Base from '../layouts/Base.astro';
 import { orderSteps } from '../data/orders';
-import { site } from '../data/site';
+import { bank, site } from '../data/site';
 import '../styles/orderflow.css';
 ---
 
@@ -19,7 +19,7 @@ import '../styles/orderflow.css';
   </header>
 
   <section class="section" aria-label="Order details">
-    <div class="wrap overlap track" id="t-root" data-steps={JSON.stringify(orderSteps)} data-wa={site.whatsapp}>
+    <div class="wrap overlap track" id="t-root" data-steps={JSON.stringify(orderSteps)} data-wa={site.whatsapp} data-bank={JSON.stringify(bank)}>
       <div class="of-card"><p>Loading…</p></div>
     </div>
   </section>
@@ -62,6 +62,14 @@ import '../styles/orderflow.css';
   .track :global(.t-file span) { display: grid; min-width: 0; overflow-wrap: anywhere; }
   .track :global(.t-file small) { color: var(--ink-soft); }
   .track :global(.t-action .t-file__btn) { margin-top: 0; min-height: 2.4rem; padding: 0.4rem 1rem; font-size: 0.95rem; flex: none; }
+  .track :global(.t-bank) { margin-top: 1rem; border: 1px solid var(--line); border-radius: 14px; padding: 0.2rem 0.9rem; background: #fbfcfd; }
+  .track :global(.t-bank summary) { cursor: pointer; padding: 0.65rem 0; font-weight: 600; color: var(--ink); }
+  .track :global(.t-bank dl) { margin: 0.2rem 0 0.6rem; display: grid; gap: 0.45rem; }
+  .track :global(.t-bank dl div) { display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
+  .track :global(.t-bank dt) { color: var(--ink-soft); font-size: var(--step--1); }
+  .track :global(.t-bank dd) { margin: 0; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+  .track :global(.t-bank .linkish) { font-size: 0.8rem; margin-left: 0.4rem; }
+  .track :global(.t-bank .t-bank__ref) { background: #fff7e0; border-radius: 10px; padding: 0.5rem 0.65rem; }
   @media (width >= 60rem) {
     .track { grid-template-columns: minmax(0, 1fr) 22rem; }
     .track :global(.t-side) { position: sticky; top: 6.5rem; }

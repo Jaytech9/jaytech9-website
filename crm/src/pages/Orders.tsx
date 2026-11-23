@@ -158,7 +158,7 @@ function OrderModal({ o, onClose }: { o: Order; onClose: () => void }) {
             <dt>Total</dt><dd>{ghs(o.total)} · {o.turnaround_days} days · {o.revisions_included} rounds ({o.revisions_used} used)</dd>
             <dt>Deposit {o.deposit_pct}%</dt><dd>{ghs(m.deposit)} {o.deposit_paid_at ? <Pill tone="green">Paid {dateMed(o.deposit_paid_at)}</Pill> : <Pill tone="grey">Not paid</Pill>}</dd>
             <dt>Balance</dt><dd>{ghs(m.balance)}{m.off > 0 && <small className="muted"> (after {ghs(m.off)} late discount)</small>} {o.balance_paid_at ? <Pill tone="green">Paid {dateMed(o.balance_paid_at)}</Pill> : null}</dd>
-            {payments.map((p) => <Fragment key={p.id}><dt>{p.kind === 'deposit' ? 'Deposit' : 'Balance'} payment</dt><dd style={{ fontWeight: 400 }}>{ghs(p.amount)} · {p.method === 'paystack' ? `Paystack${p.channel ? ` (${p.channel.replace('_', ' ')})` : ''}` : 'Recorded by hand'} · {p.paid_at ? dateMed(p.paid_at) : ''}</dd></Fragment>)}
+            {payments.map((p) => <Fragment key={p.id}><dt>{p.kind === 'deposit' ? 'Deposit' : 'Balance'} payment</dt><dd style={{ fontWeight: 400 }}>{ghs(p.amount)} · {p.method === 'paystack' ? `Paystack${p.channel ? ` (${p.channel.replace('_', ' ')})` : ''}` : 'Paid directly (recorded by you)'} · {p.paid_at ? dateMed(p.paid_at) : ''}</dd></Fragment>)}
           </dl>
         )}
 
@@ -182,8 +182,8 @@ function OrderModal({ o, onClose }: { o: Order; onClose: () => void }) {
                 onClick={() => run({ action: 'materials', ready: !o.materials_ready_at }, o.materials_ready_at ? 'Marked as still waiting' : 'Materials marked as received')}>
                 {o.materials_ready_at ? 'Materials: received (undo)' : 'All materials received'}
               </Button>
-              {o.status === 'quoted' && <Button size="sm" variant="secondary" icon="money" disabled={busy} onClick={() => run({ action: 'mark_paid', kind: 'deposit' }, 'Deposit recorded')}>Deposit paid by MoMo/cash</Button>}
-              {['preview', 'changes', 'approved'].includes(o.status) && <Button size="sm" variant="secondary" icon="money" disabled={busy} onClick={() => run({ action: 'mark_paid', kind: 'balance' }, 'Balance recorded. Order completed.')}>Balance paid by MoMo/cash</Button>}
+              {o.status === 'quoted' && <Button size="sm" variant="secondary" icon="money" disabled={busy} onClick={() => run({ action: 'mark_paid', kind: 'deposit' }, 'Deposit recorded')}>Deposit paid directly (bank/MoMo/cash)</Button>}
+              {['preview', 'changes', 'approved'].includes(o.status) && <Button size="sm" variant="secondary" icon="money" disabled={busy} onClick={() => run({ action: 'mark_paid', kind: 'balance' }, 'Balance recorded. Order completed.')}>Balance paid directly (bank/MoMo/cash)</Button>}
               {o.status === 'changes' && <Button size="sm" variant="secondary" icon="refresh" disabled={busy} onClick={() => run({ action: 'resume' }, 'Back in progress')}>Working on changes</Button>}
             </div>
             {['in_progress', 'changes', 'preview'].includes(o.status) && (
