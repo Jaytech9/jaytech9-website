@@ -1,0 +1,114 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+const updated = '23 November 2026';
+---
+
+<Base
+  title="Terms, payments and refunds | JayTech9"
+  description="How JayTech9 quotes, takes payment, delivers work, handles revisions, cancellations and refunds, and who owns the finished work."
+>
+  <article>
+    <header class="page-head">
+      <div class="wrap">
+        <h1>Terms, payments and <em class="hl">refunds</em></h1>
+        <p class="lede">The simple rules we work by, so you know exactly what to expect.</p>
+      </div>
+    </header>
+    <div class="wrap section post-body overlap sheet">
+      <div class="prose">
+        <p><strong>Last updated:</strong> {updated}</p>
+        <p>
+          These terms apply to services and products from {site.legalName} (“JayTech9”, “we”), {site.city},
+          {site.country}. A written quote or agreement for your project can add to them; where the two differ, the
+          quote or agreement applies.
+        </p>
+
+        <h2 id="quotes">Quotes</h2>
+        <ul>
+          <li>Every job starts with a written quote showing the work, the price, the timeline and the payment split.</li>
+          <li>Prices are in Ghana cedis (GH₵) unless the quote says another currency.</li>
+          <li>A quote is valid for 14 days.</li>
+        </ul>
+
+        <h2 id="payments">Payments</h2>
+        <ul>
+          <li>
+            <strong>Deposit:</strong> 70% of the quoted price is paid before work starts. Work begins once the deposit
+            and all the materials we need from you (text, pictures, logos, access) have arrived.
+          </li>
+          <li>
+            <strong>Balance:</strong> the remaining 30% is paid when the work is delivered. We send a preview first;
+            the final files, code and logins are handed over once the balance is paid.
+          </li>
+          <li>Larger projects may be split into stages instead. The quote will say so.</li>
+          <li>
+            You can pay by mobile money or card through Paystack, our secure payment provider, or by bank or
+            mobile money transfer. We never ask for your card details by phone, WhatsApp or email.
+          </li>
+          <li>Hosting, care plans and subscriptions are paid in advance for each period (monthly or yearly).</li>
+        </ul>
+
+        <h2 id="delivery">Delivery and revisions</h2>
+        <ul>
+          <li>We deliver by the date in your quote, counted from when the deposit and your materials have arrived.</li>
+          <li>Each job includes two rounds of changes, unless the quote says otherwise. Further changes are quoted separately.</li>
+          <li>If you need extra time to send materials or feedback, the delivery date moves by the same amount.</li>
+        </ul>
+
+        <h2 id="refunds">Cancellations and refunds</h2>
+        <ul>
+          <li><strong>Before work starts:</strong> cancel and we refund your deposit in full.</li>
+          <li>
+            <strong>After work starts:</strong> the deposit covers the work already done and is not refundable. If
+            you cancel, you receive the work completed so far.
+          </li>
+          <li><strong>If we can’t deliver</strong> what was agreed, we refund everything you have paid for that job.</li>
+          <li>
+            <strong>Domains and third-party services</strong> (such as domain registration or paid plugins) can’t be
+            refunded once bought in your name.
+          </li>
+          <li><strong>Hosting and care plans:</strong> cancel any time; the plan stops at the end of the period you’ve paid for.</li>
+          <li><strong>Donations</strong> are not refundable, except for duplicate or mistaken payments.</li>
+          <li>
+            Approved refunds are paid back to the original payment method within 10 working days. To ask for a
+            refund, email <a href={`mailto:${site.email}`}>{site.email}</a> with your name and payment reference.
+          </li>
+        </ul>
+
+        <h2 id="ownership">Ownership</h2>
+        <ul>
+          <li>
+            Once the job is paid in full, you own what we made for you: the designs, videos, code, data and
+            logins. Domains are registered in your name.
+          </li>
+          <li>
+            We may show the finished work in our portfolio. Tell us if you’d rather we didn’t, and we won’t.
+          </li>
+          <li>
+            You confirm that you have the right to use the text, pictures, music, logos and other materials you send
+            us.
+          </li>
+        </ul>
+
+        <h2 id="responsibility">Our responsibility</h2>
+        <p>
+          We do careful, professional work and fix our own mistakes free of charge. Our total responsibility for any
+          job is limited to the amount you paid for that job.
+        </p>
+
+        <h2 id="privacy">Your information</h2>
+        <p>
+          How we handle personal details is explained in our <a href="/privacy/">privacy policy</a>.
+        </p>
+
+        <h2 id="law">Law and contact</h2>
+        <p>
+          These terms are governed by the laws of Ghana. Questions or problems: email
+          <a href={`mailto:${site.email}`}>{site.email}</a>, call or WhatsApp
+          <a href={site.whatsapp}>{site.phoneDisplay}</a>. We aim to resolve any concern within 5 working days.
+        </p>
+      </div>
+    </div>
+  </article>
+</Base>
