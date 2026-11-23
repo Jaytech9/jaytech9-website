@@ -157,6 +157,10 @@ import '../styles/orderflow.css';
   // /order/?service=video picks that service.
   const want = new URLSearchParams(location.search).get('service');
   if (want) form.querySelector<HTMLInputElement>(`input[name=service][data-id="${CSS.escape(want)}"]`)?.click();
+  // From the gallery ("Order a design like this"): name the piece in the brief so we know the style.
+  const like = new URLSearchParams(location.search).get('like')?.slice(0, 120);
+  const briefBox = form.querySelector<HTMLTextAreaElement>('[name="brief"]');
+  if (like && briefBox && !briefBox.value) briefBox.value = `I'd like something like "${like}" from your gallery. `;
   const input = document.getElementById('o-files') as HTMLInputElement;
   const drop = document.getElementById('o-drop')!;
   const list = document.getElementById('o-list')!;

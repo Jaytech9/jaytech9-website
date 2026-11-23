@@ -7,14 +7,16 @@ import { getSections } from '../lib/crm';
 const path = Astro.url.pathname.replace(/\/?$/, '/');
 const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 
+// "Order" sits in the middle, raised in green: the easiest spot for a thumb on a phone.
 const tabs = [
   { label: 'Home', href: '/', icon: 'home' },
   { label: 'Services', href: '/services/', icon: 'layers' },
+  { label: 'Order', href: '/order/', icon: 'briefcase', main: true },
   { label: 'Products', href: '/products/', icon: 'package' },
-  { label: 'Contact', href: '/contact/', icon: 'mail' },
 ] as const;
 
 const allMore = [
+  { label: 'Contact', href: '/contact/', icon: 'mail' },
   { label: 'Design gallery', href: '/design/', icon: 'brush' },
   { label: 'About us', href: '/about/', icon: 'info' },
   { label: 'Blog', href: '/blog/', icon: 'book' },
@@ -31,8 +33,12 @@ const more = allMore.filter((m) => !(m.href === '/blog/' && !sections.blog) && !
   <ul class="tabbar__list">
     {tabs.map((t) => (
       <li>
-        <a class="tabbar__item" href={t.href} aria-current={isCurrent(t.href) ? 'page' : undefined}>
-          <Icon name={t.icon} size={22} strokeWidth={1.8} />
+        <a class:list={['tabbar__item', { 'tabbar__item--main': 'main' in t }]} href={t.href} aria-current={isCurrent(t.href) ? 'page' : undefined}>
+          {'main' in t ? (
+            <span class="tabbar__main"><Icon name={t.icon} size={24} strokeWidth={2} /></span>
+          ) : (
+            <Icon name={t.icon} size={22} strokeWidth={1.8} />
+          )}
           <span>{t.label}</span>
         </a>
       </li>
@@ -115,6 +121,29 @@ const more = allMore.filter((m) => !(m.href === '/blog/' && !sections.blog) && !
     text-decoration: none;
     display: flex;
     position: relative;
+  }
+  /* Raised green "Order" button in the middle. */
+  .tabbar__item--main {
+    color: var(--white);
+    font-weight: 600;
+  }
+  .tabbar__main {
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    margin-top: -1.6rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--ink);
+    box-shadow: 0 0 0 4px #10293a, 0 8px 18px #0006;
+    transition: transform 0.15s;
+  }
+  .tabbar__item--main:active .tabbar__main {
+    transform: scale(0.94);
+  }
+  .tabbar__item--main[aria-current='page']:before {
+    display: none;
   }
   .tabbar__item::-webkit-details-marker {
     display: none;

@@ -230,7 +230,7 @@ const viewerData = pieces.map((p) => ({
           <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="" /></svg>
           <span></span>
         </a>
-        <a class="button viewer__cta" href="/book/?service=design">Want something like this? Book it</a>
+        <a class="button viewer__cta" href="/order/?service=design">Order a design like this</a>
       </div>
     </div>
   </dialog>
@@ -401,6 +401,10 @@ const viewerData = pieces.map((p) => ({
       titleEl.textContent = p.title;
       metaEl.textContent = [p.category, String(p.year), p.client].filter(Boolean).join(' · ');
       noteEl.textContent = p.note;
+      // "Order a design like this" opens the order form with the right service and this piece named.
+      const cta = $<HTMLAnchorElement>('.viewer__cta');
+      cta.href = `/order/?service=${p.video ? 'video' : 'design'}&like=${encodeURIComponent(p.title)}`;
+      cta.textContent = p.video ? 'Order a video like this' : 'Order a design like this';
       front.src = p.image;
       front.alt = p.alt;
       back.src = p.back || '';

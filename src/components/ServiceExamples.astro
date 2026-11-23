@@ -7,8 +7,9 @@ import { getProjects, getSections, serviceIdFromTitle } from '../lib/crm';
 interface Props {
   service: string;
   cta?: string;
+  order?: string; // quick jobs: show "Order now" first (opens /order/ with this service)
 }
-const { service, cta = 'Book this service' } = Astro.props;
+const { service, cta = 'Book this service', order } = Astro.props;
 const examples = (await getCollection('products', (p) => p.data.service === service)).sort(
   (a, b) => a.data.order - b.data.order,
 );
@@ -21,7 +22,14 @@ const showExamples = sections.service_examples;
 ---
 
 <div class="examples">
-  <a class="examples__book" href={`/book/?service=${service}`}>{cta}</a>
+  {order ? (
+    <div class="examples__actions">
+      <a class="examples__book" href={`/order/?service=${order}`}>Order now</a>
+      <a class="examples__talk" href={`/book/?service=${service}`}>Talk it through first</a>
+    </div>
+  ) : (
+    <a class="examples__book" href={`/book/?service=${service}`}>{cta}</a>
+  )}
   {
     service === 'design' ? (
       <>
@@ -85,6 +93,20 @@ const showExamples = sections.service_examples;
     font-weight: 600;
     text-decoration: none;
     transition: background-color 0.2s, transform 0.2s;
+  }
+  .examples__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .examples__actions .examples__book {
+    margin-bottom: 0;
+  }
+  .examples__talk {
+    font-weight: 600;
+    color: var(--brand);
   }
   .examples__book:hover {
     background: var(--brand-deep);
