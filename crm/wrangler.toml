@@ -16,3 +16,9 @@ ADMIN_EMAILS = "joneskwamehene@gmail.com,jaytech9.official@gmail.com"
 binding = "DB"
 database_name = "jaytech9"
 database_id = "5be947cb-075e-4828-9dc7-ac63b403da8e"   # from: npx wrangler d1 create jaytech9
+
+# Client uploads for orders. Create the bucket first (npx wrangler r2 bucket create jaytech9-files),
+# then remove the # from the three lines below. Until then, clients share files by link.
+# [[r2_buckets]]
+# binding = "FILES"
+# bucket_name = "jaytech9-files"
