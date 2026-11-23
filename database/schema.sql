@@ -243,8 +243,10 @@ CREATE TABLE IF NOT EXISTS order_files (
   name        TEXT NOT NULL,
   size        INTEGER NOT NULL DEFAULT 0,
   type        TEXT,
+  kind        TEXT NOT NULL DEFAULT 'client' CHECK (kind IN ('client', 'preview', 'final')),   -- migration 0002
   created_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
 );
+CREATE INDEX IF NOT EXISTS order_files_order ON order_files (order_id, kind);
 
 CREATE TABLE IF NOT EXISTS payments (
   id           TEXT PRIMARY KEY,

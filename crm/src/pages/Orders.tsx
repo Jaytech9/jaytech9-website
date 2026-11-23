@@ -7,6 +7,8 @@ import { db } from '../lib/db';
 import { Button, Card, Empty, Field, Modal, PageHead, Pill, SearchBox, Segmented, Skeleton, useNow, useToast } from '../components/ui';
 import ContactButtons from '../components/ContactButtons';
 import { Icon } from '../components/Icon';
+import { watermark, watermarkOverlayPng } from '../lib/watermark';
+import type { OrderFile } from '../lib/types';
 import { ago, dateMed, when } from '../lib/format';
 import { SERVICES, type Order, type OrderStatus } from '../lib/types';
 
@@ -146,8 +148,8 @@ function OrderModal({ o, onClose }: { o: Order; onClose: () => void }) {
           {o.wanted_by && <><dt>Wanted by</dt><dd>{dateMed(o.wanted_by)}</dd></>}
           <dt>Materials</dt><dd style={{ fontWeight: 400 }}>
             {o.materials_link && <div><a href={o.materials_link} target="_blank" rel="noreferrer noopener">{o.materials_link}</a></div>}
-            {files.map((f) => <div key={f.id}><a href={`/api/order-file?id=${encodeURIComponent(f.id)}`}><Icon name="file" size={14} /> {f.name}</a> <small className="muted">{Math.max(1, Math.round(f.size / 1024))} KB</small></div>)}
-            {!o.materials_link && !files.length && 'None yet'}
+            {files.filter((f) => f.kind !== 'preview' && f.kind !== 'final').map((f) => <div key={f.id}><a href={`/api/order-file?id=${encodeURIComponent(f.id)}`}><Icon name="file" size={14} /> {f.name}</a> <small className="muted">{Math.max(1, Math.round(f.size / 1024))} KB</small></div>)}
+            {!o.materials_link && !files.some((f) => f.kind === 'client') && 'None yet'}
           </dd>
         </dl>
 
@@ -185,16 +187,13 @@ function OrderModal({ o, onClose }: { o: Order; onClose: () => void }) {
               {o.status === 'changes' && <Button size="sm" variant="secondary" icon="refresh" disabled={busy} onClick={() => run({ action: 'resume' }, 'Back in progress')}>Working on changes</Button>}
             </div>
             {['in_progress', 'changes', 'preview'].includes(o.status) && (
-              <form className="form" onSubmit={(e) => { const f = form(e); run({ action: 'preview', url: f.url, message: f.msg }, 'Preview sent to the client'); }}>
-                <Field label="Preview link (watermarked)" hint="Google Drive, YouTube unlisted, a staging site…" wide><input name="url" type="url" required placeholder="https://" defaultValue={o.preview_url ?? ''} /></Field>
-                <Field label="Message with the preview" wide><input name="msg" placeholder="Your preview is ready." /></Field>
-                <div><Button type="submit" disabled={busy} icon="eye">{o.preview_at ? 'Send new preview' : 'Send preview'}</Button></div>
-              </form>
+              <TeamFiles o={o} kind="preview" files={files.filter((f) => f.kind === 'preview')} busy={busy}
+                onSend={(url, msg) => run({ action: 'preview', url, message: msg }, 'Preview sent to the client')} />
             )}
-            <form className="form" style={{ marginTop: 14 }} onSubmit={(e) => { const f = form(e); run({ action: 'final', url: f.url }, 'Final files link saved'); }}>
-              <Field label="Final files link" hint="Only shown to the client after the balance is paid." wide><input name="url" type="url" required placeholder="https://" defaultValue={o.final_url ?? ''} /></Field>
-              <div><Button type="submit" variant="secondary" disabled={busy}>Save final link</Button></div>
-            </form>
+            <div style={{ marginTop: 18 }}>
+              <TeamFiles o={o} kind="final" files={files.filter((f) => f.kind === 'final')} busy={busy}
+                onSend={(url) => run({ action: 'final', url }, 'Final files saved. The client gets them once the balance is paid.')} />
+            </div>
             {o.started_at && (
               <form className="form" style={{ marginTop: 14 }} onSubmit={(e) => { const f = form(e); run({ action: 'due', due_at: f.due }, 'Due date changed'); }}>
                 <Field label="Move the due date" hint="Only when the delay is on the client's side (late materials or feedback)."><input name="due" type="date" required /></Field>
@@ -203,12 +202,10 @@ function OrderModal({ o, onClose }: { o: Order; onClose: () => void }) {
             )}
           </Card>
         )}
-        {o.status === 'completed' && !o.final_url && (
+        {o.status === 'completed' && (
           <Card title="Final files">
-            <form className="form" onSubmit={(e) => { const f = form(e); run({ action: 'final', url: f.url }, 'Final files released'); }}>
-              <Field label="Final files link" wide><input name="url" type="url" required placeholder="https://" /></Field>
-              <div><Button type="submit" disabled={busy}>Release files</Button></div>
-            </form>
+            <TeamFiles o={o} kind="final" files={files.filter((f) => f.kind === 'final')} busy={busy}
+              onSend={(url) => run({ action: 'final', url }, 'Final files released')} />
           </Card>
         )}
 
@@ -271,5 +268,89 @@ function NewOrder({ open, onClose, onCreated }: { open: boolean; onClose: () => 
         <Field label="Brief" wide><textarea name="brief" rows={3} /></Field>
       </form>
     </Modal>
+  );
+}
+
+const fmtSize = (b: number) => (b > 1048576 ? `${(b / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(b / 1024))} KB`);
+
+/** Upload preview or final files (any type) and/or a link, then send. Previews get the logo watermark. */
+function TeamFiles({ o, kind, files, busy, onSend }: { o: Order; kind: 'preview' | 'final'; files: OrderFile[]; busy: boolean; onSend: (url: string, msg?: string) => Promise<boolean> }) {
+  const toast = useToast();
+  const [picked, setPicked] = useState<File[]>([]);
+  const [mark, setMark] = useState(kind === 'preview');
+  const [url, setUrl] = useState(kind === 'preview' ? o.preview_url ?? '' : o.final_url ?? '');
+  const [msg, setMsg] = useState('');
+  const [working, setWorking] = useState('');
+  const upload = async () => {
+    if (!picked.length) return true;
+    const fd = new FormData();
+    fd.set('id', o.id); fd.set('kind', kind);
+    let plain = 0;
+    for (const [i, f] of picked.entries()) {
+      setWorking(mark ? `Adding watermark ${i + 1} of ${picked.length}…` : 'Uploading…');
+      if (mark) { const r = await watermark(f); if (!r.marked) plain++; fd.append('files', r.file); } else fd.append('files', f);
+    }
+    setWorking('Uploading…');
+    const res = await fetch('/api/order-upload', { method: 'POST', body: fd, credentials: 'same-origin' });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(body.error ?? `Upload failed (${res.status}).`);
+    load('order_files', true);
+    if (mark && plain) toast(`${plain} file${plain > 1 ? 's' : ''} (video, audio or other) uploaded without a watermark. Watermark videos in your editor.`);
+    setPicked([]);
+    return true;
+  };
+  const send = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!picked.length && !files.length && !url.trim()) { toast('Add files or a link first.', 'error'); return; }
+    try { await upload(); setWorking(''); await onSend(url.trim(), msg); setMsg(''); }
+    catch (x) { toast((x as Error).message, 'error'); } finally { setWorking(''); }
+  };
+  const remove = async (f: OrderFile) => {
+    if (!window.confirm(`Remove ${f.name}?`)) return;
+    const res = await fetch(`/api/order-upload?id=${encodeURIComponent(f.id)}`, { method: 'DELETE', credentials: 'same-origin' });
+    if (res.ok) { load('order_files', true); toast('File removed'); } else toast('Could not remove the file.', 'error');
+  };
+  const isPreview = kind === 'preview';
+  return (
+    <form className="form" onSubmit={send}>
+      <Field label={isPreview ? 'Preview files' : 'Final files'} hint={isPreview ? 'Any file type. Images and PDFs get your logo watermark automatically.' : 'Any file type, full quality. Released only after the balance is paid.'} wide>
+        <input type="file" multiple onChange={(e) => { setPicked([...picked, ...Array.from(e.target.files ?? [])]); e.target.value = ''; }} />
+      </Field>
+      {(picked.length > 0 || files.length > 0) && (
+        <ul style={{ gridColumn: '1 / -1', listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: 6 }}>
+          {files.map((f) => (
+            <li key={f.id} style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '8px 10px', borderRadius: 10, background: '#f3f6f8' }}>
+              <Icon name="file" size={16} /><a href={`/api/order-file?id=${encodeURIComponent(f.id)}`} style={{ flex: 1, overflowWrap: 'anywhere' }}>{f.name}</a>
+              <small className="muted">{fmtSize(f.size)} · uploaded</small>
+              <button type="button" className="icon-btn" aria-label={`Remove ${f.name}`} onClick={() => remove(f)}><Icon name="trash" size={16} /></button>
+            </li>
+          ))}
+          {picked.map((f, i) => (
+            <li key={`${f.name}${i}`} style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '8px 10px', borderRadius: 10, background: '#fff8e6' }}>
+              <Icon name="file" size={16} /><span style={{ flex: 1, overflowWrap: 'anywhere' }}>{f.name}</span>
+              <small className="muted">{fmtSize(f.size)} · ready to upload</small>
+              <button type="button" className="icon-btn" aria-label={`Remove ${f.name}`} onClick={() => setPicked(picked.filter((_, j) => j !== i))}><Icon name="x" size={16} /></button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {isPreview && (
+        <div style={{ gridColumn: '1 / -1', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+          <label style={{ display: 'flex', gap: 8, alignItems: 'center', fontWeight: 600 }}>
+            <input type="checkbox" checked={mark} onChange={(e) => setMark(e.target.checked)} /> Add JayTech9 logo watermark
+          </label>
+          <button type="button" className="btn btn--secondary btn--sm" onClick={() => watermarkOverlayPng()}><Icon name="down" size={14} /> Watermark for video editors (PNG)</button>
+        </div>
+      )}
+      <Field label={isPreview ? 'Or a preview link (optional)' : 'Or a download link (optional)'} hint="Google Drive, YouTube unlisted, WeTransfer… Best for videos over 95 MB." wide>
+        <input type="url" placeholder="https://" value={url} onChange={(e) => setUrl(e.target.value)} />
+      </Field>
+      {isPreview && <Field label="Message with the preview" wide><input value={msg} onChange={(e) => setMsg(e.target.value)} placeholder="Your preview is ready." /></Field>}
+      <div style={{ gridColumn: '1 / -1', display: 'flex', gap: 10, alignItems: 'center' }}>
+        <Button type="submit" variant={isPreview ? 'primary' : 'secondary'} icon={isPreview ? 'eye' : 'check'} disabled={busy || !!working}>
+          {working || (isPreview ? (o.preview_at ? 'Send new preview' : 'Send preview') : 'Save final files')}
+        </Button>
+      </div>
+    </form>
   );
 }

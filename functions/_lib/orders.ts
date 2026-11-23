@@ -56,7 +56,7 @@ export async function publicView(env: Env, o: OrderRow) {
   const [updates, payments, files] = await env.DB.batch([
     env.DB.prepare("SELECT author, message, created_at FROM order_updates WHERE order_id = ? ORDER BY created_at DESC LIMIT 100").bind(o.id),
     env.DB.prepare("SELECT kind, amount, status, method, paid_at FROM payments WHERE order_id = ? AND status = 'success' ORDER BY paid_at").bind(o.id),
-    env.DB.prepare('SELECT name, size FROM order_files WHERE order_id = ? ORDER BY created_at').bind(o.id),
+    env.DB.prepare('SELECT id, name, size, type, kind FROM order_files WHERE order_id = ? ORDER BY created_at').bind(o.id),
   ]);
   const m = money(o);
   const showPreview = ['preview', 'changes', 'approved', 'completed'].includes(o.status);
@@ -71,8 +71,16 @@ export async function publicView(env: Env, o: OrderRow) {
     final_url: o.status === 'completed' ? o.final_url : null,
     reviewed: !!o.reviewed_at, created_at: o.created_at,
     can_pay: paystackReady(env),
-    updates: updates.results, payments: payments.results, files: files.results,
+    updates: updates.results, payments: payments.results,
+    // Previews show once sent; final files only after the balance is paid (same rule as final_url).
+    files: (files.results as { kind: string }[]).filter((f) => f.kind === 'client' || (f.kind === 'preview' && showPreview) || (f.kind === 'final' && o.status === 'completed')),
   };
+}
+/** Can the client see this file right now? (same rules as publicView) */
+export function clientMaySee(o: Pick<OrderRow, 'status'>, kind: string) {
+  if (kind === 'client') return true;
+  if (kind === 'preview') return ['preview', 'changes', 'approved', 'completed'].includes(o.status);
+  return kind === 'final' && o.status === 'completed';
 }
 export const paystackReady = (env: Env) => !!env.PAYSTACK_SECRET_KEY;
 

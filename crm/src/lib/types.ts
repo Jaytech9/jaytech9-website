@@ -55,7 +55,7 @@ export interface Order {
   consent_review: boolean; consent_portfolio: boolean; reviewed_at?: string | null; notes?: string | null; created_at: string; updated_at: string;
 }
 export interface OrderUpdate { id: Id; order_id: Id; author: 'team' | 'client' | 'system'; message: string; created_at: string }
-export interface OrderFile { id: Id; order_id: Id; r2_key: string; name: string; size: number; type?: string | null; created_at: string }
+export interface OrderFile { id: Id; order_id: Id; r2_key: string; name: string; size: number; type?: string | null; kind: 'client' | 'preview' | 'final'; created_at: string }
 export interface Payment {
   id: Id; order_id?: Id | null; kind: 'deposit' | 'balance' | 'donation'; amount: number; currency: string; reference: string;
   status: 'pending' | 'success' | 'failed'; method: 'paystack' | 'manual'; channel?: string | null; payer_name?: string | null;

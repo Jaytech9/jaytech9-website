@@ -5,8 +5,8 @@
 //   quote         { id, total (GH₵), deposit_pct, turnaround_days, revisions_included, quote_note? }
 //   materials     { id, ready: boolean }
 //   mark_paid     { id, kind: "deposit" | "balance" }        (Mobile Money / cash received directly)
-//   preview       { id, url, message? }
-//   final         { id, url }
+//   preview       { id, url?, message? }                    (url optional when preview files were uploaded)
+//   final         { id, url? }
 //   resume        { id }                                     (back to work after changes)
 //   due           { id, due_at }                             (move the due date, e.g. late materials)
 //   update        { id, message }                            (a note the client sees)
@@ -98,7 +98,9 @@ export const onRequestPost = async (ctx: Ctx) => {
       case 'preview': {
         if (!o.deposit_paid_at) throw new HttpError(409, 'Record the deposit before sending a preview.');
         if (!['in_progress', 'changes', 'preview'].includes(o.status)) throw new HttpError(409, 'This order is not in progress.');
-        const url = https(b.url);
+        const hasFiles = await db.prepare("SELECT 1 FROM order_files WHERE order_id = ? AND kind = 'preview' LIMIT 1").bind(o.id).first();
+        const url = str(b.url, 1000) ? https(b.url) : o.preview_url;
+        if (!url && !hasFiles) throw new HttpError(400, 'Upload preview files or paste a preview link first.');
         const first = !o.preview_at;
         const late = first && o.due_at && Date.parse(t) > Date.parse(o.due_at);
         await db.batch([
@@ -109,7 +111,11 @@ export const onRequestPost = async (ctx: Ctx) => {
         break;
       }
       case 'final': {
-        await db.batch([set({ final_url: https(b.url) }), log('final files added', o.ref, o.id)]);
+        // Called after uploading final files (url may be empty) or with a link.
+        const url = str(b.url, 1000) ? https(b.url) : o.final_url;
+        const hasFiles = await db.prepare("SELECT 1 FROM order_files WHERE order_id = ? AND kind = 'final' LIMIT 1").bind(o.id).first();
+        if (!url && !hasFiles) throw new HttpError(400, 'Upload the final files or paste a link.');
+        await db.batch([set({ final_url: url }), log('final files added', o.ref, o.id)]);
         if (o.status === 'completed') await note(o.id, 'Your final files are ready to download.').run();
         break;
       }

@@ -9,7 +9,7 @@ export type Order = {
   preview_url: string | null; final_url: string | null; reviewed: boolean; created_at: string; can_pay: boolean;
   updates: { author: string; message: string; created_at: string }[];
   payments: { kind: string; amount: number; method: string; paid_at: string }[];
-  files: { name: string; size: number }[];
+  files: { id: string; name: string; size: number; type: string | null; kind: 'client' | 'preview' | 'final' }[];
 };
 
 const root = document.getElementById('t-root')!;
@@ -82,6 +82,44 @@ function confirmInline(b: HTMLButtonElement, msg: string) {
   return false;
 }
 
+// ---------- Files from the team (previews and final files) ----------
+const fileUrls = new Map<string, Promise<string>>();
+/** Fetch a file with the order token and give back a local object URL (cached for this visit). */
+function fileUrl(id: string) {
+  if (!fileUrls.has(id)) fileUrls.set(id, fetch(`/api/track/file?id=${encodeURIComponent(id)}`, { headers: { 'x-order-token': token } })
+    .then(async (r) => { if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || 'Could not open the file.'); return URL.createObjectURL(await r.blob()); }));
+  return fileUrls.get(id)!;
+}
+const sizeOf = (b: number) => (b > 1048576 ? `${(b / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(b / 1024))} KB`);
+async function download(f: Order['files'][number], b: HTMLButtonElement) {
+  const old = b.textContent; b.textContent = 'Preparing…';
+  try { const a = h('a', { href: await fileUrl(f.id), download: f.name }); document.body.append(a); a.click(); a.remove(); b.textContent = old; }
+  catch (e) { b.textContent = (e as Error).message; }
+}
+function fileRow(f: Order['files'][number]) {
+  return h('li', { class: 't-file' }, h('span', {}, h('strong', {}, f.name), h('small', {}, sizeOf(f.size))),
+    btn('Download', 'button button--quiet t-file__btn', (b) => download(f, b)));
+}
+/** Previews: images and videos shown on the page (video with the JayTech9 logo on top), other files as downloads. */
+function previewGallery(files: Order['files']) {
+  const wrap = h('div', { class: 't-gallery' });
+  for (const f of files) {
+    const t = f.type ?? '';
+    if (/^image\//.test(t) || /^video\/(mp4|webm|quicktime)/.test(t)) {
+      const fig = h('figure', { class: 't-media' }, h('div', { class: 't-media__load' }, 'Loading preview…'));
+      const isVideo = t.startsWith('video/');
+      fileUrl(f.id).then((u) => {
+        const el = isVideo ? h('video', { src: u, controls: true, playsinline: true, controlslist: 'nodownload', preload: 'metadata' }) : h('img', { src: u, alt: f.name, loading: 'lazy' });
+        el.addEventListener('contextmenu', (e) => e.preventDefault());
+        fig.replaceChildren(h('div', { class: 't-media__frame' }, el, isVideo ? h('img', { class: 't-media__mark', src: '/logo-512.png', alt: '' }) : null,
+          isVideo ? h('span', { class: 't-media__tag' }, 'Preview · JayTech9') : null), h('figcaption', {}, f.name));
+      }).catch((e) => fig.replaceChildren(h('p', { class: 'of-error' }, (e as Error).message)));
+      wrap.append(fig);
+    } else wrap.append(h('ul', { class: 't-files' }, fileRow(f)));
+  }
+  return wrap;
+}
+
 function payPanel(o: Order, kind: 'deposit' | 'balance') {
   const box = errBox();
   const label = kind === 'deposit' ? 'Pay deposit' : 'Pay balance';
@@ -137,8 +175,10 @@ function actionCard(o: Order) {
   if (o.status === 'in_progress' && !o.materials_ready) card.append(h('p', { class: 'of-hint' }, 'We are still waiting for some materials. The delivery clock starts once everything is in. Send them with a message below or on WhatsApp.'));
   if (['preview', 'changes', 'approved'].includes(o.status)) {
     const url = safeUrl(o.preview_url);
+    const pf = o.files.filter((f) => f.kind === 'preview');
+    if (pf.length) card.append(previewGallery(pf));
     if (url) card.append(h('div', { class: 't-preview' }, h('strong', {}, 'Watermarked preview'),
-      h('a', { class: 'button', href: url, target: '_blank', rel: 'noopener noreferrer' }, 'Open preview')));
+      h('a', { class: 'button', href: url, target: '_blank', rel: 'noopener noreferrer' }, 'Open preview link')));
   }
   if (o.status === 'preview') {
     const left = Math.max(0, o.revisions_included - o.revisions_used);
@@ -160,8 +200,10 @@ function actionCard(o: Order) {
   }
   if (o.status === 'completed') {
     const url = safeUrl(o.final_url);
-    card.append(url ? h('a', { class: 'button of-button-wide', href: url, target: '_blank', rel: 'noopener noreferrer' }, 'Download final files')
-      : h('p', {}, 'We are uploading your final files and will post the link here shortly.'));
+    const ff = o.files.filter((f) => f.kind === 'final');
+    if (ff.length) card.append(h('h3', { style: 'margin:1.25rem 0 0.5rem;font-size:1rem' }, 'Your final files'), h('ul', { class: 't-files' }, ...ff.map(fileRow)));
+    if (url) card.append(h('a', { class: 'button of-button-wide', href: url, target: '_blank', rel: 'noopener noreferrer' }, ff.length ? 'Open the download link' : 'Download final files'));
+    if (!url && !ff.length) card.append(h('p', {}, 'We are uploading your final files and will post them here shortly.'));
     card.append(o.reviewed ? h('p', { class: 'of-ok' }, 'Thank you for your review!') : reviewForm());
   }
   if (o.status === 'requested' || o.status === 'cancelled') card.append(h('a', { class: 'button button--quiet', href: WA }, 'Chat on WhatsApp'));
@@ -187,7 +229,8 @@ function summaryCard(o: Order) {
     rows.push(['Balance', `${ghs(o.balance)}${o.status === 'completed' ? ' · paid' : ''}`]);
   }
   if (o.turnaround_days) rows.push(['Delivery time', `${o.turnaround_days} day${o.turnaround_days > 1 ? 's' : ''}`]);
-  rows.push(['Materials', o.materials_ready ? 'All received' : o.files.length ? `${o.files.length} file${o.files.length > 1 ? 's' : ''} received` : 'Waiting']);
+  const mine = o.files.filter((f) => f.kind === 'client').length;
+  rows.push(['Materials', o.materials_ready ? 'All received' : mine ? `${mine} file${mine > 1 ? 's' : ''} received` : 'Waiting']);
   if (o.started_at) rows.push(['Clock started', day(o.started_at)]);
   rows.push(['Changes included', `${o.revisions_included} rounds (${o.revisions_used} used)`]);
   const card = h('div', { class: 'of-card' }, h('h2', {}, 'Summary'));
