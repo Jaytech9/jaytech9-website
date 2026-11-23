@@ -26,19 +26,19 @@
   --teal: #0e6e6e;
   --teal-deep: #0a5556;
   --teal-tint: #e2f0ee;
-  /* Soft surface: cards float on a pale blue-grey page with wide, diffuse shadows
-     tinted by the ink colour, plus a faint white highlight along the top edge. */
+  /* App-style cards (like SSNIT Mobile): white tiles with a soft, clearly visible shadow that sits
+     mostly underneath, tinted by the ink colour, plus a faint white highlight along the top edge. */
   --surface-highlight: inset 0 1px 0 #ffffffe6;
   --shadow-card:
     var(--surface-highlight),
-    0 1px 2px #10293a0d,
-    0 6px 14px -6px #10293a14,
-    0 22px 40px -22px #10293a2e;
+    0 1px 2px #10293a14,
+    0 3px 8px #10293a17,
+    0 10px 18px -8px #10293a38;
   --shadow-card-hover:
     var(--surface-highlight),
-    0 2px 4px #10293a12,
-    0 12px 24px -10px #10293a1f,
-    0 34px 56px -26px #10293a47;
+    0 2px 4px #10293a1a,
+    0 6px 14px #10293a1c,
+    0 16px 26px -10px #10293a42;
   --shadow-raised:
     var(--surface-highlight),
     0 2px 6px #10293a0d,
