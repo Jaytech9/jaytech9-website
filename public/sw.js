@@ -1,6 +1,6 @@
 // JayTech9 service worker: makes the site installable and usable offline.
 // Bump VERSION whenever you deploy a change you want everyone to receive straight away.
-const VERSION = 'jt9-v7';
+const VERSION = 'jt9-v8';
 const CORE = ['/', '/offline/', '/services/', '/products/', '/about/', '/contact/', '/manifest.webmanifest', '/icon-192.png'];
 
 self.addEventListener('install', (event) => {
@@ -17,7 +17,12 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const req = event.request;
-  if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
+  const url = new URL(req.url);
+  if (req.method !== 'GET' || url.origin !== location.origin) return;
+  // Live data (orders, payments, counts) must never come from the cache.
+  if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/cdn-cgi/')) return;
+  // Private order pages and payment returns are never stored on the device.
+  if (/^\/(track|donate\/thanks)\//.test(url.pathname)) return;
 
   // Pages: try the network first so visitors see the latest content; fall back to cache, then the offline page.
   if (req.mode === 'navigate') {
