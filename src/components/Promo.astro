@@ -1,6 +1,8 @@
 ---
 // Large banner cards that slide automatically (home page highlights, services header).
-// Swipe, tap the dots, or use the pause button. Respects "reduce motion" settings.
+// App-style (like SSNIT Mobile): a centred card with its neighbours peeking in, a short pause on each card,
+// then a smooth glide to the next, looping forward for ever. Swipe or tap the dots. Hover, focus or a touch
+// pauses it; it stays still for anyone who has "reduce motion" switched on.
 import Icon from './Icon.astro';
 
 interface Slide {
@@ -49,10 +51,6 @@ const { slides, label, class: className } = Astro.props;
     ))}
   </div>
   <div class="promo__controls">
-    <button type="button" class="promo__pause" aria-label="Pause slideshow" hidden>
-      <svg class="promo__pause-icon" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10" rx="1" /><rect x="7" y="1" width="3" height="10" rx="1" /></svg>
-      <svg class="promo__play-icon" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z" /></svg>
-    </button>
     <div class="promo__dots">
       {slides.map((s, i) => (
         <button type="button" class="promo__dot" aria-label={`Show slide ${i + 1}: ${s.tag}`} aria-current={i === 0 ? 'true' : undefined} />
@@ -62,80 +60,98 @@ const { slides, label, class: className } = Astro.props;
 </div>
 
 <script is:inline>
-  // Banner motion: each card stays 6s (the active dot fills up as a timer), then glides to the next.
-  // Hovering or focusing pauses; a swipe pauses briefly and then resumes; the button pauses for good.
+  // Each card stays 3.5s, then the row glides left to the next card. A copy of the first card sits after
+  // the last (and a copy of the last before the first), so the loop always moves forward without rewinding.
   (function () {
-    var DELAY = 6000;
+    var DELAY = 3500;
     var motionOK = matchMedia('(prefers-reduced-motion: no-preference)').matches;
     document.querySelectorAll('.promo:not([data-ready])').forEach(function (root) {
       root.setAttribute('data-ready', '');
-      root.style.setProperty('--promo-delay', DELAY + 'ms');
       var track = root.querySelector('.promo__track');
-      var slides = Array.prototype.slice.call(track.children);
+      var real = Array.prototype.slice.call(track.children);
+      var n = real.length;
       var dots = Array.prototype.slice.call(root.querySelectorAll('.promo__dot'));
-      var pause = root.querySelector('.promo__pause');
-      var index = 0, timer = null, resumeTimer = null;
-      var userPaused = false, hovering = false, interacting = false;
+      if (n > 1) {
+        var headCopy = real[n - 1].cloneNode(true);
+        var tailCopy = real[0].cloneNode(true);
+        [headCopy, tailCopy].forEach(function (c) {
+          c.classList.remove('is-active');
+          c.setAttribute('aria-hidden', 'true');
+          c.setAttribute('inert', '');
+          c.removeAttribute('aria-label');
+          c.removeAttribute('aria-roledescription');
+        });
+        track.insertBefore(headCopy, real[0]);
+        track.appendChild(tailCopy);
+      }
+      var all = Array.prototype.slice.call(track.children);
+      var offset = n > 1 ? 1 : 0;
+      var index = offset, timer = null, resumeTimer = null, settleTimer = null;
+      var hovering = false, interacting = false;
 
-      function canPlay() {
-        return motionOK && !userPaused && !hovering && !interacting && !document.hidden;
-      }
-      function schedule() {
-        clearTimeout(timer);
-        var playing = canPlay();
-        root.classList.toggle('is-playing', playing);
-        if (playing) timer = setTimeout(function () { go((index + 1) % slides.length); }, DELAY);
-      }
-      function go(i) {
-        var s = slides[i];
-        track.scrollTo({ left: s.offsetLeft - (track.clientWidth - s.clientWidth) / 2, behavior: motionOK ? 'smooth' : 'auto' });
-      }
-      function mark(i) {
-        if (i === index && slides[i].classList.contains('is-active')) return;
+      function centre(el) { return el.offsetLeft - (track.clientWidth - el.clientWidth) / 2; }
+      function jump(i) { track.scrollTo({ left: centre(all[i]), behavior: 'auto' }); }
+      function glide(i) { track.scrollTo({ left: centre(all[i]), behavior: motionOK ? 'smooth' : 'auto' }); }
+      function realOf(i) { return ((i - offset) % n + n) % n; }
+
+      function setActive(i) {
         index = i;
-        slides.forEach(function (s, j) { s.classList.toggle('is-active', j === i); });
+        var r = realOf(i);
+        all.forEach(function (s, j) { s.classList.toggle('is-active', j === i); });
         dots.forEach(function (d, j) {
-          if (j === i) d.setAttribute('aria-current', 'true');
+          if (j === r) d.setAttribute('aria-current', 'true');
           else d.removeAttribute('aria-current');
         });
-        schedule();
+      }
+      // After the glide lands on a copy, swap to the real card at the same spot, invisibly.
+      function settle() {
+        if (n < 2) return;
+        if (index === 0) { jump(n); setActive(n); }
+        else if (index === n + 1) { jump(1); setActive(1); }
+      }
+      function canPlay() { return motionOK && n > 1 && !hovering && !interacting && !document.hidden; }
+      function schedule() {
+        clearTimeout(timer);
+        if (canPlay()) timer = setTimeout(function () { glide(index + 1); }, DELAY);
       }
       function holdThenResume() {
         interacting = true;
-        schedule();
+        clearTimeout(timer);
         clearTimeout(resumeTimer);
-        resumeTimer = setTimeout(function () { interacting = false; schedule(); }, 8000);
+        resumeTimer = setTimeout(function () { interacting = false; schedule(); }, 6000);
       }
+
       if ('IntersectionObserver' in window) {
         var io = new IntersectionObserver(
           function (entries) {
             entries.forEach(function (e) {
-              if (e.isIntersecting) mark(slides.indexOf(e.target));
+              if (e.isIntersecting) { setActive(all.indexOf(e.target)); schedule(); }
             });
           },
           { root: track, threshold: 0.6 },
         );
-        slides.forEach(function (s) { io.observe(s); });
+        all.forEach(function (s) { io.observe(s); });
       }
+      track.addEventListener('scroll', function () {
+        clearTimeout(settleTimer);
+        settleTimer = setTimeout(settle, 120);
+      }, { passive: true });
+      window.addEventListener('resize', function () { jump(index); });
+
       dots.forEach(function (d, i) {
-        d.addEventListener('click', function () { holdThenResume(); go(i); });
+        d.addEventListener('click', function () { holdThenResume(); glide(i + offset); });
       });
-      if (!motionOK) return;
-      pause.hidden = false;
-      pause.addEventListener('click', function () {
-        userPaused = !userPaused;
-        pause.setAttribute('aria-label', userPaused ? 'Play slideshow' : 'Pause slideshow');
-        pause.classList.toggle('is-paused', userPaused);
-        schedule();
-      });
-      root.addEventListener('mouseenter', function () { hovering = true; schedule(); });
+      root.addEventListener('mouseenter', function () { hovering = true; clearTimeout(timer); });
       root.addEventListener('mouseleave', function () { hovering = false; schedule(); });
-      root.addEventListener('focusin', function () { hovering = true; schedule(); });
+      root.addEventListener('focusin', function () { hovering = true; clearTimeout(timer); });
       root.addEventListener('focusout', function () { hovering = false; schedule(); });
-      ['pointerdown', 'wheel', 'touchstart'].forEach(function (ev) {
+      ['pointerdown', 'touchstart', 'wheel'].forEach(function (ev) {
         track.addEventListener(ev, holdThenResume, { passive: true });
       });
       document.addEventListener('visibilitychange', schedule);
+
+      jump(offset);
+      setActive(offset);
       schedule();
     });
   })();
@@ -151,10 +167,10 @@ const { slides, label, class: className } = Astro.props;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
     overscroll-behavior-x: contain;
-    grid-auto-columns: calc(100% - 2 * var(--gutter) - 1.5rem);
+    grid-auto-columns: 84%;
     grid-auto-flow: column;
-    gap: 0.75rem;
-    padding: 0.25rem calc(var(--gutter) + 0.75rem) 1.75rem;
+    gap: 0.6rem;
+    padding: 0.25rem 8% 1.25rem;
     margin-bottom: -0.75rem;
     display: grid;
     overflow-x: auto;
@@ -286,88 +302,40 @@ const { slides, label, class: className } = Astro.props;
   .promo__dots {
     display: flex;
   }
-  .promo__pause {
-    cursor: pointer;
-    background: var(--white);
-    color: var(--ink);
-    fill: currentColor;
-    box-shadow: var(--shadow-card);
-    border: 0;
-    border-radius: 50%;
-    place-items: center;
-    width: 1.75rem;
-    height: 1.75rem;
-    padding: 0;
-    display: grid;
-  }
-  .promo__pause[hidden] {
-    display: none;
-  }
-  .promo__play-icon,
-  .promo__pause.is-paused .promo__pause-icon {
-    display: none;
-  }
-  .promo__pause.is-paused .promo__play-icon {
-    display: block;
-  }
-  /* Dots: 24px tap target; the active dot is a pill that fills up while the slide is showing. */
+  /* Dots: small and calm, like an app. The current card's dot is dark; 24px tap target. */
   .promo__dot {
     cursor: pointer;
     background: none;
     border: 0;
-    place-items: center start;
-    min-width: 1.5rem;
+    place-items: center;
+    width: 1.5rem;
     height: 1.5rem;
-    padding: 0 0.2rem;
+    padding: 0;
     display: grid;
   }
-  .promo__dot:before,
-  .promo__dot:after {
-    content: '';
-    border-radius: 999px;
-    grid-area: 1 / 1;
-    height: 0.5rem;
-  }
   .promo__dot:before {
-    background: var(--brand);
-    opacity: 0.4;
+    content: '';
+    border-radius: 50%;
     width: 0.5rem;
+    height: 0.5rem;
+    background: var(--brand);
+    opacity: 0.45;
     transition:
-      width 0.35s ease,
-      opacity 0.35s ease;
-  }
-  .promo__dot:after {
-    background: var(--ink);
-    width: 0;
+      opacity 0.3s ease,
+      background-color 0.3s ease;
   }
   .promo__dot[aria-current='true']:before {
-    opacity: 0.25;
-    width: 1.75rem;
+    background: var(--ink);
+    opacity: 1;
   }
-  .promo__dot[aria-current='true']:after {
-    width: 1.75rem;
-  }
-  .promo.is-playing .promo__dot[aria-current='true']:after {
-    animation: promo-progress var(--promo-delay, 6s) linear forwards;
-  }
-  @keyframes promo-progress {
-    from {
-      width: 0.5rem;
-    }
-    to {
-      width: 1.75rem;
-    }
-  }
-  /* On a blue background (page headers) the dots switch to white with a green fill. */
+  /* On a blue background (page headers) the dots switch to white, with green for the current card. */
   .promo--on-brand .promo__dot:before {
     background: var(--white);
     opacity: 0.55;
   }
   .promo--on-brand .promo__dot[aria-current='true']:before {
-    opacity: 0.3;
-  }
-  .promo--on-brand .promo__dot:after {
     background: var(--accent);
+    opacity: 1;
   }
   /* Card change: the incoming card settles to full size while its words rise in; neighbours rest slightly back. */
   .promo__slide {
@@ -376,8 +344,8 @@ const { slides, label, class: className } = Astro.props;
       opacity 0.6s ease;
   }
   .promo__slide:not(.is-active) {
-    opacity: 0.75;
-    transform: scale(0.955);
+    opacity: 0.85;
+    transform: scale(0.97);
   }
   .promo__text > *,
   .promo__tag {
@@ -396,23 +364,12 @@ const { slides, label, class: className } = Astro.props;
   .promo__slide.is-active .promo__text > :nth-child(3) {
     transition-delay: 0.16s;
   }
-  .promo__slide.is-active .promo__art :global(svg) {
-    animation: promo-float 6s ease-in-out infinite;
-  }
-  @keyframes promo-float {
-    50% {
-      transform: translateY(-8px);
-    }
-  }
   @media (prefers-reduced-motion: reduce) {
     .promo__slide:not(.is-active),
     .promo__slide:not(.is-active) .promo__text > *,
     .promo__slide:not(.is-active) .promo__tag {
       opacity: 1;
       transform: none;
-    }
-    .promo__slide.is-active .promo__art :global(svg) {
-      animation: none;
     }
   }
   @media (width>=30rem) {
@@ -425,8 +382,8 @@ const { slides, label, class: className } = Astro.props;
   }
   @media (width>=48rem) {
     .promo__track {
-      grid-auto-columns: calc(100% - 2 * var(--gutter) - 6rem);
-      padding-inline: calc(var(--gutter) + 3rem);
+      grid-auto-columns: 80%;
+      padding-inline: 10%;
     }
     .promo__slide {
       min-height: 15rem;
@@ -442,10 +399,9 @@ const { slides, label, class: className } = Astro.props;
       margin-inline: 0;
     }
     .promo__track {
-      grid-auto-columns: 100%;
-      padding: 0 0 1.75rem;
-      margin-bottom: -0.75rem;
-      gap: 1rem;
+      grid-auto-columns: 88%;
+      padding: 0 6% 1.25rem;
+      gap: 0.75rem;
     }
     .promo__slide {
       min-height: 21rem;

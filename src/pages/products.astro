@@ -67,10 +67,6 @@ import Testimonials from '../components/Testimonials.astro';
         </div>
       </div>
       <div class="deck-controls">
-        <button type="button" class="deck-pause" aria-label="Pause slideshow" hidden>
-          <svg class="deck-pause__pause" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10" rx="1" /><rect x="7" y="1" width="3" height="10" rx="1" /></svg>
-          <svg class="deck-pause__play" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7.5-4.5z" /></svg>
-        </button>
         {heroCards.map((c, i) => (
           <button type="button" class="deck-dot" aria-label={`Show card ${i + 1}: ${c.eyebrow ?? c.cta}`} aria-current={i === 0 ? 'true' : undefined} />
         ))}
@@ -78,10 +74,10 @@ import Testimonials from '../components/Testimonials.astro';
     </div>
   </section>
   <script is:inline>
-    // Header slider: each card shows for 6s (its dot fills as a timer), then the row slides left to
-    // the next card, looping round seamlessly. Swipe on phones; hover/focus pauses; button pauses for good.
+    // Header slider: each card shows for 3.5s, then the row slides left to the next card, looping round
+    // seamlessly (app-style, no pause button). Swipe on phones; hover, focus or a touch pauses it.
     (function () {
-      var DELAY = 6000;
+      var DELAY = 3500;
       var slider = document.querySelector('.prod-slider');
       if (!slider) return;
       var track = slider.querySelector('.prod-slider__track');
@@ -89,7 +85,6 @@ import Testimonials from '../components/Testimonials.astro';
       var n = cards.length;
       var wrap = slider.parentElement;
       var dots = Array.prototype.slice.call(wrap.querySelectorAll('.deck-dot'));
-      var pause = wrap.querySelector('.deck-pause');
       var motionOK = matchMedia('(prefers-reduced-motion: no-preference)').matches;
       var index = 0, timer = null, userPaused = false, hovering = false, resumeTimer = null, busy = false;
       wrap.style.setProperty('--deck-delay', DELAY + 'ms');
@@ -152,13 +147,6 @@ import Testimonials from '../components/Testimonials.astro';
       });
       mark(0);
       if (!motionOK) return;
-      pause.hidden = false;
-      pause.addEventListener('click', function () {
-        userPaused = !userPaused;
-        pause.setAttribute('aria-label', userPaused ? 'Play slideshow' : 'Pause slideshow');
-        pause.classList.toggle('is-paused', userPaused);
-        schedule();
-      });
       slider.addEventListener('mouseenter', function () { hovering = true; schedule(); });
       slider.addEventListener('mouseleave', function () { hovering = false; schedule(); });
       slider.addEventListener('focusin', function () { hovering = true; schedule(); });
@@ -428,77 +416,30 @@ import Testimonials from '../components/Testimonials.astro';
     margin-top: 0.85rem;
     display: flex;
   }
-  .deck-pause {
-    cursor: pointer;
-    background: var(--white);
-    color: var(--ink);
-    fill: currentColor;
-    box-shadow: var(--shadow-card);
-    border: 0;
-    border-radius: 50%;
-    place-items: center;
-    width: 1.75rem;
-    height: 1.75rem;
-    margin-right: 0.35rem;
-    padding: 0;
-    display: grid;
-  }
-  .deck-pause[hidden] {
-    display: none;
-  }
-  .deck-pause__play,
-  .deck-pause.is-paused .deck-pause__pause {
-    display: none;
-  }
-  .deck-pause.is-paused .deck-pause__play {
-    display: block;
-  }
   .deck-dot {
     cursor: pointer;
     background: none;
     border: 0;
-    place-items: center start;
-    min-width: 1.5rem;
+    place-items: center;
+    width: 1.5rem;
     height: 1.5rem;
-    padding: 0 0.2rem;
+    padding: 0;
     display: grid;
   }
-  .deck-dot:before,
-  .deck-dot:after {
-    content: '';
-    border-radius: 999px;
-    grid-area: 1 / 1;
-    height: 0.5rem;
-  }
   .deck-dot:before {
-    background: var(--brand);
-    opacity: 0.4;
+    content: '';
+    border-radius: 50%;
     width: 0.5rem;
+    height: 0.5rem;
+    background: var(--brand);
+    opacity: 0.45;
     transition:
-      width 0.35s ease,
-      opacity 0.35s ease;
-  }
-  .deck-dot:after {
-    background: var(--ink);
-    width: 0;
+      opacity 0.3s ease,
+      background-color 0.3s ease;
   }
   .deck-dot[aria-current='true']:before {
-    opacity: 0.25;
-    width: 1.75rem;
-  }
-  .deck-dot[aria-current='true']:after {
-    width: 1.75rem;
-  }
-  .is-playing .deck-dot[aria-current='true']:after {
-    animation: deck-progress var(--deck-delay, 6s) linear forwards;
-  }
-  @keyframes deck-progress {
-    from {
-      width: 0.5rem;
-    }
-    to {
-      width: 1.75rem;
-    }
+    background: var(--ink);
+    opacity: 1;
   }
   @media (prefers-reduced-motion: reduce) {
     .prod-slider__track,
