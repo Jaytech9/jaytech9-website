@@ -1,6 +1,7 @@
 // CRM → Gallery: flyers, logos, banners and short videos shown on the website's Design gallery
 // (jaytech9.com/design) and, when "featured", in "Recent designs" on the home page.
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { db } from '../lib/db';
 import { insertRow, logActivity, publishWebsiteSoon, removeRow, updateRow, useTable } from '../lib/store';
 import { Button, Card, Empty, Field, Modal, PageHead, Pill, Segmented, Skeleton, Switch, useToast } from '../components/ui';
 import { Icon } from '../components/Icon';
@@ -15,6 +16,9 @@ export default function Gallery() {
   const toast = useToast();
   const [filter, setFilter] = useState<'all' | 'live' | 'hidden'>('all');
   const [editing, setEditing] = useState<Partial<GalleryItem> | null>(null);
+  const [loves, setLoves] = useState<Record<string, number>>({});
+  useEffect(() => { db.fn<Record<string, number>>('love-counts', {}).then((r) => { if (r && !(r as { demo?: boolean }).demo) setLoves(r); }).catch(() => {}); }, []);
+  const lovesOf = (g: GalleryItem) => loves[`crm-${g.id.slice(0, 8)}`] ?? 0;
   const list = useMemo(() => rows.filter((r) => filter === 'all' || (filter === 'live' ? r.show : !r.show)), [rows, filter]);
   const publish = () => publishWebsiteSoon((ok) => toast(ok ? 'Website updated, live in about a minute' : 'Saved. The website could not be reached to update; use Settings → Publish.', ok ? 'ok' : 'error'));
   const quick = async (g: GalleryItem, patch: Partial<GalleryItem>, msg: string) => {
@@ -50,7 +54,7 @@ export default function Gallery() {
                     {g.featured && <span style={{ position: 'absolute', right: 10, top: 10, background: '#fff1d6', color: '#8a5300', borderRadius: 999, padding: '2px 9px', fontSize: 12, fontWeight: 600 }}>★ Home page</span>}
                   </button>
                   <div style={{ padding: '10px 12px', display: 'grid', gap: 8 }}>
-                    <div><strong style={{ display: 'block', lineHeight: 1.3 }}>{g.title}</strong><small className="muted">{catLabel(g.category)} · {g.year}{g.client ? ` · ${g.client}` : ''}</small></div>
+                    <div><strong style={{ display: 'block', lineHeight: 1.3 }}>{g.title}</strong><small className="muted">{catLabel(g.category)} · {g.year}{g.client ? ` · ${g.client}` : ''}{lovesOf(g) > 0 && <> · <span style={{ color: '#e0444b', fontWeight: 600 }}>♥ {lovesOf(g)}</span></>}</small></div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6 }}>
                       <Switch label="Show on website" on={g.show} onChange={(v) => quick(g, { show: v }, v ? 'Now on the website' : 'Hidden from the website')} />
                       <div style={{ display: 'flex', gap: 2 }}>
