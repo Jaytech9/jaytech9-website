@@ -328,8 +328,40 @@ const waStarters = [
     dateInput.classList.add('visually-hidden');
     dateInput.tabIndex = -1;
     dateInput.setAttribute('aria-hidden', 'true');
+    // ----- Live availability: times someone already booked (or that we blocked) can't be picked.
+    const slotInputs = Array.from(form.querySelectorAll<HTMLInputElement>('[name="preferred_time"]'));
+    let avail: { taken: Record<string, string[]>; closed: string[] } = { taken: {}, closed: [] };
+    const markSlots = () => {
+      const taken = new Set(avail.taken[dateInput.value] ?? []);
+      for (const r of slotInputs) {
+        const off = taken.has(r.value);
+        r.disabled = off;
+        r.closest('.bchip')?.classList.toggle('is-taken', off);
+        r.closest('.bchip')?.setAttribute('title', off ? 'Already booked' : '');
+        if (off && r.checked) r.checked = false;
+      }
+    };
+    const markDays = () => {
+      days.querySelectorAll<HTMLInputElement>('input[name="day-choice"]').forEach((r) => {
+        const full = avail.closed.includes(r.value) || (avail.taken[r.value]?.length ?? 0) >= slotInputs.length;
+        r.disabled = full;
+        const label = r.closest('.bday')!;
+        label.classList.toggle('is-full', full);
+        const small = label.querySelector('small')!;
+        small.dataset.day ??= small.textContent ?? '';
+        small.textContent = full ? 'Fully booked' : small.dataset.day;
+        if (full && r.checked) { r.checked = false; dateInput.value = ''; }
+      });
+    };
+    const loadAvailability = () =>
+      fetch(`/api/availability?from=${iso(options[0])}&to=${iso(options[options.length - 1])}`, { cache: 'no-store' })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((a) => { if (a?.taken) { avail = a; markDays(); markSlots(); } })
+        .catch(() => { /* booking still works; the server double-checks */ });
+    loadAvailability();
     days.addEventListener('change', (e) => {
       dateInput.value = (e.target as HTMLInputElement).value;
+      markSlots();
       update();
     });
 
@@ -769,6 +801,22 @@ const waStarters = [
     background: var(--brand);
     border-color: var(--brand);
     color: var(--white);
+  }
+  .bchip.is-taken {
+    cursor: not-allowed;
+  }
+  .bchip.is-taken span {
+    border-style: dashed;
+    color: #8aa0ae;
+    text-decoration: line-through;
+    background: #f3f6f8;
+  }
+  .bdays :global(.bday.is-full) {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+  .bdays :global(.bday.is-full span) {
+    border-style: dashed;
   }
   .bslot__local {
     display: block;

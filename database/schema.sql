@@ -266,3 +266,14 @@ CREATE TABLE IF NOT EXISTS payments (
 );
 CREATE INDEX IF NOT EXISTS payments_order ON payments (order_id);
 CREATE INDEX IF NOT EXISTS payments_kind ON payments (kind, created_at);
+
+-- Times blocked for calls (also in migrations/0003).
+CREATE TABLE IF NOT EXISTS blocked_times (
+  id          TEXT PRIMARY KEY,
+  day         TEXT NOT NULL,                 -- YYYY-MM-DD (Ghana time)
+  slot        TEXT,                          -- HH:MM, or NULL for the whole day
+  reason      TEXT,                          -- internal only, never shown on the website
+  created_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+);
+CREATE INDEX IF NOT EXISTS blocked_times_day ON blocked_times (day);
+CREATE INDEX IF NOT EXISTS bookings_call_at ON bookings (call_at);

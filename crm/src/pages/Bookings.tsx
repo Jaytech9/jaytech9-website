@@ -5,6 +5,15 @@ import { Button, Card, Empty, Field, Modal, PageHead, Pill, SearchBox, Segmented
 import ContactButtons from '../components/ContactButtons';
 import { ago, dateMed, when } from '../lib/format';
 import { SERVICES, type Booking, type BookingStatus } from '../lib/types';
+import BookingSchedule, { MoveTime, dayOf, isFree, niceDay, slotOf } from '../components/BookingSchedule';
+
+const waNumber = (p?: string | null) => { const d = (p ?? '').replace(/\D/g, ''); return d.startsWith('0') ? `233${d.slice(1)}` : d; };
+/** Opens WhatsApp with a ready message about the call time (you press send). */
+function whatsappCallMessage(b: Booking, when: string, moved = false) {
+  if (!b.phone) return;
+  const text = `Hello ${b.name.split(' ')[0]}, this is JayTech9. Your free call ${moved ? 'has been moved to' : 'is confirmed for'} ${niceDay(dayOf(when))} at ${slotOf(when)} (Ghana time)${b.method ? ` by ${b.method.toLowerCase()}` : ''}. Speak soon!`;
+  window.open(`https://wa.me/${waNumber(b.phone)}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+}
 
 const LABEL: Record<BookingStatus, [string, 'blue' | 'green' | 'grey' | 'red' | 'amber']> = {
   new: ['New', 'blue'], confirmed: ['Confirmed', 'green'], done: ['Done', 'grey'], cancelled: ['Cancelled', 'red'], no_show: ['No show', 'amber'],
@@ -21,6 +30,9 @@ export default function Bookings() {
   const toast = useToast();
   const [params, setParams] = useSearchParams();
   const [filter, setFilter] = useState<Filter>('upcoming');
+  const [view, setView] = useState<'schedule' | 'list'>(() => { try { return (localStorage.getItem('jt9-bookings-view') as 'list') || 'schedule'; } catch { return 'schedule'; } });
+  const [moving, setMoving] = useState<Booking | null>(null);
+  const pickView = (v: 'schedule' | 'list') => { setView(v); try { localStorage.setItem('jt9-bookings-view', v); } catch { /* ok */ } };
   const [q, setQ] = useState('');
   const [openId, setOpenId] = useState<string | null>(params.get('open'));
   const [creating, setCreating] = useState(params.get('new') === '1');
@@ -52,8 +64,11 @@ export default function Bookings() {
 
   return (
     <>
-      <PageHead title="Bookings" sub="Free calls booked on the website, or added by you." actions={<Button icon="plus" onClick={() => setCreating(true)}>New booking</Button>} />
+      <PageHead title="Bookings" sub="Free calls booked on the website, or added by you. Booked and blocked times are hidden on the website." actions={<>
+        <Segmented label="View" value={view} onChange={pickView} options={[{ id: 'schedule', label: 'Schedule' }, { id: 'list', label: 'List' }]} />
+        <Button icon="plus" onClick={() => setCreating(true)}>New booking</Button></>} />
       <Card pad={false}>
+        {view === 'schedule' ? <div style={{ paddingTop: 16 }}>{!loaded ? <div style={{ padding: 20 }}><Skeleton /></div> : <BookingSchedule onOpen={setOpenId} />}</div> : <>
         <div className="toolbar" style={{ padding: '16px 20px' }}>
           <Segmented label="Show" value={filter} onChange={setFilter} options={[{ id: 'upcoming', label: 'Upcoming' }, { id: 'new', label: 'New' }, { id: 'past', label: 'Past' }, { id: 'all', label: 'All' }]} />
           <SearchBox value={q} onChange={setQ} placeholder="Search name, phone, service" />
@@ -78,11 +93,13 @@ export default function Bookings() {
             </table>
           </div>
         )}
+        </>}
       </Card>
 
       <Modal open={!!open} title={open?.name ?? ''} onClose={() => setOpenId(null)} footer={open && (
         <>
-          {open.status === 'new' && <Button variant="green" icon="check" onClick={() => setStatus(open, 'confirmed')}>Confirm call</Button>}
+          {open.status === 'new' && <Button variant="green" icon="check" onClick={async () => { await setStatus(open, 'confirmed'); if (open.call_at) whatsappCallMessage(open, open.call_at); }}>Confirm call</Button>}
+          {['new', 'confirmed'].includes(open.status) && <Button variant="secondary" icon="calendar" onClick={() => setMoving(open)}>Move time</Button>}
           {['new', 'confirmed'].includes(open.status) && <Button variant="secondary" onClick={() => setStatus(open, 'done')}>Mark done</Button>}
           {['new', 'confirmed'].includes(open.status) && <Button variant="danger" onClick={() => setStatus(open, 'cancelled')}>Cancel</Button>}
           {open.status === 'done' && <Button icon="columns" onClick={() => toDeal(open)}>Add to pipeline</Button>}
@@ -107,6 +124,7 @@ export default function Bookings() {
         )}
       </Modal>
       <NewBooking open={creating} onClose={() => setCreating(false)} />
+      <MoveTime booking={moving} onClose={() => setMoving(null)} onMoved={(b, when) => { setMoving(null); whatsappCallMessage(b, when, true); }} />
     </>
   );
 }
@@ -114,10 +132,14 @@ export default function Bookings() {
 function NewBooking({ open, onClose }: { open: boolean; onClose: () => void }) {
   const toast = useToast();
   const clients = useTable('clients').rows;
+  const allBookings = useTable('bookings').rows;
+  const blocks = useTable('blocked_times').rows;
   const [busy, setBusy] = useState(false);
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const f = Object.fromEntries(new FormData(e.currentTarget)) as Record<string, string>;
+    const when = f.when ? new Date(f.when).toISOString() : null;
+    if (when && !isFree(dayOf(when), slotOf(when), allBookings, blocks)) { toast('That time is already booked or blocked. Pick another time.', 'error'); return; }
     setBusy(true);
     try {
       const match = clients.find((c) => (f.phone && c.phone === f.phone) || (f.email && c.email?.toLowerCase() === f.email.toLowerCase()));

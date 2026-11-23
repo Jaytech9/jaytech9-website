@@ -28,7 +28,9 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   if (!bot) {
     try {
       if (await tooMany(env, request.headers.get('cf-connecting-ip') ?? 'unknown')) return errorPage('Too many messages in a short time. Please wait a minute.', 429);
-      if (!(await saveForm(env, form))) return errorPage('Some details were missing.', 400);
+      const saved = await saveForm(env, form);
+      if (saved === 'taken') return errorPage('Someone has just booked that time. Please go back and pick another time.', 409);
+      if (!saved) return errorPage('Some details were missing.', 400);
     } catch (e) {
       console.error('form not saved', (e as Error).message);
       return errorPage('Something went wrong on our side.', 500);

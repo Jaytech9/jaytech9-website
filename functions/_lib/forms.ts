@@ -27,7 +27,7 @@ async function clientFor(env: Env, f: Map<string, string[]>, service: string | n
   return id;
 }
 
-export async function saveForm(env: Env, form: FormData) {
+export async function saveForm(env: Env, form: FormData): Promise<boolean | 'taken'> {
   // Group values by name (checkbox groups such as "needs" send several).
   const f = new Map<string, string[]>();
   for (const [k, v] of form.entries()) f.set(k, [...(f.get(k) ?? []), String(v)]);
@@ -40,12 +40,17 @@ export async function saveForm(env: Env, form: FormData) {
     const date = one('preferred_date', 10), time = one('preferred_time', 5);
     const call_at = date && time && /^\d{4}-\d{2}-\d{2}$/.test(date) && /^\d{2}:\d{2}$/.test(time) ? `${date}T${time}:00.000Z` : null; // Ghana time = UTC
     const details = [one('details'), one('link', 300) && `Link: ${one('link', 300)}`].filter(Boolean).join('\n') || null;
-    await env.DB.prepare(
+    // One booking per time: the row is only added if nobody holds that time and it isn't blocked.
+    // Done in a single statement, so two people pressing send at once can't both get it.
+    const res = await env.DB.prepare(
       `INSERT INTO bookings (id, client_id, name, organisation, email, phone, service, details, budget, timeline, method, call_at, source, status, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'new', ?)`,
+       SELECT ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, 'new', ?14
+       WHERE ?12 IS NULL OR (
+         NOT EXISTS (SELECT 1 FROM bookings WHERE call_at = ?12 AND status IN ('new', 'confirmed'))
+         AND NOT EXISTS (SELECT 1 FROM blocked_times WHERE day = substr(?12, 1, 10) AND (slot IS NULL OR slot = substr(?12, 12, 5))))`,
     ).bind(uuid(), client_id, one('name', 120) ?? 'Website visitor', one('organisation', 120), one('email', 200), one('phone', 40),
       service, details, one('budget', 60), one('timeline', 60), one('method', 60), call_at, one('source', 60), now()).run();
-    return true;
+    return res.meta.changes ? true : 'taken';
   }
 
   if (name === 'contact') {

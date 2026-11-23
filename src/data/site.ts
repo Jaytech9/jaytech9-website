@@ -50,7 +50,7 @@ export const footerServices = [
 // Booking page (/book/): when visitors can ask for their free call. Times are Ghana time (GMT).
 export const booking = {
   workingDays: [1, 2, 3, 4, 5], // Monday to Friday (0 = Sunday)
-  slots: ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00'],
+  slots: ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00'], // keep in step with crm/src/lib/types.ts → BOOKING_SLOTS
   daysAhead: 14, // how far ahead visitors can pick a day
   methods: ['Phone call', 'WhatsApp call', 'Google Meet', 'In person (Accra)'],
   budgets: ['Under GH₵ 5,000', 'GH₵ 5,000 – 15,000', 'GH₵ 15,000 – 50,000', 'Over GH₵ 50,000', 'Not sure yet'],

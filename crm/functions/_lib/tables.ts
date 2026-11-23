@@ -12,6 +12,7 @@ export const TABLES = {
   activity: ['entity', 'entity_id', 'action', 'detail', 'actor', 'created_at'],
   staff: ['email', 'name', 'role', 'created_at'],
   help_questions: ['question', 'page', 'done', 'created_at'],
+  blocked_times: ['day', 'slot', 'reason', 'created_at'],
   // Orders and payments are changed only through /api/order (rules for money and the clock live there).
   orders: ['notes'],
   order_updates: [],
@@ -21,7 +22,7 @@ export const TABLES = {
 export type Table = keyof typeof TABLES;
 
 export const KEY: Partial<Record<Table, string>> = { site_sections: 'key' };              // primary key if not "id"
-export const ORDER: Partial<Record<Table, string>> = { site_sections: 'sort ASC' };        // default: newest first
+export const ORDER: Partial<Record<Table, string>> = { site_sections: 'sort ASC', blocked_times: 'day ASC, slot ASC' };        // default: newest first
 export const BOOLS = new Set(['marketing_opt_in', 'show_on_website', 'consent', 'enabled', 'done', 'consent_review', 'consent_portfolio']);
 export const JSONS = new Set(['audience_spec']);
 export const HAS_UPDATED_AT = new Set<Table>(['deals', 'projects', 'site_sections', 'orders']);

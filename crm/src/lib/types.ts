@@ -62,12 +62,19 @@ export interface Payment {
   payer_email?: string | null; message?: string | null; paid_at?: string | null; created_at: string;
 }
 
+export interface BlockedTime { id: Id; day: string; slot?: string | null; reason?: string | null; created_at: string }
+
 export interface Tables {
+  blocked_times: BlockedTime;
   orders: Order; order_updates: OrderUpdate; order_files: OrderFile; payments: Payment;
   clients: Client; bookings: Booking; enquiries: Enquiry; deals: Deal; projects: Project; reviews: Review;
   site_sections: Section; campaigns: Campaign; activity: Activity; staff: Staff; help_questions: HelpQuestion;
 }
 export type TableName = keyof Tables;
+
+// Call times offered on the website's booking page. KEEP IN STEP with src/data/site.ts → booking.
+export const BOOKING_SLOTS = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00'];
+export const WORKING_DAYS = [1, 2, 3, 4, 5]; // Monday to Friday (0 = Sunday)
 
 export const SERVICES = [
   'Websites and web applications',
