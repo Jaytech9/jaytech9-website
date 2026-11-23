@@ -24,6 +24,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return json({ url });
   } catch (e) {
     await env.DB.prepare("UPDATE payments SET status = 'failed' WHERE reference = ?").bind(reference).run();
-    return json({ error: (e as Error).message }, 502);
+    console.error("paystack init", (e as Error).message);
+    return json({ error: `Payment could not start: ${(e as Error).message}` }, 400);   // not 502: Cloudflare hides 502 bodies
   }
 };
