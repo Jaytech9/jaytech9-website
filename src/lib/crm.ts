@@ -38,10 +38,18 @@ export interface CrmProject {
   outcome: string | null;
   live_url: string | null;
 }
+export interface CrmStats {
+  delivered: number;
+  clients: number;
+  rating: number | null;
+  ratings: number;
+  donations: { total: number; donors: number };
+}
 interface SiteData {
   sections: { key: SectionKey; enabled: boolean }[];
   reviews: CrmReview[];
   projects: CrmProject[];
+  stats?: CrmStats | null;
 }
 
 let dataP: Promise<SiteData> | undefined;
@@ -68,6 +76,7 @@ export async function getSections() {
 
 export const getReviews = async () => (await siteData()).reviews;
 export const getProjects = async () => (await siteData()).projects;
+export const getStats = async () => (await siteData()).stats ?? null;
 
 // The CRM stores services by their full title; the site uses short ids.
 export const serviceIdFromTitle: Record<string, string> = {
@@ -76,5 +85,6 @@ export const serviceIdFromTitle: Record<string, string> = {
   'Data dashboards and analysis': 'data',
   'AgriTech and sustainability': 'agritech',
   'Brand and print design': 'design',
+  'Video and motion': 'video',
   'Domains, hosting and care': 'care',
 };

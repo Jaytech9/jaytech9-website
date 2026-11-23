@@ -2,7 +2,7 @@
 // DELETE /api/t/:table/:id → remove it
 import type { Ctx } from '../../../_lib/env';
 import { HttpError, fail, json, now } from '../../../_lib/http';
-import { ADMIN_ONLY_WRITE, HAS_UPDATED_AT, KEY, READ_ONLY, fromDb, isTable, toDb } from '../../../_lib/tables';
+import { ADMIN_ONLY_WRITE, HAS_UPDATED_AT, KEY, NO_CREATE_DELETE, READ_ONLY, fromDb, isTable, toDb } from '../../../_lib/tables';
 
 function target(ctx: Ctx) {
   const t = String(ctx.params.table);
@@ -29,6 +29,7 @@ export const onRequestPatch = async (ctx: Ctx) => {
 export const onRequestDelete = async (ctx: Ctx) => {
   try {
     const { t, key, id } = target(ctx);
+    if (NO_CREATE_DELETE.has(t) && ctx.data.user.role !== 'admin') throw new HttpError(403, 'Only an admin can delete an order.');
     if (t === 'staff' && id === ctx.data.user.id) throw new HttpError(400, 'You cannot remove yourself.');
     await ctx.env.DB.prepare(`DELETE FROM ${t} WHERE ${key} = ?`).bind(id).run();
     return json({ ok: true });

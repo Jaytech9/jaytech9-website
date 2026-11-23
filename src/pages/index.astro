@@ -20,12 +20,14 @@ const tiles = [
   { label: 'Our Products', hint: 'Software we build', href: '/products/', icon: 'package' },
   { label: 'WhatsApp Us', hint: 'Quick replies', href: site.whatsapp, icon: 'chat' },
   { label: 'Gallery', hint: 'Our design work', href: '/design/', icon: 'brush' },
-  { label: 'About Us', hint: 'Who we are', href: '/about/', icon: 'info' },
+  { label: 'Order Online', hint: 'Quote, pay, track', href: '/order/', icon: 'briefcase' },
 ] as const;
 import CtaBand from '../components/CtaBand.astro';
 import Testimonials from '../components/Testimonials.astro';
 import RecentDesigns from '../components/RecentDesigns.astro';
 import { getSections } from '../lib/crm';
+import NumbersStrip from '../components/NumbersStrip.astro';
+import GiveBand from '../components/GiveBand.astro';
 const sections = await getSections();
 ---
 
@@ -58,6 +60,7 @@ const sections = await getSections();
       </nav>
     </div>
   </section>
+  <NumbersStrip />
   <section class="section section--band" aria-labelledby="services-heading">
     <div class="wrap">
       <div class="section-head">
@@ -250,6 +253,7 @@ const sections = await getSections();
   </section>
   {sections.recent_designs && <RecentDesigns />}
   <Testimonials />
+  {sections.donate && <GiveBand />}
   <section class="section section--band" aria-labelledby="why-heading">
     <div class="wrap">
       <div class="section-head">

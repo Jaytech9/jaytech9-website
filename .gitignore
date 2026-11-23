@@ -14,3 +14,4 @@ backup-*.sql
 
 # Files waiting to be deleted by hand
 _to_delete/
+.qa-dist.tgz

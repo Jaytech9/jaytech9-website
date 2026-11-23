@@ -1,5 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+import '../styles/orderflow.css';
+// Online giving goes through Paystack (functions/api/donate.ts). Gifts show in CRM → Donations.
+const amounts = [20, 50, 100, 200, 500];
 ---
 
 <Base
@@ -118,25 +122,34 @@ import Base from '../layouts/Base.astro';
           </li>
         </ul>
       </div>
-      <aside class="give" aria-labelledby="give-heading">
-        <h2 id="give-heading">How to give</h2>
-        <div class="give__options">
-          <p>
-            Online giving opens soon. If you’d like to give now, or support a specific programme, contact us
-            and we’ll share the details.
-          </p>
-          <div class="button-row">
-            <a class="button" href="https://wa.me/233506181501">
-              Message us on WhatsApp
-            </a>
-            <a class="button button--quiet" href="mailto:info@jaytech9.com?subject=Donation">
-              Email us
-            </a>
+      <aside class="give" id="give" aria-labelledby="give-heading">
+        <h2 id="give-heading">Give now</h2>
+        <p class="give__raised" id="give-raised" hidden></p>
+        <form id="give-form" novalidate>
+          <div class="of-field">
+            <p class="of-label" id="amt-label">Choose an amount</p>
+            <div class="of-chips" role="radiogroup" aria-labelledby="amt-label">
+              {amounts.map((a) => (
+                <label class="of-chip"><input type="radio" name="preset" value={a} checked={a === 50} /><span>GH₵ {a}</span></label>
+              ))}
+              <label class="of-chip"><input type="radio" name="preset" value="other" /><span>Other</span></label>
+            </div>
           </div>
-        </div>
+          <div class="of-field" id="g-other-wrap" hidden>
+            <label for="g-other">Your amount (GH₵)</label>
+            <input id="g-other" type="number" inputmode="numeric" min="5" max="50000" step="1" placeholder="e.g. 75" />
+          </div>
+          <div class="of-field"><label for="g-name">Your name <span class="of-opt">(optional)</span></label><input id="g-name" name="name" autocomplete="name" maxlength="120" /></div>
+          <div class="of-field"><label for="g-email">Email</label><input id="g-email" name="email" type="email" autocomplete="email" required maxlength="200" /><p class="of-hint">Paystack sends your receipt here.</p></div>
+          <div class="of-field"><label for="g-msg">Message <span class="of-opt">(optional)</span></label><textarea id="g-msg" name="message" rows="2" maxlength="500"></textarea></div>
+          <label class="of-check"><input type="checkbox" id="g-anon" /><span>Give anonymously</span></label>
+          <p class="of-error" id="g-error" role="alert" hidden></p>
+          <button class="button give__btn of-button-wide" type="submit" id="g-btn">Give GH₵ 50</button>
+          <p class="of-lock"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Mobile Money or card, secured by Paystack</p>
+        </form>
         <p class="give__note">
-          Every gift is acknowledged. For partnerships or sponsorship of a full programme, please email
-          info@jaytech9.com.
+          Every gift is acknowledged. Prefer to give another way, or sponsor a full programme? <a href={site.whatsapp}>WhatsApp us</a>
+          or email <a href="mailto:info@jaytech9.com?subject=Donation">info@jaytech9.com</a>. Donations are not refundable.
         </p>
       </aside>
     </div>
@@ -167,10 +180,13 @@ import Base from '../layouts/Base.astro';
     border: 1px solid #e3e9e5;
     padding: clamp(1.5rem, 4vw, 2.25rem);
   }
-  .give__options {
-    gap: 1.5rem;
-    display: grid;
-  }
+  .give h2 { margin-bottom: 1rem; }
+  .give__raised { margin: -0.25rem 0 1.25rem; padding: 0.65rem 0.9rem; border-radius: 12px; background: #fff0f0; color: #9b1c22; font-weight: 600; }
+  .give__raised[hidden], #g-other-wrap[hidden] { display: none; }
+  .give__btn { background: #ff5a5f; border-color: #ff5a5f; font-weight: 700; min-height: 3.25rem; margin-top: 0.5rem; }
+  .give__btn:hover { background: #e8434a; border-color: #e8434a; }
+  .give .of-chip input:checked + span { background: #ff5a5f; border-color: #ff5a5f; }
+  .give { border-top: 6px solid #ff5a5f; }
   .give__options p {
     color: var(--ink-soft);
   }
@@ -266,3 +282,59 @@ import Base from '../layouts/Base.astro';
     max-width: 36rem;
   }
 </style>
+
+<script>
+  const form = document.getElementById('give-form') as HTMLFormElement;
+  const btn = document.getElementById('g-btn') as HTMLButtonElement;
+  const other = document.getElementById('g-other') as HTMLInputElement;
+  const otherWrap = document.getElementById('g-other-wrap')!;
+  const err = document.getElementById('g-error')!;
+  const presets = Array.from(form.querySelectorAll<HTMLInputElement>('input[name=preset]'));
+
+  const amount = () => {
+    const p = presets.find((r) => r.checked)?.value;
+    return p === 'other' ? Math.round(Number(other.value)) : Number(p);
+  };
+  const label = () => { const a = amount(); btn.textContent = a >= 5 ? `Give GH₵ ${a.toLocaleString('en-GH')}` : 'Give now'; };
+  const sync = () => { otherWrap.hidden = presets.find((r) => r.checked)?.value !== 'other'; label(); };
+  presets.forEach((r) => r.addEventListener('change', () => { sync(); if (!otherWrap.hidden) other.focus(); }));
+  other.addEventListener('input', label);
+
+  // /donate/?amount=100 (from the home page band) picks that amount.
+  const want = Number(new URLSearchParams(location.search).get('amount'));
+  if (want >= 5) {
+    const hit = presets.find((r) => Number(r.value) === want);
+    if (hit) hit.checked = true; else { presets[presets.length - 1].checked = true; other.value = String(Math.round(want)); }
+  }
+  sync();
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    err.hidden = true;
+    const a = amount();
+    const email = (document.getElementById('g-email') as HTMLInputElement).value.trim();
+    const show = (m: string) => { err.textContent = m; err.hidden = false; };
+    if (!(a >= 5 && a <= 50000)) return show('Please choose an amount between GH₵ 5 and GH₵ 50,000.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return show('Please add your email so Paystack can send your receipt.');
+    btn.classList.add('is-busy'); btn.textContent = 'Opening secure checkout…';
+    try {
+      const res = await fetch('/api/donate', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({
+        amount: a, email,
+        name: (document.getElementById('g-name') as HTMLInputElement).value,
+        message: (document.getElementById('g-msg') as HTMLTextAreaElement).value,
+        anonymous: (document.getElementById('g-anon') as HTMLInputElement).checked,
+      }) });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok || !body.url) throw new Error(body.error || 'Something went wrong. Please try again.');
+      location.href = body.url;
+    } catch (x) { show((x as Error).message); btn.classList.remove('is-busy'); label(); }
+  });
+
+  const raised = document.getElementById('give-raised')!;
+  fetch('/api/stats').then((r) => r.json()).then((s) => {
+    const d = s?.donations;
+    if (!d || d.donors < 1) return;
+    raised.textContent = `❤ GH₵ ${Math.round(d.total / 100).toLocaleString('en-GH')} raised from ${d.donors} supporter${d.donors > 1 ? 's' : ''}`;
+    raised.hidden = false;
+  }).catch(() => {});
+</script>

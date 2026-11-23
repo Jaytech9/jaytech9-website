@@ -1,0 +1,34 @@
+---
+// Home page numbers strip. Counts come from the database at build time (CRM → Orders and Projects,
+// approved reviews). It stays hidden until the numbers are real enough to be worth showing,
+// so the site never shows "0 projects" or invented figures.
+import { getStats } from '../lib/crm';
+const stats = await getStats();
+const items: { value: string; label: string }[] = [];
+if (stats && stats.delivered >= 3) items.push({ value: `${stats.delivered}+`, label: 'projects delivered' });
+if (stats && stats.clients >= 3) items.push({ value: `${stats.clients}+`, label: 'happy clients' });
+if (stats && stats.rating && stats.ratings >= 3) items.push({ value: `${stats.rating.toFixed(1)}★`, label: `average from ${stats.ratings} reviews` });
+if (items.length) items.push({ value: '1 day', label: 'to get your quote' });
+---
+
+{items.length >= 2 && (
+  <section class="nums" aria-label="JayTech9 in numbers">
+    <div class="wrap">
+      <ul class="nums__list">
+        {items.map((i) => <li><strong>{i.value}</strong><span>{i.label}</span></li>)}
+      </ul>
+    </div>
+  </section>
+)}
+
+<style>
+  .nums { padding-block: clamp(1.5rem, 4vw, 2.5rem) 0; }
+  .nums__list {
+    list-style: none; margin: 0; padding: clamp(1rem, 3vw, 1.5rem); display: grid; gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    background: var(--white); border: var(--card-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-card);
+  }
+  .nums__list li { display: grid; gap: 0.15rem; text-align: center; }
+  .nums__list strong { font-size: var(--step-2); letter-spacing: -0.03em; color: var(--brand); font-variant-numeric: tabular-nums; }
+  .nums__list span { font-size: var(--step--1); color: var(--ink-soft); }
+</style>

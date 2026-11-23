@@ -2,6 +2,8 @@
 // Settings → Variables and Secrets (mark keys as "Secret"). Local values go in crm/.dev.vars.
 export interface Env {
   DB: D1Database;                // the shared "jaytech9" D1 database (binding set in wrangler.toml)
+  FILES?: R2Bucket;              // client uploads for orders (same R2 bucket as the website)
+  SITE_URL?: string;             // public website address used in client links (default https://jaytech9.com)
   ACCESS_TEAM_DOMAIN?: string;   // e.g. https://jaytech9.cloudflareaccess.com
   ACCESS_AUD?: string;           // "Application Audience (AUD) Tag" of the CRM app in Zero Trust → Access
   ADMIN_EMAILS?: string;         // comma-separated; these people become admins on first sign-in

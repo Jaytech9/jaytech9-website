@@ -18,10 +18,12 @@ export default function Layout() {
   const bookings = useTable('bookings').rows;
   const enquiries = useTable('enquiries').rows;
   const reviews = useTable('reviews').rows;
+  const orders = useTable('orders').rows;
   const counts = {
     bookings: bookings.filter((b) => b.status === 'new').length,
     enquiries: enquiries.filter((e) => e.status === 'new').length,
     reviews: reviews.filter((r) => r.status === 'pending').length,
+    orders: orders.filter((o) => ['requested', 'changes', 'approved'].includes(o.status) || (o.status === 'in_progress' && !o.materials_ready_at)).length,
   };
   const alerts = counts.bookings + counts.enquiries + counts.reviews;
   useEffect(() => setOpen(false), [loc.pathname]);
@@ -46,10 +48,12 @@ export default function Layout() {
           {item('/', 'grid', 'Dashboard')}
           {item('/bookings', 'calendar', 'Bookings', counts.bookings)}
           {item('/enquiries', 'inbox', 'Enquiries', counts.enquiries)}
+          {item('/orders', 'bag', 'Orders', counts.orders)}
           {item('/clients', 'users', 'Clients')}
           {item('/pipeline', 'columns', 'Pipeline')}
           {item('/projects', 'folder', 'Projects')}
           {item('/messages', 'send', 'Messages')}
+          {item('/donations', 'heart', 'Donations')}
           <p className="nav__group">Website</p>
           {item('/website', 'globe', 'Website sections')}
           {item('/reviews', 'star', 'Reviews', counts.reviews, true)}

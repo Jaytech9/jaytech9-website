@@ -15,6 +15,8 @@ const Messages = lazy(() => import('./pages/Messages'));
 const Website = lazy(() => import('./pages/Website'));
 const Reviews = lazy(() => import('./pages/Reviews'));
 const Settings = lazy(() => import('./pages/Settings'));
+const Orders = lazy(() => import('./pages/Orders'));
+const Donations = lazy(() => import('./pages/Donations'));
 
 export default function App() {
   const { user, ready } = useAuth();
@@ -26,6 +28,8 @@ export default function App() {
         <Route index element={<Lazy><Dashboard /></Lazy>} />
         <Route path="bookings" element={<Lazy><Bookings /></Lazy>} />
         <Route path="enquiries" element={<Lazy><Enquiries /></Lazy>} />
+        <Route path="orders" element={<Lazy><Orders /></Lazy>} />
+        <Route path="donations" element={<Lazy><Donations /></Lazy>} />
         <Route path="clients" element={<Lazy><Clients /></Lazy>} />
         <Route path="pipeline" element={<Lazy><Pipeline /></Lazy>} />
         <Route path="projects" element={<Lazy><Projects /></Lazy>} />

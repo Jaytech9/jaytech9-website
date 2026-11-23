@@ -60,6 +60,15 @@ export async function updateRow<T extends TableName>(t: T, id: string, patch: Pa
   }
 }
 
+/** Put a row the server returned (e.g. from /api/order) into the cache, replacing any old copy. */
+export function putRow<T extends TableName>(t: T, row: Tables[T]) {
+  const k = keyOf(t);
+  const id = (row as unknown as Record<string, unknown>)[k];
+  const rows = get(t).rows;
+  const has = rows.some((r) => (r as unknown as Record<string, unknown>)[k] === id);
+  set(t, { rows: has ? rows.map((r) => ((r as unknown as Record<string, unknown>)[k] === id ? row : r)) : [row, ...rows] });
+}
+
 export async function removeRow(t: TableName, id: string) {
   const before = get(t).rows;
   set(t, { rows: before.filter((r) => (r as { id: string }).id !== id) });

@@ -1,0 +1,60 @@
+---
+// The client's private order page. The secret is in the address after "#", which browsers never send
+// to a server, so it stays out of logs. The page reads the order from /api/track (token in a header)
+// and lets the client pay, approve the preview, ask for changes, message us and leave a review.
+// The page logic lives in src/scripts/track.ts.
+import Base from '../layouts/Base.astro';
+import { orderSteps } from '../data/orders';
+import { site } from '../data/site';
+import '../styles/orderflow.css';
+---
+
+<Base title="Your order | JayTech9" description="Track your JayTech9 order." noindex>
+  <header class="page-head">
+    <div class="wrap">
+      <p class="eyebrow" id="t-ref">Your order</p>
+      <h1 id="t-title">Order tracker</h1>
+      <p class="lede" id="t-lede">Loading your order…</p>
+    </div>
+  </header>
+
+  <section class="section" aria-label="Order details">
+    <div class="wrap overlap track" id="t-root" data-steps={JSON.stringify(orderSteps)} data-wa={site.whatsapp}>
+      <div class="of-card"><p>Loading…</p></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .track { display: grid; gap: 1.25rem; align-items: start; }
+  .track :global(.of-card + .of-card) { margin-top: 0; }
+  .track :global(.t-main), .track :global(.t-side) { display: grid; gap: 1.25rem; min-width: 0; }
+  .track :global(.t-banner) { grid-column: 1 / -1; }
+  .track :global(.t-amount) { font-size: var(--step-3); font-weight: 700; letter-spacing: -0.03em; line-height: 1; margin: 0.25rem 0 0.35rem; font-variant-numeric: tabular-nums; }
+  .track :global(.t-action h2) { margin-bottom: 0.5rem; }
+  .track :global(.t-action p) { color: var(--ink-soft); margin: 0.5rem 0 0; }
+  .track :global(.t-action p.t-amount) { color: var(--ink); margin: 0.35rem 0 0.25rem; }
+  .track :global(.t-action .of-lock) { margin-top: 0.65rem; }
+  .track :global(.t-action .button) { margin-top: 1rem; }
+  .track :global(.t-due) { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+  .track :global(.t-updates) { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.9rem; }
+  .track :global(.t-updates li) { padding: 0.75rem 0.9rem; border-radius: 14px; background: var(--paper); }
+  .track :global(.t-updates li.is-client) { background: #e6f1f8; }
+  .track :global(.t-updates small) { display: block; color: var(--ink-soft); font-size: 0.8rem; margin-bottom: 0.2rem; }
+  .track :global(.t-updates p) { margin: 0; white-space: pre-line; overflow-wrap: anywhere; }
+  .track :global(.t-stars) { display: flex; gap: 0.25rem; }
+  .track :global(.t-stars button) { font-size: 2rem; line-height: 1; background: none; border: 0; padding: 0.1rem; cursor: pointer; color: #c9d6df; }
+  .track :global(.t-stars button.is-on) { color: #f4a100; }
+  .track :global(.t-preview) {
+    display: grid; place-items: center; gap: 0.5rem; padding: 1.5rem; border-radius: 16px; text-align: center;
+    background: repeating-linear-gradient(-45deg, #f5f9fc 0 14px, #eaf2f8 14px 28px); border: 1px solid var(--line);
+  }
+  @media (width >= 60rem) {
+    .track { grid-template-columns: minmax(0, 1fr) 22rem; }
+    .track :global(.t-side) { position: sticky; top: 6.5rem; }
+  }
+</style>
+
+<script>
+  import '../scripts/track';
+</script>

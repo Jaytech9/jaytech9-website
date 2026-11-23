@@ -1,0 +1,192 @@
+---
+// Request a service: the client picks a service, describes the job, attaches materials and leaves
+// contact details. Posted with JavaScript to /api/orders (functions/api/orders.ts), which saves it to
+// CRM → Orders and returns the client's private tracking link (/track/#…). We then send a quote.
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { orderServices, orderSteps } from '../data/orders';
+import { site } from '../data/site';
+import '../styles/orderflow.css';
+---
+
+<Base
+  title="Request a service | JayTech9"
+  description="Order a promo video, design, website or system online. Get a clear quote, pay a 70% deposit, approve a preview, then pay the balance and download your files."
+>
+  <header class="page-head">
+    <div class="wrap">
+      <p class="eyebrow">Order online</p>
+      <h1>Request a <em class="hl">service</em></h1>
+      <p class="lede">Tell us what you need and send your materials. We reply with a clear quote, usually within one working day. You only pay once you accept it.</p>
+    </div>
+  </header>
+
+  <section class="section" aria-label="Order form">
+    <div class="wrap overlap order">
+      <form id="order-form" class="order__form" action="/api/orders" method="post" enctype="multipart/form-data" novalidate>
+        <p class="visually-hidden" aria-hidden="true">
+          <label>Leave this empty <input name="company-website" tabindex="-1" autocomplete="off" /></label>
+        </p>
+
+        <fieldset class="of-card">
+          <legend class="visually-hidden">Service</legend>
+          <h2><span class="of-num">1</span>Which service?</h2>
+          <div class="of-choices">
+            {orderServices.map((s, i) => (
+              <label class="of-choice">
+                <input type="radio" name="service" value={s.title} data-id={s.id} required checked={i === 0} />
+                <span class="of-choice__card">
+                  <span class="of-choice__icon"><Icon name={s.icon} /></span>
+                  <span>
+                    <strong>{s.title}{s.id === 'video' && <span class="of-choice__new">New</span>}</strong>
+                    <small>{s.blurb}</small>
+                  </span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="of-card">
+          <legend class="visually-hidden">Brief</legend>
+          <h2><span class="of-num">2</span>Tell us about the job</h2>
+          <div class="of-field">
+            <label for="o-title">Short title <span class="of-opt">(optional)</span></label>
+            <input id="o-title" name="title" maxlength="160" placeholder="For example: 30-second promo video for our shop opening" />
+          </div>
+          <div class="of-field">
+            <label for="o-brief">What do you need?</label>
+            <textarea id="o-brief" name="brief" rows="6" required maxlength="4000" placeholder="What it is for, who will see it, length or size, colours or style you like, wording to include, examples you like…"></textarea>
+          </div>
+          <div class="of-field">
+            <label for="o-date">Ideal delivery date <span class="of-opt">(optional)</span></label>
+            <input id="o-date" name="wanted_by" type="date" />
+            <p class="of-hint">We confirm the real delivery time in the quote. The clock starts once the deposit and all materials are in.</p>
+          </div>
+        </fieldset>
+
+        <fieldset class="of-card">
+          <legend class="visually-hidden">Materials</legend>
+          <h2><span class="of-num">3</span>Your materials <span class="of-opt">(logo, photos, clips, text)</span></h2>
+          <label class="of-drop" id="o-drop">
+            <input id="o-files" name="files" type="file" multiple accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.zip,.txt" />
+            <Icon name="upload" size={28} />
+            <span><strong>Choose files</strong> or drop them here</span>
+            <span class="of-hint">Up to 5 files, 20 MB each. Bigger videos: use a link below.</span>
+          </label>
+          <ul class="of-files" id="o-list" aria-live="polite"></ul>
+          <div class="of-field" style="margin-top:1.2rem">
+            <label for="o-link">Or share a link <span class="of-opt">(Google Drive, WeTransfer, Dropbox)</span></label>
+            <input id="o-link" name="materials_link" type="url" inputmode="url" placeholder="https://" />
+          </div>
+        </fieldset>
+
+        <fieldset class="of-card">
+          <legend class="visually-hidden">Your details</legend>
+          <h2><span class="of-num">4</span>Your details</h2>
+          <div class="of-grid">
+            <div class="of-field"><label for="o-name">Your name</label><input id="o-name" name="name" required autocomplete="name" maxlength="120" /></div>
+            <div class="of-field"><label for="o-org">Business or organisation <span class="of-opt">(optional)</span></label><input id="o-org" name="organisation" autocomplete="organization" maxlength="160" /></div>
+            <div class="of-field"><label for="o-phone">Phone or WhatsApp</label><input id="o-phone" name="phone" type="tel" autocomplete="tel" placeholder="024 123 4567" maxlength="40" /></div>
+            <div class="of-field"><label for="o-email">Email</label><input id="o-email" name="email" type="email" autocomplete="email" maxlength="200" /></div>
+          </div>
+          <p class="of-hint">We need a phone number or an email to send your quote. By sending, you agree to our <a href="/terms/">terms</a> and <a href="/privacy/">privacy policy</a>.</p>
+          <p class="of-error" id="o-error" role="alert" hidden></p>
+          <button class="button of-button-wide" type="submit" style="margin-top:1.25rem">Send my request</button>
+          <p class="of-lock"><Icon name="lock" size={14} /> No payment now. You pay only after accepting the quote.</p>
+          <noscript><p class="of-error">This form needs JavaScript. You can also send your request on <a href={site.whatsapp}>WhatsApp</a>.</p></noscript>
+        </fieldset>
+      </form>
+
+      <aside class="order__how of-card" aria-labelledby="how-h">
+        <h2 id="how-h">How it works</h2>
+        <ol class="of-steps">
+          {orderSteps.map((s, i) => (
+            <li class="of-step"><span class="of-step__dot">{i + 1}</span><div><strong>{s.title}</strong><p>{s.text}</p></div></li>
+          ))}
+        </ol>
+        <ul class="order__promise">
+          <li><Icon name="clock" size={18} /> <span><strong>On time or 10% off.</strong> If the first preview is late, we take 10% off the balance.</span></li>
+          <li><Icon name="eye" size={18} /> <span><strong>Track every step</strong> on your private order page.</span></li>
+          <li><Icon name="shield" size={18} /> <span><strong>Secure payment</strong> by Mobile Money or card through Paystack.</span></li>
+        </ul>
+        <p class="of-hint">Large projects can be split 50/50 or into stages. See our <a href="/terms/">terms and refunds</a>.</p>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .order { display: grid; gap: 1.25rem; align-items: start; }
+  .order__form fieldset { border: var(--card-border); margin: 0 0 1.25rem; min-width: 0; }
+  .order__how h2 { font-size: var(--step-1); }
+  .order__promise { list-style: none; margin: 1.5rem 0 1rem; padding: 1.25rem 0 0; border-top: 1px solid var(--line); display: grid; gap: 0.85rem; }
+  .order__promise li { display: grid; grid-template-columns: auto 1fr; gap: 0.6rem; align-items: start; font-size: var(--step--1); color: var(--ink-soft); }
+  .order__promise :global(svg) { color: var(--green-deep); margin-top: 0.15rem; }
+  .order__promise strong { color: var(--ink); }
+  @media (width >= 60rem) {
+    .order { grid-template-columns: minmax(0, 1fr) 22rem; }
+    .order__how { position: sticky; top: 6.5rem; }
+  }
+</style>
+
+<script>
+  const form = document.getElementById('order-form') as HTMLFormElement;
+  // /order/?service=video picks that service.
+  const want = new URLSearchParams(location.search).get('service');
+  if (want) form.querySelector<HTMLInputElement>(`input[name=service][data-id="${CSS.escape(want)}"]`)?.click();
+  const input = document.getElementById('o-files') as HTMLInputElement;
+  const drop = document.getElementById('o-drop')!;
+  const list = document.getElementById('o-list')!;
+  const err = document.getElementById('o-error')!;
+  const MAX = 5, MB = 1024 * 1024;
+  let picked: File[] = [];
+
+  const size = (b: number) => (b > MB ? `${(b / MB).toFixed(1)} MB` : `${Math.max(1, Math.round(b / 1024))} KB`);
+  const render = () => {
+    list.replaceChildren(...picked.map((f, i) => {
+      const li = document.createElement('li');
+      const name = document.createElement('span'); name.textContent = `${f.name} · ${size(f.size)}`;
+      const rm = document.createElement('button'); rm.type = 'button'; rm.className = 'linkish'; rm.textContent = 'Remove';
+      rm.setAttribute('aria-label', `Remove ${f.name}`);
+      rm.onclick = () => { picked.splice(i, 1); render(); };
+      li.append(name, rm); return li;
+    }));
+  };
+  const add = (files: FileList | null) => {
+    for (const f of Array.from(files ?? [])) if (!picked.some((p) => p.name === f.name && p.size === f.size)) picked.push(f);
+    input.value = '';
+    render();
+  };
+  input.addEventListener('change', () => add(input.files));
+  ['dragenter', 'dragover'].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add('is-over'); }));
+  ['dragleave', 'drop'].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.remove('is-over'); }));
+  drop.addEventListener('drop', (e) => add((e as DragEvent).dataTransfer?.files ?? null));
+
+  const show = (msg: string) => { err.textContent = msg; err.hidden = false; err.scrollIntoView({ block: 'center', behavior: 'smooth' }); };
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    err.hidden = true;
+    const fd = new FormData(form);
+    fd.delete('files');
+    const v = (k: string) => String(fd.get(k) ?? '').trim();
+    if (!v('brief')) return show('Please describe what you need.');
+    if (!v('name')) return show('Please add your name.');
+    if (!v('phone') && !v('email')) return show('Please add a phone number or an email so we can send your quote.');
+    if (picked.length > MAX) return show(`Please attach at most ${MAX} files, or share a link for the rest.`);
+    const big = picked.find((f) => f.size > 20 * MB);
+    if (big) return show(`"${big.name}" is over 20 MB. Please share it with a link instead.`);
+    picked.forEach((f) => fd.append('files', f));
+    const btn = form.querySelector('button[type=submit]') as HTMLButtonElement;
+    btn.classList.add('is-busy'); btn.textContent = picked.length ? 'Uploading…' : 'Sending…';
+    try {
+      const res = await fetch('/api/orders', { method: 'POST', body: fd });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok || !body.token) throw new Error(body.error || 'Something went wrong. Please try again.');
+      location.href = `/track/?new=1#${body.token}`;
+    } catch (x) {
+      show((x as Error).message);
+      btn.classList.remove('is-busy'); btn.textContent = 'Send my request';
+    }
+  });
+</script>

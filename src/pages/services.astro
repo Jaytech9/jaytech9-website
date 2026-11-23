@@ -10,6 +10,7 @@ const slides = (await getCollection('banners', (b) => b.data.page === 'services'
   .map((b) => ({ ...b.data, tag: b.data.tag ?? '', art: visual(b.data.visual) }));
 import CtaBand from '../components/CtaBand.astro';
 import ServiceExamples from '../components/ServiceExamples.astro';
+import Icon from '../components/Icon.astro';
 ---
 
 <Base
@@ -250,6 +251,33 @@ import ServiceExamples from '../components/ServiceExamples.astro';
         </p>
       </div>
     </section>
+    <section class="service" id="video" aria-labelledby="video-heading">
+      <div class="service__intro">
+        <span class="icon-badge service__icon"><Icon name="video" /></span>
+        <h2 id="video-heading">Video and motion <span class="service__new">New</span></h2>
+        <p class="service__tag">Short videos that make people stop scrolling and take notice.</p>
+        <p>
+          Promotional videos, social media reels and animated logos for launches, events and adverts. Send your
+          clips, photos and wording, approve a watermarked preview, then download the final files.
+        </p>
+        <div class="button-row service__order">
+          <a class="button" href="/order/?service=video">Order a video</a>
+          <a class="button button--quiet" href="/book/?service=design">Talk it through first</a>
+        </div>
+      </div>
+      <div class="card service__detail">
+        <h3>What’s included</h3>
+        <ul>
+          <li>Promo videos and adverts (15 to 90 seconds)</li>
+          <li>Reels and stories for Instagram, TikTok and WhatsApp Status</li>
+          <li>Animated logos and text animations</li>
+          <li>Captions, music and versions sized for each platform</li>
+        </ul>
+        <p class="service__fit">
+          <strong>Good for:</strong> Shop openings, product launches, events, churches and campaigns.
+        </p>
+      </div>
+    </section>
     <section class="service" id="care" aria-labelledby="care-heading">
       <div class="service__intro">
         <span class="icon-badge service__icon">
@@ -358,6 +386,11 @@ import ServiceExamples from '../components/ServiceExamples.astro';
       grid-template-columns: 1fr 1fr;
     }
   }
+  .service__new {
+    display: inline-block; margin-left: 0.4rem; padding: 0.15rem 0.55rem; border-radius: 999px; background: #fff1d6; color: #8a5300;
+    font-size: 0.8rem; font-weight: 700; vertical-align: 0.3em; letter-spacing: 0.02em;
+  }
+  .service__order { margin-top: 1.25rem; }
   .service__tag {
     font-weight: 600;
     color: var(--ink);

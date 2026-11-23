@@ -1,0 +1,81 @@
+---
+// Home page donation band: a full-width photo panel that stands out from the white service cards.
+// Amount chips go straight to /donate/ with that amount picked. The "raised so far" line is read live
+// from /api/stats and only appears once real gifts have come in.
+import Icon from './Icon.astro';
+const amounts = [20, 50, 100, 200];
+---
+
+<section class="give-band" aria-labelledby="give-band-h">
+  <div class="wrap">
+    <div class="give-band__panel">
+      <img class="give-band__img" src="/images/donate-farmers-900.webp" srcset="/images/donate-farmers-900.webp 900w, /images/donate-farmers.webp 1600w"
+        sizes="(width >= 72rem) 72rem, 100vw" width="1600" height="900" alt="" loading="lazy" decoding="async" />
+      <div class="give-band__body">
+        <p class="give-band__eyebrow"><span class="give-band__pulse" aria-hidden="true"><Icon name="heart" size={16} /></span> Give back with us</p>
+        <h2 id="give-band-h">Help a farmer <span>go digital</span></h2>
+        <p class="give-band__lead">Your gift funds digital tools and training for smallholder farmers, young people and community groups in Ghana.</p>
+        <p class="give-band__raised" id="give-raised" hidden></p>
+        <div class="give-band__amounts" role="group" aria-label="Choose an amount">
+          {amounts.map((a) => <a class="give-band__chip" href={`/donate/?amount=${a}#give`}>GH₵ {a}</a>)}
+          <a class="give-band__chip" href="/donate/#give">Other</a>
+        </div>
+        <a class="button give-band__cta" href="/donate/#give"><Icon name="heart" size={18} /> Donate now</a>
+        <p class="give-band__safe"><Icon name="lock" size={14} /> Mobile Money or card, secured by Paystack</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .give-band { padding-block: var(--space-section) 0; }
+  .give-band__panel {
+    position: relative; isolation: isolate; overflow: hidden; border-radius: clamp(22px, 3vw, 30px);
+    background: #06223a; color: var(--white); box-shadow: var(--shadow-raised);
+    min-height: clamp(26rem, 60vw, 32rem); display: flex; align-items: center;
+  }
+  .give-band__img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%; }
+  .give-band__panel::before {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(90deg, #04182bf2 0%, #06264ad9 45%, #06264a66 75%, #06264a33 100%);
+  }
+  .give-band__body { padding: clamp(1.75rem, 5vw, 3.5rem); max-width: 38rem; }
+  .give-band__eyebrow {
+    display: inline-flex; align-items: center; gap: 0.5rem; margin: 0 0 1rem; padding: 0.35rem 0.85rem 0.35rem 0.4rem;
+    border-radius: 999px; background: #ffffff1f; font-weight: 600; font-size: var(--step--1); color: #e6f4ff;
+  }
+  .give-band__pulse {
+    display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: #ff5a5f; color: var(--white);
+    animation: give-pulse 2.4s ease-out infinite;
+  }
+  @keyframes give-pulse { 0% { box-shadow: 0 0 0 0 #ff5a5f99; } 70% { box-shadow: 0 0 0 12px #ff5a5f00; } 100% { box-shadow: 0 0 0 0 #ff5a5f00; } }
+  .give-band h2 { font-size: var(--step-3); line-height: 1.05; letter-spacing: -0.03em; margin: 0 0 0.75rem; text-shadow: 0 2px 24px #0006; }
+  .give-band h2 span { color: var(--accent); }
+  .give-band__lead { color: #d9e8f2; font-size: var(--step-1); margin: 0 0 1.25rem; max-width: 32rem; }
+  .give-band__raised { margin: 0 0 1.25rem; font-weight: 600; color: var(--white); }
+  .give-band__raised[hidden] { display: none; }
+  .give-band__amounts { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.25rem; }
+  .give-band__chip {
+    display: inline-grid; place-items: center; min-height: 2.75rem; min-width: 5rem; padding: 0.4rem 1rem; border-radius: 999px;
+    border: 2px solid #ffffff59; color: var(--white); font-weight: 700; text-decoration: none; background: #ffffff14; transition: all 0.15s;
+  }
+  .give-band__chip:hover { background: var(--white); color: var(--ink); border-color: var(--white); }
+  .give-band__cta { background: #ff5a5f; border-color: #ff5a5f; color: var(--white); font-weight: 700; padding-inline: 1.75rem; min-height: 3.25rem; }
+  .give-band__cta:hover { background: var(--white); border-color: var(--white); color: #c8102e; }
+  .give-band__safe { display: flex; align-items: center; gap: 0.4rem; margin: 0.9rem 0 0; font-size: var(--step--1); color: #bcd3e2; }
+  @media (width < 48rem) {
+    .give-band__panel { align-items: flex-end; }
+    .give-band__panel::before { background: linear-gradient(180deg, #06264a4d 0%, #04182bd9 45%, #04182bf7 100%); }
+  }
+  @media (prefers-reduced-motion: reduce) { .give-band__pulse { animation: none; } }
+</style>
+
+<script>
+  const el = document.getElementById('give-raised');
+  if (el) fetch('/api/stats').then((r) => r.json()).then((s) => {
+    const d = s?.donations;
+    if (!d || d.donors < 1) return;
+    el.textContent = `GH₵ ${Math.round(d.total / 100).toLocaleString('en-GH')} raised from ${d.donors} supporter${d.donors > 1 ? 's' : ''} so far. Thank you!`;
+    el.hidden = false;
+  }).catch(() => {});
+</script>

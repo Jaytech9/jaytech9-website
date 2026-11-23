@@ -2,7 +2,7 @@
 // POST /api/t/:table → add a row, returns it
 import type { Ctx } from '../../../_lib/env';
 import { HttpError, fail, json, now, uuid } from '../../../_lib/http';
-import { ADMIN_ONLY_WRITE, HAS_UPDATED_AT, KEY, ORDER, READ_ONLY, fromDb, isTable, toDb } from '../../../_lib/tables';
+import { ADMIN_ONLY_WRITE, HAS_UPDATED_AT, KEY, NO_CREATE_DELETE, ORDER, READ_ONLY, fromDb, isTable, toDb } from '../../../_lib/tables';
 
 const tableOf = (ctx: Ctx) => {
   const t = String(ctx.params.table);
@@ -21,7 +21,7 @@ export const onRequestGet = async (ctx: Ctx) => {
 export const onRequestPost = async (ctx: Ctx) => {
   try {
     const t = tableOf(ctx);
-    if (READ_ONLY.has(t) || (ADMIN_ONLY_WRITE.has(t) && ctx.data.user.role !== 'admin')) throw new HttpError(403, 'Only an admin can do that.');
+    if (READ_ONLY.has(t) || NO_CREATE_DELETE.has(t) || (ADMIN_ONLY_WRITE.has(t) && ctx.data.user.role !== 'admin')) throw new HttpError(403, 'Only an admin can do that.');
     const row = toDb(t, (await ctx.request.json()) as Record<string, unknown>);
     const key = KEY[t] ?? 'id';
     if (key === 'id') row.id = uuid();

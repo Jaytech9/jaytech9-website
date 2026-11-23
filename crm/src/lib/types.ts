@@ -43,7 +43,27 @@ export interface Activity { id: Id; entity: string; entity_id?: Id | null; actio
 export interface HelpQuestion { id: Id; question: string; page?: string | null; done: boolean; created_at: string }
 export interface Staff { id: Id; email: string; name: string; role: 'admin' | 'staff'; created_at: string }
 
+export type OrderStatus = 'requested' | 'quoted' | 'in_progress' | 'preview' | 'changes' | 'approved' | 'completed' | 'cancelled';
+export interface Order {
+  id: Id; ref: string; token: string; client_id?: Id | null; name: string; email?: string | null; phone?: string | null;
+  organisation?: string | null; service?: string | null; title?: string | null; brief?: string | null; materials_link?: string | null;
+  wanted_by?: string | null; status: OrderStatus; currency: string; total: number; deposit_pct: number; turnaround_days?: number | null;
+  revisions_included: number; revisions_used: number; quote_note?: string | null; quoted_at?: string | null;
+  deposit_paid_at?: string | null; materials_ready_at?: string | null; started_at?: string | null; due_at?: string | null;
+  preview_url?: string | null; preview_at?: string | null; final_url?: string | null; approved_at?: string | null;
+  balance_paid_at?: string | null; completed_at?: string | null; review_rating?: number | null; review_message?: string | null;
+  consent_review: boolean; consent_portfolio: boolean; reviewed_at?: string | null; notes?: string | null; created_at: string; updated_at: string;
+}
+export interface OrderUpdate { id: Id; order_id: Id; author: 'team' | 'client' | 'system'; message: string; created_at: string }
+export interface OrderFile { id: Id; order_id: Id; r2_key: string; name: string; size: number; type?: string | null; created_at: string }
+export interface Payment {
+  id: Id; order_id?: Id | null; kind: 'deposit' | 'balance' | 'donation'; amount: number; currency: string; reference: string;
+  status: 'pending' | 'success' | 'failed'; method: 'paystack' | 'manual'; channel?: string | null; payer_name?: string | null;
+  payer_email?: string | null; message?: string | null; paid_at?: string | null; created_at: string;
+}
+
 export interface Tables {
+  orders: Order; order_updates: OrderUpdate; order_files: OrderFile; payments: Payment;
   clients: Client; bookings: Booking; enquiries: Enquiry; deals: Deal; projects: Project; reviews: Review;
   site_sections: Section; campaigns: Campaign; activity: Activity; staff: Staff; help_questions: HelpQuestion;
 }
@@ -55,6 +75,7 @@ export const SERVICES = [
   'Data dashboards and analysis',
   'AgriTech and sustainability',
   'Brand and print design',
+  'Video and motion',
   'Domains, hosting and care',
 ] as const;
 

@@ -1,0 +1,39 @@
+---
+// Paystack sends donors back here with ?reference=…; we confirm the gift with Paystack through
+// /api/pay/verify before saying it went through.
+import ThanksCard from '../../components/ThanksCard.astro';
+import { site } from '../../data/site';
+---
+
+<ThanksCard
+  pageTitle="Thank you for your gift | JayTech9"
+  heading="Thank you for your gift"
+  text="Your support helps bring useful technology to farmers and community groups."
+  steps={['Paystack emails your receipt', 'We acknowledge every gift personally', 'We share updates on what your gift made possible']}
+  primary={{ label: 'Share on WhatsApp', href: `https://wa.me/?text=${encodeURIComponent('I just supported JayTech9’s work with farmers in Ghana. You can too: https://jaytech9.com/donate/')}`, whatsapp: true }}
+  secondary={{ label: 'Back to the home page', href: '/' }}
+>
+  <p class="give-status" id="give-status" role="status">Confirming your payment…</p>
+</ThanksCard>
+
+<style>
+  .give-status { margin: 0.75rem auto 0; padding: 0.5rem 0.9rem; border-radius: 12px; background: #eef3f7; font-weight: 600; width: fit-content; }
+  .give-status.is-ok { background: #e9f7e3; color: #1e5a0b; }
+  .give-status.is-bad { background: #fdecea; color: #8a1c12; }
+</style>
+
+<script>
+  const el = document.getElementById('give-status')!;
+  const ref = new URLSearchParams(location.search).get('reference');
+  const set = (t: string, c = '') => { el.textContent = t; el.className = `give-status ${c}`; };
+  (async () => {
+    if (!ref) return set('If you have just given, Paystack will email your receipt.');
+    for (let i = 0; i < 6; i++) {
+      const s = await fetch(`/api/pay/verify?reference=${encodeURIComponent(ref)}`).then((r) => r.json()).catch(() => ({ status: 'pending' }));
+      if (s.status === 'success') { history.replaceState(null, '', '/donate/thanks/'); return set('Payment received. Thank you!', 'is-ok'); }
+      if (s.status === 'failed' || s.status === 'unknown') return set('The payment did not go through and you were not charged. You can try again on the donate page.', 'is-bad');
+      await new Promise((r) => setTimeout(r, 2500));
+    }
+    set('Your payment is still being confirmed. Paystack will email your receipt once it is through.');
+  })();
+</script>

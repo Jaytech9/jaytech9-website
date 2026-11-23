@@ -3,6 +3,8 @@ import { Image } from 'astro:assets';
 import logo from '../assets/logo.png';
 import Icon from './Icon.astro';
 import { nav, site } from '../data/site';
+import { getSections } from '../lib/crm';
+const sections = await getSections();
 
 const path = Astro.url.pathname.replace(/\/?$/, '/');
 const current = (href: string) => (path.startsWith(href) ? 'page' : undefined);
@@ -26,10 +28,20 @@ const current = (href: string) => (path.startsWith(href) ? 'page' : undefined);
           </li>
         ))}
       </ul>
+      {sections.donate && (
+        <a class="app-bar__give" href="/donate/" aria-current={current('/donate/')}>
+          <Icon name="heart" size={16} /> Donate
+        </a>
+      )}
       <a class="button app-bar__cta" href="/book/">
         Book a free call
       </a>
     </nav>
+    {sections.donate && (
+      <a class="app-bar__give app-bar__give--icon" href="/donate/" aria-label="Donate">
+        <Icon name="heart" size={18} />
+      </a>
+    )}
     <a class="app-bar__chat" href={site.whatsapp} aria-label="Chat with us on WhatsApp">
       <Icon name="chat" size={20} />
     </a>
@@ -130,6 +142,15 @@ const current = (href: string) => (path.startsWith(href) ? 'page' : undefined);
     border-color: var(--white);
     color: var(--ink);
   }
+  /* Donate: a warm red pill so it stands apart from the blue bar and the green "Book" button. */
+  .app-bar__give {
+    display: inline-flex; align-items: center; gap: 0.4rem; min-height: 2.375rem; padding: 0.45rem 1rem;
+    border-radius: 980px; background: #ff5a5f; color: var(--white); font-size: 0.9375rem; font-weight: 600;
+    text-decoration: none; transition: background-color 0.15s, transform 0.15s;
+  }
+  .app-bar__give:hover { background: #e8434a; color: var(--white); transform: translateY(-1px); }
+  .app-bar__give :global(svg) { fill: currentColor; }
+  .app-bar__give--icon { width: 2.75rem; height: 2.75rem; padding: 0; justify-content: center; border-radius: 50%; margin-left: auto; }
   .app-bar__chat {
     background: #ffffff26;
     color: var(--white);
@@ -150,7 +171,8 @@ const current = (href: string) => (path.startsWith(href) ? 'page' : undefined);
     .app-bar__nav {
       display: flex;
     }
-    .app-bar__chat {
+    .app-bar__chat,
+    .app-bar__give--icon {
       display: none;
     }
   }
