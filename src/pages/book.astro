@@ -5,6 +5,7 @@
 // Days, times, budgets and call methods are set in src/data/site.ts (booking).
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
+import ServiceOrbit from '../components/ServiceOrbit.astro';
 import { services } from '../data/services';
 import { booking, site } from '../data/site';
 
@@ -28,13 +29,18 @@ const waStarters = [
   description="Book a free 30-minute call about your website, business system or data. We map out a practical next step and send a written quote, with no pressure."
 >
   <header class="page-head">
-    <div class="wrap">
-      <p class="eyebrow">Free 30-minute discovery call</p>
-      <h1>Book a free call about your <em class="hl">website, system or data</em></h1>
-      <p class="lede">
-        Tell us what your team uses today (paper books, spreadsheets, WhatsApp reports or an outdated site) and we’ll
-        map out a practical next step. No pressure, no jargon.
-      </p>
+    <div class="wrap page-head__grid">
+      <div class="page-head__text">
+        <p class="eyebrow">Free 30-minute discovery call</p>
+        <h1>Book a free call about your <em class="hl">website, system or data</em></h1>
+        <p class="lede">
+          Tell us what your team uses today (paper books, spreadsheets, WhatsApp reports or an outdated site) and
+          we’ll map out a practical next step. No pressure, no jargon.
+        </p>
+      </div>
+      <div class="page-head__aside">
+        <ServiceOrbit />
+      </div>
     </div>
   </header>
 
@@ -43,6 +49,7 @@ const waStarters = [
       <div class="sheet overlap book">
         <form
           class="bform"
+          id="booking-form"
           name="booking"
           method="POST"
           action="/book/thanks/"
@@ -971,14 +978,6 @@ const waStarters = [
   .bsummary__trust :global(svg) {
     color: var(--accent);
     flex: none;
-  }
-  .page-head .eyebrow {
-    margin: 0 0 0.5rem;
-    font-size: var(--step--1);
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--accent);
   }
   .bcall {
     margin-bottom: 1.5rem;

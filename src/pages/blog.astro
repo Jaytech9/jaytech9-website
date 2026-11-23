@@ -1,5 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
+
+// Topics we plan to write next. Edit freely; remove a line once its guide is published.
+const upcoming = [
+  'Taking Mobile Money payments on your website',
+  'From paper books to a simple stock system',
+  'What a sales dashboard tells you each week',
+];
 ---
 
 <Base
@@ -8,36 +15,40 @@ import Base from '../layouts/Base.astro';
 >
   <header class="page-head">
     <div class="wrap">
-      <h1 class="visually-hidden">Blog</h1>
-      <p class="lede">Practical guides for running a business with <em class="hl">technology</em>.</p>
+      <p class="eyebrow">Blog</p>
+      <h1>Guides and <em class="hl">insights</em></h1>
+      <p class="lede">Practical guides for running a business with technology, written for Ghana and beyond.</p>
     </div>
   </header>
   <section class="section posts-section" aria-label="Posts">
-    <div class="wrap">
-      <ul class="card-grid posts overlap">
-        <li class="card card--link">
-          <p class="posts__meta">
-            <span class="posts__topic">Business</span>
-            <time datetime="2026-10-25T00:00:00.000Z">25 October 2026</time>
-          </p>
-          <h2>
-            <a href="/blog/own-domain-email/">Why your business email should end in your own name</a>
-          </h2>
-          <p>
-            A Gmail address is free, but an email on your own domain costs very little and makes customers
-            trust you more. Here&#39;s what it takes in Ghana.
-          </p>
-          <span class="card__more">Read the guide</span>
-        </li>
-      </ul>
+    <div class="wrap posts overlap">
+      <article class="card card--link post-feature">
+        <p class="posts__meta">
+          <span class="posts__topic">Featured</span>
+          <span>Business</span>
+          <time datetime="2026-10-25T00:00:00.000Z">25 October 2026</time>
+        </p>
+        <h2>
+          <a href="/blog/own-domain-email/">Why your business email should end in your own name</a>
+        </h2>
+        <p>
+          A Gmail address is free, but an email on your own domain costs very little and makes customers trust
+          you more. Here’s what it takes in Ghana, step by step.
+        </p>
+        <span class="card__more">Read the guide</span>
+      </article>
+      <aside class="card post-next" aria-labelledby="next-h">
+        <h2 id="next-h">Coming next</h2>
+        <ul>
+          {upcoming.map((t) => <li>{t}</li>)}
+        </ul>
+        <p class="post-next__ask">Want a guide on something else? <a href="/contact/">Tell us</a>.</p>
+      </aside>
     </div>
   </section>
 </Base>
 
 <style>
-  .posts-section {
-    padding-top: clamp(2rem, 5vw, 3.5rem);
-  }
   .posts__meta {
     font-size: var(--step--1);
     color: var(--ink-soft);
@@ -52,7 +63,56 @@ import Base from '../layouts/Base.astro';
     padding: 0.15rem 0.65rem;
     font-weight: 500;
   }
-  .posts h2 {
+  .posts {
+    display: grid;
+    gap: 1.25rem;
+    align-items: stretch;
+  }
+  @media (width >= 56rem) {
+    .posts {
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+    }
+  }
+  .post-feature h2 {
+    font-size: var(--step-2);
+    margin: 0.75rem 0 0.6rem;
+    max-width: 24ch;
+  }
+  .post-feature p:not(.posts__meta) {
+    color: var(--ink-soft);
+    max-width: 52ch;
+  }
+  .post-next h2 {
     font-size: var(--step-1);
+    margin: 0 0 0.75rem;
+  }
+  .post-next ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .post-next li {
+    position: relative;
+    padding-left: 1.1rem;
+    color: var(--ink-soft);
+  }
+  .post-next li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--green);
+  }
+  .post-next__ask {
+    margin: 1.25rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+    font-size: var(--step--1);
+    color: var(--ink-soft);
   }
 </style>

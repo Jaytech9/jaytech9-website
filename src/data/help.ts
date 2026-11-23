@@ -31,7 +31,7 @@ export const helpFaq: [string, string][] = [
     'What is your email, phone or WhatsApp number?',
     `Email ${site.email}, or call or WhatsApp ${site.phoneDisplay}.`,
   ],
-  ['How quickly do you reply?', 'We reply within one working day, usually sooner.'],
+  ['How quickly do you reply?', 'We usually reply within a few hours. For the quickest answer, message us on WhatsApp.'],
   [
     'Do I own my website, domain, code and data?',
     'Yes. Your domain is registered in your name, your data stays yours, and you receive the code and logins at handover.',

@@ -322,6 +322,15 @@ a:hover {
 .page-head .lede {
   margin-top: 1.25rem;
 }
+/* Small label above a page title: the same on every page. */
+.page-head .eyebrow {
+  margin: 0 0 0.6rem;
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
 .prose {
   max-width: var(--measure);
 }
@@ -559,4 +568,41 @@ html :is(.card--link, .tile, .sheet__tile, .work-card, .prod-spotlight):active {
 :where(input[type='text'], input[type='email'], input[type='tel'], input[type='search'], textarea, select) {
   background-color: var(--field-bg);
   box-shadow: var(--shadow-inset);
+}
+
+/* ---------- Page header with a right-hand panel (Book, Contact, Order) ----------
+   Text on the left, a supporting panel on the right on wide screens. On phones and tablets the
+   panel is hidden (or stacks, when it carries useful actions), so the page stays short. */
+.page-head__grid {
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+}
+.page-head__text {
+  max-width: 38rem;
+}
+.page-head__aside {
+  display: none;
+}
+.page-head__aside--stack {
+  display: block;
+}
+@media (width >= 60rem) {
+  .page-head__grid {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 3rem;
+  }
+  .page-head__aside {
+    display: block;
+    justify-self: end;
+    width: 100%;
+    max-width: 26rem;
+  }
+}
+.head-card {
+  background: var(--white);
+  color: var(--ink);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 18px 40px #0420384d;
+  padding: 1.25rem 1.35rem;
 }

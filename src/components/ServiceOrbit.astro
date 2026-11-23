@@ -1,0 +1,184 @@
+---
+// Book page: the services slowly circling a "Your free call" centre. Purely a visual in the header
+// (wide screens only). Clicking a service picks it in the booking form below and scrolls there;
+// "Video and motion" is ordered online, so it goes to /order/. Pauses on hover; still for people who
+// turn off motion.
+import Icon from './Icon.astro';
+const items = [
+  { id: 'websites', label: 'Websites', icon: 'monitor' },
+  { id: 'systems', label: 'Business systems', icon: 'layers' },
+  { id: 'data', label: 'Dashboards', icon: 'chart' },
+  { id: 'agritech', label: 'AgriTech', icon: 'sprout' },
+  { id: 'design', label: 'Design', icon: 'brush' },
+  { id: 'video', label: 'Video', icon: 'video', href: '/order/?service=video', isNew: true },
+  { id: 'care', label: 'Hosting', icon: 'globe' },
+] as const;
+---
+
+<div class="orbit" role="group" aria-label="Pick a service to talk about">
+  <span class="orbit__ring" aria-hidden="true"></span>
+  <span class="orbit__ring orbit__ring--inner" aria-hidden="true"></span>
+  <div class="orbit__core">
+    <span class="orbit__core-icon"><Icon name="headset" size={26} /></span>
+    <strong>Your free call</strong>
+    <small>30 minutes</small>
+  </div>
+  <ul class="orbit__spin">
+    {items.map((s, i) => (
+      <li class="orbit__item" style={`--a:${(360 / items.length) * i}deg`}>
+        <a class="orbit__face" href={'href' in s ? s.href : `#booking-form`} data-service={'href' in s ? undefined : s.id}>
+          <span class:list={['orbit__dot', { 'orbit__dot--new': 'isNew' in s }]}><Icon name={s.icon} size={20} /></span>
+          <span class="orbit__label">{s.label}{'isNew' in s && <em> · New</em>}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .orbit {
+    --size: 22rem;
+    --r: calc(var(--size) / 2 - 1.6rem);
+    --turn: 48s;
+    position: relative;
+    width: var(--size);
+    height: var(--size);
+    margin-inline: auto;
+  }
+  .orbit__ring {
+    position: absolute;
+    inset: 1.6rem;
+    border-radius: 50%;
+    border: 1.5px dashed #ffffff45;
+  }
+  .orbit__ring--inner {
+    inset: 5.6rem;
+    border: 1px solid #ffffff24;
+  }
+  .orbit__core {
+    position: absolute;
+    inset: 7rem;
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--ink);
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    text-align: center;
+    gap: 0.1rem;
+    box-shadow: 0 0 0 10px #ffffff14, 0 16px 36px #04203859;
+  }
+  .orbit__core-icon {
+    color: var(--green-deep);
+    margin-bottom: 0.15rem;
+  }
+  .orbit__core strong {
+    font-size: 1rem;
+    line-height: 1.15;
+    color: var(--brand-deep);
+  }
+  .orbit__core small {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+  .orbit__spin {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    animation: orbit-spin var(--turn) linear infinite;
+  }
+  .orbit__item {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+    transform: rotate(var(--a)) translateY(calc(-1 * var(--r))) rotate(calc(-1 * var(--a)));
+  }
+  .orbit__face {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 6.5rem;
+    margin: -1.55rem 0 0 -3.25rem;
+    display: grid;
+    justify-items: center;
+    gap: 0.3rem;
+    text-decoration: none;
+    color: var(--white);
+    animation: orbit-spin var(--turn) linear infinite reverse;
+  }
+  .orbit__dot {
+    display: grid;
+    place-items: center;
+    width: 3.1rem;
+    height: 3.1rem;
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--brand);
+    box-shadow: 0 8px 20px #04203859;
+    transition: transform 0.2s, background-color 0.2s, color 0.2s;
+  }
+  .orbit__dot--new {
+    background: #ff5a5f;
+    color: var(--white);
+  }
+  .orbit__label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.15;
+    text-align: center;
+    text-shadow: 0 1px 8px #04203899;
+    white-space: nowrap;
+  }
+  .orbit__label em {
+    font-style: normal;
+    color: #ffd0d1;
+  }
+  .orbit__face:hover .orbit__dot,
+  .orbit__face:focus-visible .orbit__dot {
+    transform: scale(1.12);
+    background: var(--accent);
+    color: var(--ink);
+  }
+  .orbit__face:focus-visible {
+    outline: none;
+  }
+  .orbit__face:focus-visible .orbit__dot {
+    box-shadow: 0 0 0 3px var(--white), 0 0 0 6px var(--accent);
+  }
+  .orbit:hover .orbit__spin,
+  .orbit:hover .orbit__face,
+  .orbit:focus-within .orbit__spin,
+  .orbit:focus-within .orbit__face {
+    animation-play-state: paused;
+  }
+  @keyframes orbit-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .orbit__spin,
+    .orbit__face {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  // Clicking a service picks it in the booking form and scrolls there.
+  document.querySelectorAll<HTMLAnchorElement>('.orbit__face[data-service]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      const input = document.querySelector<HTMLInputElement>(`.bform [name="service"][data-id="${a.dataset.service}"]`);
+      if (!input) return;
+      e.preventDefault();
+      input.checked = true;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      document.querySelector('.bform')?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+      setTimeout(() => input.focus({ preventScroll: true }), 400);
+    });
+  });
+</script>

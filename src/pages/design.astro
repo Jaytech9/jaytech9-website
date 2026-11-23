@@ -7,6 +7,7 @@ import { getCollection } from 'astro:content';
 import { designCategories } from '../content.config';
 import { designCategoryLabels, showPlaceholders } from '../data/services';
 import { glyphs, platforms } from '../data/brand-glyphs';
+import { site } from '../data/site';
 
 const pieces = (await getCollection('designs'))
   .filter((d) => showPlaceholders || !d.data.placeholder)
@@ -44,7 +45,9 @@ const viewerData = pieces.map((p) => ({
 >
   <header class="page-head">
     <div class="wrap">
-      <h1 class="visually-hidden">Design gallery</h1>
+      <p class="eyebrow">Design gallery</p>
+      <h1>Our design <em class="hl">work</em></h1>
+      <p class="lede">Logos, flyers, banners and social media designs for businesses, churches and brands.</p>
     </div>
   </header>
 
@@ -54,9 +57,17 @@ const viewerData = pieces.map((p) => ({
         {
           pieces.length === 0 ? (
             <div class="gempty gempty--soon">
-              <h2>New work coming soon</h2>
-              <p>We’re adding our latest designs. In the meantime, tell us what you need.</p>
-              <a class="button" href="/book/?service=design">Book a free call</a>
+              <h2>What we design</h2>
+              <p>Our latest pieces are being added here. Here’s what we make, and you can see recent posts on Instagram.</p>
+              <ul class="gcats">
+                {Object.entries(designCategoryLabels).map(([k, label]) => (
+                  <li class={`gcat gcat--${k}`}>{label}</li>
+                ))}
+              </ul>
+              <div class="button-row gempty__actions">
+                <a class="button" href="/order/?service=design">Order a design</a>
+                <a class="button button--quiet" href={site.social.find((s) => s.label === 'Instagram')?.href} rel="noopener">See our work on Instagram</a>
+              </div>
             </div>
           ) : (
             <>
@@ -800,6 +811,30 @@ const viewerData = pieces.map((p) => ({
     font-size: 0.78rem;
     color: var(--ink-soft);
   }
+  .gcats {
+    list-style: none;
+    margin: 1.5rem auto 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    max-width: 48rem;
+  }
+  .gcat {
+    padding: 1.1rem 0.75rem;
+    border-radius: 16px;
+    background: #e6f1f8;
+    color: var(--brand-deep);
+    font-weight: 600;
+    text-align: center;
+  }
+  .gcat:nth-child(4n + 2) { background: #e9f7e3; color: #1e5a0b; }
+  .gcat:nth-child(4n + 3) { background: #fff1d6; color: #8a5300; }
+  .gcat:nth-child(4n + 4) { background: #fbeaf0; color: #72243e; }
+  .gempty__actions {
+    justify-content: center;
+    margin-top: 1.75rem;
+  }
   .gempty {
     text-align: center;
     padding: 2.5rem 1rem;
@@ -809,6 +844,14 @@ const viewerData = pieces.map((p) => ({
   }
   .gempty p {
     color: var(--ink-soft);
+  }
+  .gempty--soon h2 {
+    font-size: var(--step-2);
+    margin: 0 0 0.6rem;
+  }
+  .gempty--soon > p {
+    max-width: 40rem;
+    margin-inline: auto;
   }
 
   /* ---------- Viewer ---------- */
