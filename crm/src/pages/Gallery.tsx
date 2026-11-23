@@ -5,7 +5,7 @@ import { db } from '../lib/db';
 import { insertRow, logActivity, publishWebsiteSoon, removeRow, updateRow, useTable } from '../lib/store';
 import { Button, Card, Empty, Field, Modal, PageHead, Pill, Segmented, Skeleton, Switch, useToast } from '../components/ui';
 import { Icon } from '../components/Icon';
-import { coverFromVideo, mediaSrc, preparePicture, removeMedia, uploadMedia } from '../lib/media';
+import { addMissingThumbs, compressVideo, coverFromVideo, makeThumb, mediaSrc, preparePicture, removeMedia, uploadMedia } from '../lib/media';
 import { DESIGN_CATEGORIES, type GalleryItem } from '../lib/types';
 
 const catLabel = (id: string) => DESIGN_CATEGORIES.find((c) => c.id === id)?.label ?? id;
@@ -18,6 +18,12 @@ export default function Gallery() {
   const [editing, setEditing] = useState<Partial<GalleryItem> | null>(null);
   const [loves, setLoves] = useState<Record<string, number>>({});
   useEffect(() => { db.fn<Record<string, number>>('love-counts', {}).then((r) => { if (r && !(r as { demo?: boolean }).demo) setLoves(r); }).catch(() => {}); }, []);
+  // Once per session: give older pieces their small grid picture so the website loads them fast.
+  useEffect(() => {
+    if (!loaded || !rows.length || sessionStorage.getItem('jt9-thumbs')) return;
+    sessionStorage.setItem('jt9-thumbs', '1');
+    addMissingThumbs(rows.map((r) => r.image_key).filter(Boolean) as string[]).catch(() => {});
+  }, [loaded, rows]);
   const lovesOf = (g: GalleryItem) => loves[`crm-${g.id.slice(0, 8)}`] ?? 0;
   const list = useMemo(() => rows.filter((r) => filter === 'all' || (filter === 'live' ? r.show : !r.show)), [rows, filter]);
   const publish = () => publishWebsiteSoon((ok) => toast(ok ? 'Website updated, live in about a minute' : 'Saved. The website could not be reached to update; use Settings → Publish.', ok ? 'ok' : 'error'));
@@ -107,10 +113,14 @@ function EditPiece({ item, onClose, onSaved }: { item: Partial<GalleryItem>; onC
         setBusy('Uploading picture…');
         patch.image_key = await uploadMedia('gallery', p.file);
         patch.image_w = p.width; patch.image_h = p.height;
+        await uploadMedia('gallery', await makeThumb(p.file), patch.image_key);
       }
       if (video) {
-        setBusy(`Uploading video (${(video.size / 1048576).toFixed(0)} MB)…`);
-        patch.video_key = await uploadMedia('gallery', video);
+        setBusy('Shrinking video for mobile…');
+        const v = await compressVideo(video, (pct) => setBusy(`Shrinking video for mobile… ${pct}%`));
+        setBusy(`Uploading video (${(v.file.size / 1048576).toFixed(1)} MB)…`);
+        patch.video_key = await uploadMedia('gallery', v.file);
+        toast(v.note);
       }
       setBusy('Saving…');
       if (isNew) await insertRow('gallery_items', patch); else await updateRow('gallery_items', item.id!, patch);
@@ -136,8 +146,8 @@ function EditPiece({ item, onClose, onSaved }: { item: Partial<GalleryItem>; onC
           <div style={{ borderRadius: 14, background: '#f3f6f8', border: '1px dashed #c9d6df', minHeight: 200, display: 'grid', placeItems: 'center', overflow: 'hidden' }}>
             {preview ? <img src={preview} alt="" style={{ width: '100%', maxHeight: 320, objectFit: 'contain' }} /> : <span className="muted" style={{ padding: 20, textAlign: 'center' }}>No picture yet</span>}
           </div>
-          <Field label="Picture" hint="JPG, PNG or WebP. Resized automatically for fast pages."><input type="file" accept="image/jpeg,image/png,image/webp" onChange={(e) => pickPicture(e.target.files?.[0])} /></Field>
-          <Field label="Short video (optional)" hint="MP4 best, up to 95 MB. A cover is taken from the video if you don't add a picture.">
+          <Field label="Picture" hint="JPG, PNG or WebP. Shrunk automatically so it loads fast on mobile data."><input type="file" accept="image/jpeg,image/png,image/webp" onChange={(e) => pickPicture(e.target.files?.[0])} /></Field>
+          <Field label="Short video (optional)" hint="MP4 or phone video (.mov). Shrunk to 720p automatically before upload — use Chrome. A cover is taken from the video if you don't add a picture.">
             <input type="file" accept="video/mp4,video/webm,video/quicktime" onChange={(e) => pickVideo(e.target.files?.[0])} />
           </Field>
           {(f.video_key || video) && <div className="muted" style={{ display: 'flex', gap: 8, alignItems: 'center' }}><Icon name="check" size={14} /> {video ? video.name : 'Video attached'} <button type="button" className="linkish" onClick={removeVideo}>Remove video</button></div>}

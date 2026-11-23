@@ -1,5 +1,6 @@
 ---
-import '@fontsource-variable/inter/opsz.css';
+import '../styles/fonts.css';
+import interLatin from '../fonts/inter-latin.woff2?url';
 import '../styles/global.css';
 import '../styles/typography.css';
 import Header from '../components/Header.astro';
@@ -41,6 +42,7 @@ const sections = await getSections();
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />

@@ -1,6 +1,6 @@
 // JayTech9 service worker: makes the site installable and usable offline.
 // Bump VERSION whenever you deploy a change you want everyone to receive straight away.
-const VERSION = 'jt9-v8';
+const VERSION = 'jt9-v9';
 const CORE = ['/', '/offline/', '/services/', '/products/', '/about/', '/contact/', '/manifest.webmanifest', '/icon-192.png'];
 
 self.addEventListener('install', (event) => {
@@ -23,6 +23,8 @@ self.addEventListener('fetch', (event) => {
   if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/cdn-cgi/')) return;
   // Private order pages and payment returns are never stored on the device.
   if (/^\/(track|donate\/thanks)\//.test(url.pathname)) return;
+  // Videos stream in pieces straight from the network; storing them would fill the phone.
+  if (req.headers.has('range') || /\.(mp4|webm|mov)$/i.test(url.pathname)) return;
 
   // Pages: try the network first so visitors see the latest content; fall back to cache, then the offline page.
   if (req.mode === 'navigate') {
@@ -37,7 +39,9 @@ self.addEventListener('fetch', (event) => {
   // Styles, fonts, images: serve from cache when we have them, otherwise fetch and keep a copy.
   event.respondWith(
     caches.match(req).then((hit) => hit || fetch(req).then((res) => {
-      if (res.ok) { const copy = res.clone(); caches.open(VERSION).then((c) => c.put(req, copy)); }
+      // Keep a copy, except a stand-in picture (short cache) that will be replaced by a real thumbnail.
+      const keep = res.status === 200 && !(url.pathname.startsWith('/media/') && !/immutable/.test(res.headers.get('cache-control') || ''));
+      if (keep) { const copy = res.clone(); caches.open(VERSION).then((c) => c.put(req, copy)); }
       return res;
     }))
   );

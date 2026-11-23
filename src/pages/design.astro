@@ -116,7 +116,7 @@ const viewerData = pieces.map((p) => ({
                     <button type="button" class="gitem__open" data-index={i} aria-haspopup="dialog">
                       <span class="gitem__frame">
                         <img
-                          src={p.data.image.src}
+                          src={p.thumb ?? p.data.image.src}
                           width={p.data.image.width}
                           height={p.data.image.height}
                           alt={p.data.alt}
