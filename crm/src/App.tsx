@@ -17,6 +17,8 @@ const Reviews = lazy(() => import('./pages/Reviews'));
 const Settings = lazy(() => import('./pages/Settings'));
 const Orders = lazy(() => import('./pages/Orders'));
 const Donations = lazy(() => import('./pages/Donations'));
+const Gallery = lazy(() => import('./pages/Gallery'));
+const Logos = lazy(() => import('./pages/Logos'));
 
 export default function App() {
   const { user, ready } = useAuth();
@@ -35,6 +37,8 @@ export default function App() {
         <Route path="projects" element={<Lazy><Projects /></Lazy>} />
         <Route path="messages" element={<Lazy><Messages /></Lazy>} />
         <Route path="website" element={<Lazy><Website /></Lazy>} />
+        <Route path="gallery" element={<Lazy><Gallery /></Lazy>} />
+        <Route path="logos" element={<Lazy><Logos /></Lazy>} />
         <Route path="reviews" element={<Lazy><Reviews /></Lazy>} />
         <Route path="settings" element={<Lazy><Settings /></Lazy>} />
         <Route path="*" element={<Navigate to="/" replace />} />

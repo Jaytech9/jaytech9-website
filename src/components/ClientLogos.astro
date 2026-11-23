@@ -3,15 +3,19 @@
 // Placeholders show only in the local preview; the live site hides the row until a real entry exists.
 import { getCollection } from 'astro:content';
 import { showPlaceholders } from '../data/services';
+import { getCrmLogos, mediaUrl } from '../lib/crm';
 
 interface Props {
   heading?: string;
 }
 const { heading = 'Trusted by' } = Astro.props;
 
-const clients = (await getCollection('clients'))
-  .filter((c) => showPlaceholders || !c.data.placeholder)
-  .sort((a, b) => a.data.order - b.data.order);
+// CRM → Client logos first, then any in src/content/clients.json.
+const fromCrm = (await getCrmLogos()).map((l) => ({ id: `crm-${l.id.slice(0, 8)}`, data: { order: l.sort, name: l.name, logo: l.logo_key ? mediaUrl(l.logo_key) : undefined, url: l.url ?? undefined, placeholder: false } }));
+const clients = [
+  ...fromCrm,
+  ...(await getCollection('clients')).filter((c) => showPlaceholders || !c.data.placeholder).sort((a, b) => a.data.order - b.data.order),
+];
 ---
 
 {

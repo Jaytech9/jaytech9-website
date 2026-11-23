@@ -64,7 +64,21 @@ export interface Payment {
 
 export interface BlockedTime { id: Id; day: string; slot?: string | null; reason?: string | null; created_at: string }
 
+export interface GalleryItem {
+  id: Id; title: string; category: string; year: number; client?: string | null; note?: string | null; alt?: string | null;
+  image_key: string; image_w: number; image_h: number; video_key?: string | null; platform?: 'tiktok' | 'instagram' | 'youtube' | 'facebook' | null;
+  post_url?: string | null; featured: boolean; show: boolean; sort: number; created_at: string; updated_at: string;
+}
+export interface BrandLogo { id: Id; name: string; logo_key?: string | null; url?: string | null; show: boolean; sort: number; created_at: string; updated_at: string }
+export const DESIGN_CATEGORIES: { id: string; label: string }[] = [
+  { id: 'logos', label: 'Logos' }, { id: 'flyers', label: 'Flyers' }, { id: 'banners', label: 'Banners' },
+  { id: 'social-media', label: 'Social media' }, { id: 'church-events', label: 'Church & events' },
+  { id: 'business-cards', label: 'Business cards' }, { id: 'fashion-beauty', label: 'Fashion & beauty' },
+  { id: 'packaging-merch', label: 'Packaging & merch' },
+]; // keep in step with src/content.config.ts → designCategories
+
 export interface Tables {
+  gallery_items: GalleryItem; brand_logos: BrandLogo;
   blocked_times: BlockedTime;
   orders: Order; order_updates: OrderUpdate; order_files: OrderFile; payments: Payment;
   clients: Client; bookings: Booking; enquiries: Enquiry; deals: Deal; projects: Project; reviews: Review;

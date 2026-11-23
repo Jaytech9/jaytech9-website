@@ -3,14 +3,12 @@
 // Visitors filter by category or search; tapping a piece opens a viewer with zoom, a front/back flip
 // (when the piece has a back image) or a 360° spin (when it has a set of spin photos).
 import Base from '../layouts/Base.astro';
-import { getCollection } from 'astro:content';
+import { getDesigns } from '../lib/designs';
 import { designCategories } from '../content.config';
-import { designCategoryLabels, showPlaceholders } from '../data/services';
+import { designCategoryLabels } from '../data/services';
 import { glyphs, platforms } from '../data/brand-glyphs';
 
-const pieces = (await getCollection('designs'))
-  .filter((d) => showPlaceholders || !d.data.placeholder)
-  .sort((a, b) => a.data.order - b.data.order);
+const pieces = await getDesigns();
 
 const counts = Object.fromEntries(
   designCategories.map((c) => [c, pieces.filter((p) => p.data.category === c).length]),
@@ -99,7 +97,7 @@ const viewerData = pieces.map((p) => ({
                 </div>
               </div>
               <p class="gcount" aria-live="polite">
-                Showing {pieces.length} designs
+                Showing {pieces.length} design{pieces.length === 1 ? '' : 's'}
               </p>
 
               <ul class="masonry">

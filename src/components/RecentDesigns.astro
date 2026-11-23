@@ -1,13 +1,10 @@
 ---
 // "Recent designs" strip for the home page: featured pieces from the design gallery.
 // Hidden on the live site until at least one real (non-placeholder) piece is featured.
-import { getCollection } from 'astro:content';
-import { designCategoryLabels, showPlaceholders } from '../data/services';
+import { getDesigns } from '../lib/designs';
+import { designCategoryLabels } from '../data/services';
 
-const pieces = (await getCollection('designs'))
-  .filter((d) => d.data.featured && (showPlaceholders || !d.data.placeholder))
-  .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, 6);
+const pieces = (await getDesigns()).filter((d) => d.data.featured).slice(0, 6);
 ---
 
 {

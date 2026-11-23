@@ -56,6 +56,8 @@ export default function Layout() {
           {item('/donations', 'heart', 'Donations')}
           <p className="nav__group">Website</p>
           {item('/website', 'globe', 'Website sections')}
+          {item('/gallery', 'eye', 'Gallery')}
+          {item('/logos', 'users', 'Client logos')}
           {item('/reviews', 'star', 'Reviews', counts.reviews, true)}
           <p className="nav__group">General</p>
           {item('/settings', 'settings', 'Settings')}

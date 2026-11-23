@@ -45,11 +45,19 @@ export interface CrmStats {
   ratings: number;
   donations: { total: number; donors: number };
 }
+export interface CrmGalleryItem {
+  id: string; title: string; category: string; year: number; client: string | null; note: string | null; alt: string | null;
+  image_key: string; image_w: number; image_h: number; video_key: string | null; platform: string | null; post_url: string | null;
+  featured: number; sort: number;
+}
+export interface CrmLogo { id: string; name: string; logo_key: string | null; url: string | null; sort: number }
 interface SiteData {
   sections: { key: SectionKey; enabled: boolean }[];
   reviews: CrmReview[];
   projects: CrmProject[];
   stats?: CrmStats | null;
+  gallery?: CrmGalleryItem[];
+  logos?: CrmLogo[];
 }
 
 let dataP: Promise<SiteData> | undefined;
@@ -77,6 +85,10 @@ export async function getSections() {
 export const getReviews = async () => (await siteData()).reviews;
 export const getProjects = async () => (await siteData()).projects;
 export const getStats = async () => (await siteData()).stats ?? null;
+export const getCrmGallery = async () => (await siteData()).gallery ?? [];
+export const getCrmLogos = async () => (await siteData()).logos ?? [];
+/** Public address of a file uploaded in the CRM (served by functions/media). */
+export const mediaUrl = (key: string) => `/media/${key}`;
 
 // The CRM stores services by their full title; the site uses short ids.
 export const serviceIdFromTitle: Record<string, string> = {
