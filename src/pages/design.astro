@@ -7,7 +7,6 @@ import { getCollection } from 'astro:content';
 import { designCategories } from '../content.config';
 import { designCategoryLabels, showPlaceholders } from '../data/services';
 import { glyphs, platforms } from '../data/brand-glyphs';
-import { site } from '../data/site';
 
 const pieces = (await getCollection('designs'))
   .filter((d) => showPlaceholders || !d.data.placeholder)
@@ -58,7 +57,7 @@ const viewerData = pieces.map((p) => ({
           pieces.length === 0 ? (
             <div class="gempty gempty--soon">
               <h2>What we design</h2>
-              <p>Our latest pieces are being added here. Here’s what we make, and you can see recent posts on Instagram.</p>
+              <p>Our latest pieces are being added here. Here’s what we make for businesses, churches and brands.</p>
               <ul class="gcats">
                 {Object.entries(designCategoryLabels).map(([k, label]) => (
                   <li class={`gcat gcat--${k}`}>{label}</li>
@@ -66,7 +65,7 @@ const viewerData = pieces.map((p) => ({
               </ul>
               <div class="button-row gempty__actions">
                 <a class="button" href="/order/?service=design">Order a design</a>
-                <a class="button button--quiet" href={site.social.find((s) => s.label === 'Instagram')?.href} rel="noopener">See our work on Instagram</a>
+                <a class="button button--quiet" href="/book/?service=design">Book a free call</a>
               </div>
             </div>
           ) : (
