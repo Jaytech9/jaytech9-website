@@ -11,7 +11,7 @@ export interface Env {
   ARKESEL_API_KEY?: string;      // SMS (arkesel.com)
   SMS_SENDER_ID?: string;        // registered sender name, e.g. JayTech9
   RESEND_API_KEY?: string;       // email (resend.com)
-  EMAIL_FROM?: string;           // e.g. JayTech9 <hello@jaytech9.com>
+  EMAIL_FROM?: string;           // e.g. JayTech9 <info@jaytech9.com>
   DEV_USER_EMAIL?: string;       // LOCAL TESTING ONLY: signs you in on localhost without Cloudflare Access
 }
 
