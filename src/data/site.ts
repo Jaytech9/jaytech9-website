@@ -42,7 +42,7 @@ export const nav = [
   { label: 'Products', href: '/products/' },
   { label: 'Gallery', href: '/design/' },
   { label: 'About', href: '/about/' },
-  { label: 'Careers', href: '/careers/' },
+  // Careers lives in the footer (and the phone Menu) to keep the top bar focused on customers.
 ];
 
 // Footer: keep each list to four items.

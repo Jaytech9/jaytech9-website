@@ -253,7 +253,6 @@ const sections = await getSections();
   </section>
   {sections.recent_designs && <RecentDesigns />}
   <Testimonials />
-  {sections.donate && <GiveBand />}
   <section class="section section--band" aria-labelledby="why-heading">
     <div class="wrap">
       <div class="section-head">
@@ -361,6 +360,8 @@ const sections = await getSections();
     highlight="Let’s talk about yours."
     text=""
   />
+  {/* Donation sits last, just above the footer, so the page leads with the business. */}
+  {sections.donate && <GiveBand />}
 </Base>
 
 <style>
