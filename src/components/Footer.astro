@@ -140,11 +140,21 @@ const year = new Date().getFullYear();
       <div class="site-footer__app-text">
         <strong>Get the JayTech9 app</strong>
         <span>Opens from your home screen, loads fast and uses little data.</span>
-        <span class="site-footer__app-tip" id="get-app-tip" hidden>On iPhone: tap the Share button <span aria-hidden="true">⎙</span>, then “Add to Home Screen”.</span>
       </div>
       <button type="button" class="site-footer__app-btn" id="get-app-btn">Get the app</button>
     </div>
   </div>
+  <dialog class="app-guide" id="app-guide" aria-labelledby="app-guide-h">
+    <div class="app-guide__card">
+      <button type="button" class="app-guide__x" id="app-guide-x" aria-label="Close">×</button>
+      <img src="/icon-192.png" alt="" width="56" height="56" loading="lazy" />
+      <h2 id="app-guide-h">Add JayTech9 to your home screen</h2>
+      <p class="app-guide__note" id="app-guide-note"></p>
+      <ol class="app-guide__steps" id="app-guide-steps"></ol>
+      <p class="app-guide__foot">It opens like an app, without the browser bar, and uses very little data.</p>
+      <button type="button" class="app-guide__ok" id="app-guide-ok">Got it</button>
+    </div>
+  </dialog>
   <div class="site-footer__base">
     <div class="wrap site-footer__base-inner">
       <p>
@@ -156,30 +166,60 @@ const year = new Date().getFullYear();
 </footer>
 
 <script>
-  // "Get the app": Android and computers (Chrome, Edge, Samsung) get the browser's install prompt;
-  // iPhone shows how to add it from Safari's Share menu. Hidden once the site is installed.
+  // "Get the app". Android and computers (Chrome, Edge, Samsung Internet) get the browser's own install prompt.
+  // iPhone/iPad never allow a website to show that prompt, so we show clear steps for the browser in use.
+  // Hidden once the site is running as an installed app.
   const box = document.getElementById('get-app');
   const btn = document.getElementById('get-app-btn');
-  const tip = document.getElementById('get-app-tip');
-  const w = window as Window & { __jt9Install?: Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> } };
-  const installed = matchMedia('(display-mode: standalone)').matches || (navigator as Navigator & { standalone?: boolean }).standalone;
-  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  const show = () => { if (box && !installed) box.hidden = false; };
-  if (ios) show();
-  if (w.__jt9Install) show();
-  document.addEventListener('jt9-install', show);
-  window.addEventListener('appinstalled', () => { if (box) box.hidden = true; });
+  const guide = document.getElementById('app-guide') as HTMLDialogElement | null;
+  const steps = document.getElementById('app-guide-steps');
+  const note = document.getElementById('app-guide-note');
+  type Prompt = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> };
+  const w = window as Window & { __jt9Install?: Prompt };
+  const ua = navigator.userAgent;
+  const installed = matchMedia('(display-mode: standalone)').matches || (navigator as Navigator & { standalone?: boolean }).standalone === true;
+  const ios = /iphone|ipad|ipod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const android = /android/i.test(ua);
+  const inApp = /FBAN|FBAV|Instagram|Line\/|WhatsApp|TikTok|Snapchat|Twitter/i.test(ua);
+  const share = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Share"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>';
+  const dots = '<strong aria-label="More">•••</strong>';
+  const kebab = '<strong aria-label="Menu">⋮</strong>';
+
+  if (box && !installed && (ios || android || w.__jt9Install)) box.hidden = false;
+  document.addEventListener('jt9-install', () => { if (box && !installed) box.hidden = false; });
+  window.addEventListener('appinstalled', () => { if (box) box.hidden = true; guide?.close(); });
+
+  function showGuide() {
+    if (!guide || !steps || !note) return;
+    let list: string[] = [];
+    note.textContent = '';
+    if (inApp) {
+      note.textContent = 'You are inside another app’s browser. Open this page in your phone’s browser first:';
+      list = [`Tap ${dots} or ${kebab} at the top of the screen`, 'Choose “Open in browser” (or “Open in Safari” / “Open in Chrome”)', 'Then tap “Get the app” again'];
+    } else if (ios && /CriOS/i.test(ua)) {
+      list = [`Tap the Share button ${share} in the address bar (top or bottom)`, 'Scroll down and tap “Add to Home Screen”', 'Tap “Add”. The JayTech9 icon appears on your home screen'];
+    } else if (ios) {
+      list = [`Tap the Share button ${share}. On newer iPhones, tap ${dots} first, then Share`, 'Scroll down and tap “Add to Home Screen”', 'Tap “Add”. The JayTech9 icon appears on your home screen'];
+    } else {
+      list = [`Tap the menu ${kebab} at the top right of your browser`, 'Tap “Install app” or “Add to Home screen”', 'Tap “Install”. The JayTech9 icon appears on your home screen'];
+    }
+    steps.innerHTML = list.map((t) => `<li><span>${t}</span></li>`).join('');
+    guide.showModal();
+  }
+
   btn?.addEventListener('click', async () => {
     const e = w.__jt9Install;
-    if (e) {
+    if (e && !inApp) {
       await e.prompt();
       const { outcome } = await e.userChoice;
       if (outcome === 'accepted' && box) box.hidden = true;
       w.__jt9Install = undefined;
-    } else if (tip) {
-      tip.hidden = !tip.hidden;
+    } else {
+      showGuide();
     }
   });
+  for (const id of ['app-guide-x', 'app-guide-ok']) document.getElementById(id)?.addEventListener('click', () => guide?.close());
+  guide?.addEventListener('click', (ev) => { if (ev.target === guide) guide.close(); });
 </script>
 
 <style>
@@ -213,8 +253,106 @@ const year = new Date().getFullYear();
     color: #c9d6df;
     font-size: 0.9rem;
   }
-  .site-footer__app-text .site-footer__app-tip {
-    color: #8fe070;
+  .app-guide {
+    border: 0;
+    padding: 0;
+    background: transparent;
+    width: min(26rem, calc(100vw - 2rem));
+    margin: auto auto calc(5rem + env(safe-area-inset-bottom, 0px));
+  }
+  .app-guide::backdrop {
+    background: #0b1e2bb3;
+  }
+  .app-guide__card {
+    position: relative;
+    background: var(--white);
+    color: var(--ink);
+    border-radius: 1.25rem;
+    padding: 1.5rem 1.25rem 1.25rem;
+    text-align: center;
+    box-shadow: 0 20px 50px -10px #0008;
+  }
+  .app-guide__card img {
+    border-radius: 14px;
+    margin: 0 auto 0.75rem;
+  }
+  .app-guide h2 {
+    font-size: 1.15rem;
+    margin: 0 0 0.5rem;
+  }
+  .app-guide__note {
+    color: #8a4b00;
+    font-size: 0.9rem;
+    margin: 0 0 0.5rem;
+  }
+  .app-guide__steps {
+    text-align: left;
+    margin: 0.75rem 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: s;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .app-guide__steps :global(li) {
+    counter-increment: s;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    background: #f2f5f8;
+    border-radius: 0.75rem;
+    padding: 0.65rem 0.8rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+  .app-guide__steps :global(li):before {
+    content: counter(s);
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background: #0068a1;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+  .app-guide__steps :global(svg) {
+    display: inline-block;
+    vertical-align: -3px;
+    color: #0068a1;
+  }
+  .app-guide__steps :global(li) > :global(span) {
+    flex: 1;
+  }
+  .app-guide__foot {
+    color: #5b7383;
+    font-size: 0.85rem;
+    margin: 0 0 1rem;
+  }
+  .app-guide__ok {
+    width: 100%;
+    min-height: 2.9rem;
+    border: 0;
+    border-radius: 999px;
+    background: #0068a1;
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .app-guide__x {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.6rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 0;
+    background: none;
+    font-size: 1.6rem;
+    color: #5b7383;
+    cursor: pointer;
   }
   .site-footer__app-btn {
     flex: none;
