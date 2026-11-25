@@ -45,6 +45,10 @@ const sections = await getSections();
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <script is:inline>
+      // Keep the browser's install offer so the footer's "Get the app" button can show it.
+      addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); window.__jt9Install = e; document.dispatchEvent(new Event('jt9-install')); });
+    </script>
     <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>

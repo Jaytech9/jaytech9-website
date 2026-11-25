@@ -134,17 +134,103 @@ const year = new Date().getFullYear();
       </ul>
     </div>
   </div>
+  <div class="wrap">
+    <div class="site-footer__app" id="get-app" hidden>
+      <img src="/icon-192.png" alt="" width="48" height="48" loading="lazy" />
+      <div class="site-footer__app-text">
+        <strong>Get the JayTech9 app</strong>
+        <span>Opens from your home screen, loads fast and uses little data.</span>
+        <span class="site-footer__app-tip" id="get-app-tip" hidden>On iPhone: tap the Share button <span aria-hidden="true">⎙</span>, then “Add to Home Screen”.</span>
+      </div>
+      <button type="button" class="site-footer__app-btn" id="get-app-btn">Get the app</button>
+    </div>
+  </div>
   <div class="site-footer__base">
     <div class="wrap site-footer__base-inner">
       <p>
-        &copy; {year} {site.legalName}. All rights reserved.
+        &copy; {year} {site.legalName}. <span class="nowrap">All rights reserved.</span>
       </p>
       <p><a href="/terms/">Terms</a> · <a href="/privacy/">Privacy policy</a></p>
     </div>
   </div>
 </footer>
 
+<script>
+  // "Get the app": Android and computers (Chrome, Edge, Samsung) get the browser's install prompt;
+  // iPhone shows how to add it from Safari's Share menu. Hidden once the site is installed.
+  const box = document.getElementById('get-app');
+  const btn = document.getElementById('get-app-btn');
+  const tip = document.getElementById('get-app-tip');
+  const w = window as Window & { __jt9Install?: Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> } };
+  const installed = matchMedia('(display-mode: standalone)').matches || (navigator as Navigator & { standalone?: boolean }).standalone;
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const show = () => { if (box && !installed) box.hidden = false; };
+  if (ios) show();
+  if (w.__jt9Install) show();
+  document.addEventListener('jt9-install', show);
+  window.addEventListener('appinstalled', () => { if (box) box.hidden = true; });
+  btn?.addEventListener('click', async () => {
+    const e = w.__jt9Install;
+    if (e) {
+      await e.prompt();
+      const { outcome } = await e.userChoice;
+      if (outcome === 'accepted' && box) box.hidden = true;
+      w.__jt9Install = undefined;
+    } else if (tip) {
+      tip.hidden = !tip.hidden;
+    }
+  });
+</script>
+
 <style>
+  .site-footer__app {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1rem;
+    background: linear-gradient(135deg, #0068a133, #3cc64a26);
+    border: 1px solid #ffffff1f;
+  }
+  .site-footer__app[hidden] {
+    display: none;
+  }
+  .site-footer__app img {
+    border-radius: 12px;
+    flex: none;
+  }
+  .site-footer__app-text {
+    display: grid;
+    gap: 0.15rem;
+    flex: 1;
+    min-width: 0;
+  }
+  .site-footer__app-text strong {
+    color: var(--white);
+  }
+  .site-footer__app-text span {
+    color: #c9d6df;
+    font-size: 0.9rem;
+  }
+  .site-footer__app-text .site-footer__app-tip {
+    color: #8fe070;
+  }
+  .site-footer__app-btn {
+    flex: none;
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 600;
+    color: var(--ink);
+    background: #8fe070;
+    border-radius: 999px;
+    padding: 0.7rem 1.2rem;
+    min-height: 2.75rem;
+  }
+  .site-footer__app-btn:hover {
+    background: var(--white);
+  }
   .site-footer {
     background: var(--ink);
     color: #e6edf2;
@@ -273,6 +359,100 @@ const year = new Date().getFullYear();
     gap: 0.25rem 2rem;
     display: flex;
   }
+  .nowrap {
+    white-space: nowrap;
+  }
+
+  /* Phones: one centred column for the brand, a tidy contact card, two even link columns, centred base. */
+  @media (width<40rem) {
+    .site-footer {
+      padding-top: 2.75rem;
+    }
+    .site-footer__grid {
+      gap: 2.25rem 1rem;
+    }
+    .site-footer__about {
+      max-width: none;
+      text-align: center;
+    }
+    .site-footer__brand {
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 0.75rem;
+    }
+    .site-footer__about > p:not(.site-footer__follow) {
+      color: #c9d6df;
+      max-width: 30ch;
+      margin-inline: auto;
+      font-size: 0.975rem;
+    }
+    .site-footer__follow {
+      color: #9fb2c0;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      margin-top: 1.25rem;
+      margin-bottom: 0.6rem;
+    }
+    .site-footer .site-footer__social {
+      justify-content: center;
+    }
+    .site-footer__heading {
+      text-align: center;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    .site-footer__heading:after {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .site-footer .site-footer__contact {
+      background: #ffffff0d;
+      border: 1px solid #ffffff17;
+      border-radius: 1rem;
+      padding: 0.35rem 1.1rem;
+    }
+    .site-footer .site-footer__contact {
+      gap: 0;
+    }
+    .site-footer__app {
+      flex-wrap: wrap;
+    }
+    .site-footer__app-btn {
+      width: 100%;
+    }
+    .site-footer__contact li {
+      min-height: 3rem;
+      padding-block: 0.4rem;
+    }
+    .site-footer__contact li + li {
+      border-top: 1px solid #ffffff14;
+    }
+    .site-footer__grid > nav,
+    .site-footer__grid > :nth-child(4) {
+      text-align: center;
+    }
+    .site-footer__grid > nav ul,
+    .site-footer__grid > :nth-child(4) ul {
+      gap: 0.55rem;
+      font-size: 0.95rem;
+    }
+    .site-footer__base {
+      margin-top: 2.5rem;
+    }
+    .site-footer__base-inner {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      font-size: 0.875rem;
+      color: #9fb2c0;
+      gap: 0.35rem;
+    }
+    .site-footer__base-inner p {
+      margin: 0;
+    }
+  }
+
   @media (width>=40rem) {
     .site-footer__grid > :nth-child(-n + 2) {
       grid-column: auto;

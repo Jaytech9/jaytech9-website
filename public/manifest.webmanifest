@@ -15,7 +15,8 @@
     { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "shortcuts": [
-    { "name": "Start a project", "url": "/contact/" },
-    { "name": "Our products", "url": "/products/" }
+    { "name": "Order", "url": "/order/", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Book a free call", "url": "/book/", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Design gallery", "url": "/design/", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] }
   ]
 }

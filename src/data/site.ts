@@ -48,16 +48,22 @@ export const nav = [
 // Footer: keep each list to four items.
 export const footerLinks = [
   { label: 'About us', href: '/about/' },
+  { label: 'Design gallery', href: '/design/' },
+  { label: 'Book a free call', href: '/book/' },
+  { label: 'Contact', href: '/contact/' },
   { label: 'Careers', href: '/careers/' },
   { label: 'Blog', href: '/blog/' },
   { label: 'Donate', href: '/donate/' },
 ];
 
 export const footerServices = [
-  { label: 'Websites and web applications', href: '/services/#websites' },
+  { label: 'Websites & web apps', href: '/services/#websites' },
   { label: 'Business systems', href: '/services/#systems' },
   { label: 'Data dashboards', href: '/services/#data' },
-  { label: 'AgriTech and sustainability', href: '/services/#agritech' },
+  { label: 'AgriTech', href: '/services/#agritech' },
+  { label: 'Brand & print design', href: '/services/#design' },
+  { label: 'Video & motion', href: '/services/#video' },
+  { label: 'Domains & hosting', href: '/services/#care' },
 ];
 
 // Booking page (/book/): when visitors can ask for their free call. Times are Ghana time (GMT).

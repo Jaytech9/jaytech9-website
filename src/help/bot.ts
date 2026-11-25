@@ -4,6 +4,8 @@
 // answers to src/data/help.ts. Everything else stays in the browser.
 import { helpFaq, helpHandoff } from '../data/help';
 
+type Link = { label: string; href: string; new_tab?: boolean };
+
 const SKIP = new Set(
   'a an the is are am was do does did how what whats when where why who which can could i im you we your our my me us to of in on at for and or it its this that with be will would should have has please tell about much there any some if from by so need want get'.split(
     ' ',
@@ -30,6 +32,24 @@ const SAME: Record<string, string> = {
   donation: 'donate',
   give: 'donate',
   momo: 'mobile',
+  pay: 'payment',
+  paying: 'payment',
+  purchase: 'order',
+  buy: 'order',
+  request: 'order',
+  download: 'install',
+  app: 'install',
+  apk: 'install',
+  status: 'track',
+  progress: 'track',
+  reels: 'video',
+  reel: 'video',
+  advert: 'video',
+  late: 'long',
+  delay: 'long',
+  refund: 'refund',
+  revision: 'change',
+  edit: 'change',
   founder: 'founded',
   owner: 'own',
 };
@@ -47,25 +67,26 @@ function words(text: string): string[] {
 }
 
 /** The answer whose question best fits the message and how well it fits, or null when nothing fits well enough. */
-function bestMatch(message: string): { text: string; score: number } | null {
-  const asked = [...new Set(words(message.replace(/\bhow much\b/giu, 'cost')))];
+function bestMatch(message: string): { text: string; score: number; links: Link[] } | null {
+  const asked = [...new Set(words(message.replace(/\bhow much\b/giu, 'cost').replace(/\bmy order\b/giu, 'track order')))];
   if (!asked.length) return null;
   let bestScore = 0;
   let best: string | null = null;
-  for (const [question, answer] of helpFaq) {
+  let bestLinks: Link[] = [];
+  for (const [question, answer, links] of helpFaq) {
     const questionWords = new Set(words(question));
     const answerWords = new Set(words(answer));
     const inQuestion = asked.filter((w) => questionWords.has(w));
     if (!inQuestion.length) continue;
     const inAnswer = asked.filter((w) => answerWords.has(w) && !questionWords.has(w));
     const score = (inQuestion.length + 0.5 * inAnswer.length) / asked.length;
-    if (score > bestScore) [bestScore, best] = [score, answer];
+    if (score > bestScore) [bestScore, best, bestLinks] = [score, answer, links ?? []];
   }
-  return best && bestScore >= 0.5 ? { text: best, score: bestScore } : null;
+  return best && bestScore >= 0.5 ? { text: best, score: bestScore, links: bestLinks } : null;
 }
 
 /** Greetings, the closest question in the list, or a hand-over to the team. */
-export function answer(message: string): { reply: string; actions: typeof helpHandoff; unknown?: boolean } {
+export function answer(message: string): { reply: string; actions: Link[]; unknown?: boolean } {
   const plain = message.trim().toLowerCase();
   if (
     /^(hi|hello|hey|hiya|good (morning|afternoon|evening))\b[\s!.,]*(there|jaytech9)?[\s!.]*$/u.test(plain)
@@ -77,7 +98,7 @@ export function answer(message: string): { reply: string; actions: typeof helpHa
   }
   const best = bestMatch(message);
   // A weak match still gets an answer, but is saved too: the list may be missing a better one.
-  if (best) return { reply: best.text, actions: [], unknown: best.score < 0.6 };
+  if (best) return { reply: best.text, actions: best.links, unknown: best.score < 0.6 };
   if (
     /\b(human|person|agent|someone|staff|call|phone|whatsapp|talk|speak|contact|number|email)\b/u.test(plain)
   ) {
