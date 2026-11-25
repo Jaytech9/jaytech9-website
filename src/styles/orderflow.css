@@ -55,7 +55,7 @@
 .of-chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
 .of-chip span {
   display: inline-grid; place-items: center; min-height: 2.9rem; min-width: 5.5rem; padding: 0.45rem 1rem; border-radius: 999px;
-  border: 2px solid #dbe4ea; background: var(--white); font-weight: 700; font-variant-numeric: tabular-nums; transition: all 0.15s;
+  border: 2px solid #dbe4ea; background: var(--white); font-weight: 700; font-variant-numeric: tabular-nums; transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.12s var(--ease-out);
 }
 .of-chip:hover span { border-color: #9ec3da; }
 .of-chip input:checked + span { background: var(--brand); border-color: var(--brand); color: var(--white); }

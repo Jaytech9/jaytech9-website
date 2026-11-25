@@ -443,8 +443,22 @@ const viewerData = pieces.map((p) => ({
       opener = from ?? null;
       show(index);
       dialog!.showModal();
+      // Grow the viewer out of the design that was tapped, so it's clear where it came from.
+      if (from) {
+        const r = from.getBoundingClientRect();
+        const d = dialog!.getBoundingClientRect();
+        dialog!.style.transformOrigin = `${r.left + r.width / 2 - d.left}px ${r.top + r.height / 2 - d.top}px`;
+      } else dialog!.style.transformOrigin = '';
       document.documentElement.classList.add('viewer-open');
     }
+    // Closing is quicker than opening and shrinks slightly back, instead of vanishing.
+    const shut = () => {
+      if (!dialog.open || dialog.classList.contains('is-closing')) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return dialog.close();
+      dialog.classList.add('is-closing');
+      setTimeout(() => { dialog.classList.remove('is-closing'); dialog.close(); }, 170);
+    };
+    dialog.addEventListener('cancel', (e) => { e.preventDefault(); shut(); });
 
     dialog.addEventListener('close', () => {
       video.pause();
@@ -458,12 +472,12 @@ const viewerData = pieces.map((p) => ({
     document.querySelectorAll<HTMLButtonElement>('.gitem__open').forEach((b) =>
       b.addEventListener('click', () => open(Number(b.dataset.index), b)),
     );
-    $<HTMLButtonElement>('.viewer__close').addEventListener('click', () => dialog.close());
+    $<HTMLButtonElement>('.viewer__close').addEventListener('click', shut);
     $<HTMLButtonElement>('.viewer__prev').addEventListener('click', () => step(-1));
     $<HTMLButtonElement>('.viewer__next').addEventListener('click', () => step(1));
     // Clicking the dark backdrop closes the viewer.
     dialog.addEventListener('click', (e) => {
-      if (e.target === dialog) dialog.close();
+      if (e.target === dialog) shut();
     });
 
     dialog.querySelectorAll<HTMLButtonElement>('.viewer__tool').forEach((b) =>
@@ -628,9 +642,16 @@ const viewerData = pieces.map((p) => ({
     font-size: var(--step--1);
     cursor: pointer;
     transition:
-      background-color 0.2s,
-      border-color 0.2s,
-      color 0.2s;
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.16s var(--ease-out);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .gchip:active,
+  .glove:active {
+    transform: scale(0.95);
+    transition-duration: 0.08s;
   }
   .gchip:hover {
     border-color: var(--brand);
@@ -725,7 +746,7 @@ const viewerData = pieces.map((p) => ({
     font-weight: 600;
     font-variant-numeric: tabular-nums;
     cursor: pointer;
-    transition: color 0.15s, border-color 0.15s, transform 0.15s;
+    transition: color 0.15s ease, border-color 0.15s ease, transform 0.16s var(--ease-out);
   }
   .glove svg {
     fill: none;
@@ -947,6 +968,28 @@ const viewerData = pieces.map((p) => ({
   .viewer::backdrop {
     background: #06111acc;
     backdrop-filter: blur(4px);
+  }
+  .viewer[open] {
+    animation: viewer-in 0.32s var(--ease-out) both;
+  }
+  .viewer[open]::backdrop {
+    animation: viewer-fade 0.3s ease both;
+  }
+  .viewer.is-closing {
+    animation: viewer-out 0.17s ease-in both;
+  }
+  .viewer.is-closing::backdrop {
+    animation: viewer-fade 0.17s ease reverse both;
+  }
+  @keyframes viewer-in {
+    from { opacity: 0; transform: scale(0.9); }
+  }
+  @keyframes viewer-out {
+    to { opacity: 0; transform: scale(0.96); }
+  }
+  @keyframes viewer-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
   .viewer__top {
     display: flex;

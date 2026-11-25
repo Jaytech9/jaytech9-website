@@ -1,8 +1,8 @@
 /* Jay Tech 9 help widget. Every class starts with jt9- so it cannot clash with a host site. */
 .jt9-help, .jt9-help * { box-sizing: border-box; }
 .jt9-help { position: fixed; right: calc(18px + env(safe-area-inset-right, 0px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 80; }
-.jt9-help-btn { position: relative; display: block; width: 76px; height: 76px; padding: 0; border: 0; background: none; cursor: pointer; filter: drop-shadow(0 12px 22px rgba(8,20,30,.35)); transition: transform .25s; }
-.jt9-help-btn:hover { transform: translateY(-3px); }
+.jt9-help-btn { position: relative; display: block; width: 76px; height: 76px; padding: 0; border: 0; background: none; cursor: pointer; filter: drop-shadow(0 12px 22px rgba(8,20,30,.35)); transition: transform .16s cubic-bezier(0.23, 1, 0.32, 1); -webkit-tap-highlight-color: transparent; }
+@media (hover: hover) and (pointer: fine) { .jt9-help-btn:hover { transform: translateY(-3px); } }
 .jt9-help-btn:focus-visible { outline: 3px solid #2A9BE8; outline-offset: 4px; border-radius: 22px; }
 .jt9-help-mark, .jt9-help-x { position: absolute; inset: 2px; display: grid; place-items: center; transition: opacity .25s, transform .25s; }
 .jt9-help-x { inset: 10px; border-radius: 50%; background: #0E1C27; color: #fff; opacity: 0; transform: rotate(-90deg) scale(.6); }
@@ -23,7 +23,7 @@
 .jt9-help-hello { position: absolute; right: 90px; bottom: 20px; margin: 0; width: max-content; max-width: min(17rem, calc(100vw - 7rem)); line-height: 1.35; background: #fff; color: #10201A; border-radius: 16px 16px 4px 16px; padding: 11px 34px 11px 16px; font-size: 14px; font-weight: 600; box-shadow: 0 12px 30px rgba(16,32,26,.2); animation: jt9HelloIn .35s ease-out; }
 .jt9-help-hello-x { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 22px; height: 22px; border: 0; border-radius: 50%; background: #EEF2F0; color: #44534C; font-size: 15px; line-height: 1; cursor: pointer; }
 @keyframes jt9HelloIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-.jt9-help-panel { position: absolute; right: 0; bottom: 92px; width: min(350px, calc(100vw - 36px)); background: #fff; color: #10201A; border-radius: 20px; box-shadow: 0 26px 70px rgba(8,20,30,.3); overflow: hidden; transform-origin: 100% 100%; transition: opacity .22s, transform .22s, visibility .22s; }
+.jt9-help-panel { position: absolute; right: 0; bottom: 92px; width: min(350px, calc(100vw - 36px)); background: #fff; color: #10201A; border-radius: 20px; box-shadow: 0 26px 70px rgba(8,20,30,.3); overflow: hidden; transform-origin: 100% 100%; transition: opacity .2s ease, transform .26s cubic-bezier(0.23, 1, 0.32, 1), visibility .26s; }
 .jt9-help-panel[hidden] { display: block !important; opacity: 0; visibility: hidden; transform: translateY(10px) scale(.96); pointer-events: none; }
 .jt9-help-head { display: flex; gap: 12px; align-items: center; padding: 18px; background: linear-gradient(135deg, #12293A, #0B1620); color: #fff; }
 .jt9-help-head strong { display: block; font-size: 17px; }
@@ -31,9 +31,10 @@
 .jt9-help-head small::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #3DDC6A; }
 .jt9-help-body { display: grid; gap: 8px; padding: 14px; }
 .jt9-help-body > p { margin: 2px 4px 6px; font-size: 14px; color: #44534C; }
-.jt9-help-opt { display: flex; gap: 12px; align-items: center; padding: 12px; border-radius: 14px; border: 1px solid #E3E9E6; color: #10201A !important; text-decoration: none; font-weight: 700; font-size: 14.5px; transition: border-color .2s, transform .2s; }
+.jt9-help-opt { display: flex; gap: 12px; align-items: center; padding: 12px; border-radius: 14px; border: 1px solid #E3E9E6; color: #10201A !important; text-decoration: none; font-weight: 700; font-size: 14.5px; transition: border-color .2s ease, transform .16s cubic-bezier(0.23, 1, 0.32, 1); }
 .jt9-help-opt[hidden] { display: none; }
-.jt9-help-opt:hover { border-color: #2A9BE8; transform: translateX(2px); }
+.jt9-help-opt:hover { border-color: #2A9BE8; }
+@media (hover: hover) and (pointer: fine) { .jt9-help-opt:hover { transform: translateX(2px); } }
 .jt9-help-opt small { display: block; font-weight: 500; font-size: 12.5px; color: #6A7A73; }
 .jt9-help-opt.is-soon { opacity: .6; cursor: default; }
 .jt9-help-opt.is-soon:hover { transform: none; border-color: #E3E9E6; }
@@ -85,3 +86,7 @@ body:has(.tabbar__more[open]) .jt9-help { display: none; }
 body .site-footer .site-footer__base { padding-bottom: 6.5rem; }
 @media (width<64rem) { body .site-footer .site-footer__base { padding-bottom: calc(4rem + 5rem); } }
 .jt9-help-hello.is-leaving { opacity: 0; transform: translateY(6px); transition: opacity .3s, transform .3s; }
+
+/* Press feedback (after the hover rules so a press always wins). */
+.jt9-help-btn:active { transform: scale(.94); transition-duration: .08s; }
+.jt9-help-opt:active { transform: scale(.98); transition-duration: .08s; }

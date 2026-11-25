@@ -50,7 +50,7 @@ const more = allMore.filter((m) => !(m.href === '/blog/' && !sections.blog) && !
           <span>Menu</span>
         </summary>
         <div class="sheet">
-          <span class="sheet__grip" aria-hidden="true"></span>
+          <span class="sheet__grip" aria-hidden="true" data-grip></span>
           <ul class="sheet__grid">
             {more.map((m) => (
               <li>
@@ -71,21 +71,22 @@ const more = allMore.filter((m) => !(m.href === '/blog/' && !sections.blog) && !
   </ul>
 </nav>
 
-<script is:inline>
-  // Close the menu sheet when tapping outside it or pressing Escape.
-  (function () {
-    var more = document.querySelector('.tabbar__more');
-    if (!more) return;
-    document.addEventListener('click', function (e) {
-      if (more.open && !more.contains(e.target)) more.open = false;
-    });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && more.open) {
-        more.open = false;
-        more.querySelector('summary').focus();
-      }
-    });
-  })();
+<script>
+  // Menu sheet: closes with a short slide-down (tap outside, Escape, the Menu tab again, or a swipe down).
+  import { closeWithMotion, swipeToClose } from '../scripts/swipe';
+  const more = document.querySelector<HTMLDetailsElement>('.tabbar__more');
+  const sheet = more?.querySelector<HTMLElement>('.sheet');
+  if (more && sheet) {
+    const close = (focus = false) => {
+      if (!more.open || more.classList.contains('is-closing')) return;
+      closeWithMotion(more, () => { more.open = false; if (focus) more.querySelector('summary')?.focus(); }, 220);
+    };
+    more.querySelector('summary')?.addEventListener('click', (e) => { if (more.open) { e.preventDefault(); close(); } });
+    // The dark backdrop is drawn by the menu itself, so a tap on it lands on the menu element: close then too.
+    document.addEventListener('click', (e) => { if (more.open && (e.target === more || !more.contains(e.target as Node))) close(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(true); });
+    swipeToClose(sheet, () => { more.open = false; });
+  }
 </script>
 
 <style>
@@ -137,10 +138,21 @@ const more = allMore.filter((m) => !(m.href === '/blog/' && !sections.blog) && !
     background: var(--accent);
     color: var(--ink);
     box-shadow: 0 0 0 4px #10293a, 0 8px 18px #0006;
-    transition: transform 0.15s;
+    transition: transform 0.16s var(--ease-out);
   }
   .tabbar__item--main:active .tabbar__main {
-    transform: scale(0.94);
+    transform: scale(0.92);
+    transition-duration: 0.08s;
+  }
+  .tabbar__item {
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tabbar__item > :global(svg) {
+    transition: transform 0.16s var(--ease-out);
+  }
+  .tabbar__item:active > :global(svg) {
+    transform: scale(0.88);
+    transition-duration: 0.08s;
   }
   .tabbar__item--main[aria-current='page']:before {
     display: none;
@@ -170,6 +182,16 @@ const more = allMore.filter((m) => !(m.href === '/blog/' && !sections.blog) && !
     position: fixed;
     inset: 0;
     z-index: -1;
+    animation: scrim-in 0.3s ease both;
+  }
+  .tabbar__more.is-closing:before {
+    animation: scrim-out 0.22s ease both;
+  }
+  @keyframes scrim-in {
+    from { opacity: 0; }
+  }
+  @keyframes scrim-out {
+    to { opacity: 0; }
   }
   .sheet {
     background: var(--paper);
@@ -180,13 +202,31 @@ const more = allMore.filter((m) => !(m.href === '/blog/' && !sections.blog) && !
     left: 0;
     right: 0;
     box-shadow: 0 -12px 30px #10293a40;
-    animation: sheet-up 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+    touch-action: none;
+    animation: sheet-up 0.4s var(--ease-drawer) both;
+  }
+  .tabbar__more.is-closing .sheet {
+    animation: sheet-down 0.22s ease-in both;
   }
   @keyframes sheet-up {
-    from {
-      transform: translateY(24px);
-      opacity: 0;
-    }
+    from { transform: translateY(100%); }
+  }
+  @keyframes sheet-down {
+    to { transform: translateY(100%); }
+  }
+  /* Tiles settle in one after another, just enough to feel alive. */
+  .sheet__grid > li {
+    animation: tile-in 0.35s var(--ease-out) both;
+  }
+  .sheet__grid > li:nth-child(2) { animation-delay: 20ms; }
+  .sheet__grid > li:nth-child(3) { animation-delay: 40ms; }
+  .sheet__grid > li:nth-child(4) { animation-delay: 60ms; }
+  .sheet__grid > li:nth-child(5) { animation-delay: 80ms; }
+  .sheet__grid > li:nth-child(6) { animation-delay: 100ms; }
+  .sheet__grid > li:nth-child(7) { animation-delay: 120ms; }
+  .sheet__grid > li:nth-child(n + 8) { animation-delay: 140ms; }
+  @keyframes tile-in {
+    from { opacity: 0; transform: translateY(8px); }
   }
   .sheet__grip {
     background: var(--line);
@@ -195,6 +235,9 @@ const more = allMore.filter((m) => !(m.href === '/blog/' && !sections.blog) && !
     height: 5px;
     margin: 0 auto 1rem;
     display: block;
+    cursor: grab;
+    /* A bigger invisible target so the grip is easy to catch with a thumb. */
+    box-shadow: 0 0 0 14px transparent;
   }
   .sheet__grid {
     grid-template-columns: repeat(3, 1fr);

@@ -65,15 +65,24 @@ export function Skeleton({ rows = 4 }: { rows?: number }) {
 
 export function Modal({ open, title, onClose, children, footer, wide }: { open: boolean; title: string; onClose: () => void; children: ReactNode; footer?: ReactNode; wide?: boolean }) {
   const ref = useRef<HTMLDialogElement>(null);
+  // Keep the content on screen while the closing animation plays.
+  const [shown, setShown] = useState(open);
   useEffect(() => {
     const d = ref.current;
     if (!d) return;
-    if (open && !d.open) d.showModal();
-    if (!open && d.open) d.close();
+    if (open) { setShown(true); if (!d.open) d.showModal(); return; }
+    if (!d.open) { setShown(false); return; }
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { d.close(); setShown(false); return; }
+    d.classList.add('is-closing');
+    const t = setTimeout(() => { d.classList.remove('is-closing'); d.close(); setShown(false); }, 150);
+    return () => clearTimeout(t);
   }, [open]);
   return (
-    <dialog ref={ref} className={`modal ${wide ? 'modal--wide' : ''}`} onClose={onClose} onClick={(e) => { if (e.target === ref.current) onClose(); }}>
-      {open && (
+    <dialog ref={ref} className={`modal ${wide ? 'modal--wide' : ''}`}
+      onCancel={(e) => { e.preventDefault(); onClose(); }}
+      onClose={() => { if (open) onClose(); }}
+      onClick={(e) => { if (e.target === ref.current) onClose(); }}>
+      {(open || shown) && (
         <div className="modal__box">
           <header className="modal__head">
             <h2>{title}</h2>
@@ -116,7 +125,7 @@ export function Stars({ value }: { value: number }) {
 }
 
 // Toasts
-type Toast = { id: number; text: string; tone: 'ok' | 'error' };
+type Toast = { id: number; text: string; tone: 'ok' | 'error'; leaving?: boolean };
 const ToastCtx = createContext<(text: string, tone?: Toast['tone']) => void>(() => {});
 export const useToast = () => useContext(ToastCtx);
 export function ToastProvider({ children }: { children: ReactNode }) {
@@ -124,14 +133,16 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const push = useCallback((text: string, tone: Toast['tone'] = 'ok') => {
     const id = Date.now() + Math.random();
     setItems((l) => [...l, { id, text, tone }]);
-    setTimeout(() => setItems((l) => l.filter((t) => t.id !== id)), 4200);
+    // Slide out first, then remove.
+    setTimeout(() => setItems((l) => l.map((t) => (t.id === id ? { ...t, leaving: true } : t))), 4000);
+    setTimeout(() => setItems((l) => l.filter((t) => t.id !== id)), 4220);
   }, []);
   return (
     <ToastCtx.Provider value={push}>
       {children}
       <div className="toasts" role="status" aria-live="polite">
         {items.map((t) => (
-          <div key={t.id} className={`toast toast--${t.tone}`}><Icon name={t.tone === 'ok' ? 'check' : 'x'} size={16} />{t.text}</div>
+          <div key={t.id} className={`toast toast--${t.tone} ${t.leaving ? 'is-leaving' : ''}`}><Icon name={t.tone === 'ok' ? 'check' : 'x'} size={16} />{t.text}</div>
         ))}
       </div>
     </ToastCtx.Provider>
