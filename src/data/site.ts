@@ -11,6 +11,9 @@ export const site = {
   city: 'Accra',
   country: 'Ghana',
   countryCode: 'GH',
+  // Google Search Console / Bing: paste only the content="…" code from their HTML-tag option, then push.
+  googleVerification: '',
+  bingVerification: '',
   founder: 'Jones Yaw Kwamehene',
   founderRole: 'Founder and Lead Developer',
   founderPhoto: '', // e.g. '/uploads/jones.webp'; initials show until a photo is added

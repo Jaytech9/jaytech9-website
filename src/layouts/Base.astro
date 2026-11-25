@@ -32,9 +32,12 @@ const org = {
   telephone: site.phone,
   founder: { '@type': 'Person', name: site.founder },
   address: { '@type': 'PostalAddress', addressLocality: site.city, addressCountry: site.countryCode },
-  areaServed: 'Worldwide',
+  areaServed: [{ '@type': 'Country', name: 'Ghana' }, 'Worldwide'],
+  contactPoint: { '@type': 'ContactPoint', telephone: site.phone, email: site.email, contactType: 'customer service', availableLanguage: ['English'] },
+  knowsAbout: ['Website design', 'Web development', 'Business systems', 'CRM', 'Data dashboards', 'Graphic design', 'Flyer design', 'Logo design', 'Promotional videos', 'AgriTech', 'Domain and hosting'],
   sameAs: site.social.map((s) => s.href),
 };
+const webSite = { '@context': 'https://schema.org', '@type': 'WebSite', name: site.name, alternateName: site.legalName, url: site.url };
 const sections = await getSections();
 ---
 
@@ -71,6 +74,9 @@ const sections = await getSections();
     <meta property="og:locale" content="en_US" />
     <meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json" set:html={JSON.stringify(org)} />
+    <script type="application/ld+json" set:html={JSON.stringify(webSite)} />
+    {site.googleVerification && <meta name="google-site-verification" content={site.googleVerification} />}
+    {site.bingVerification && <meta name="msvalidate.01" content={site.bingVerification} />}
     <script is:inline>
       if ('IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
         document.documentElement.classList.add('motion');
