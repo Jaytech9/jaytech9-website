@@ -428,14 +428,41 @@ const year = new Date().getFullYear();
     .site-footer__contact li + li {
       border-top: 1px solid #ffffff14;
     }
+    /* Links and services: full-width cards like the contact card, links as tidy wrapped pills. */
     .site-footer__grid > nav,
     .site-footer__grid > :nth-child(4) {
-      text-align: center;
+      grid-column: 1 / -1;
     }
-    .site-footer__grid > nav ul,
-    .site-footer__grid > :nth-child(4) ul {
-      gap: 0.55rem;
-      font-size: 0.95rem;
+    .site-footer .site-footer__grid > nav ul,
+    .site-footer .site-footer__grid > :nth-child(4) ul {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      background: #ffffff0d;
+      border: 1px solid #ffffff17;
+      border-radius: 1rem;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+    .site-footer__grid > nav a,
+    .site-footer__grid > :nth-child(4) a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.5rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      background: #ffffff12;
+      border: 1px solid #ffffff1a;
+      color: #e6edf2;
+      white-space: nowrap;
+    }
+    .site-footer__grid > nav a:hover,
+    .site-footer__grid > :nth-child(4) a:hover {
+      background: #8fe070;
+      border-color: #8fe070;
+      color: var(--ink);
+      text-decoration: none;
     }
     .site-footer__base {
       margin-top: 2.5rem;
