@@ -428,32 +428,40 @@ const year = new Date().getFullYear();
     .site-footer__contact li + li {
       border-top: 1px solid #ffffff14;
     }
-    /* Links on the left, services on the right: two clean columns that mirror each other. */
+    /* Phones: the bottom Menu already holds these links, so hide them here.
+       Services stay, full width in two neat columns. */
     .site-footer__grid > nav {
-      text-align: left;
+      display: none;
     }
     .site-footer__grid > :nth-child(4) {
-      text-align: right;
+      grid-column: 1 / -1;
+      text-align: center;
     }
-    .site-footer__grid > nav .site-footer__heading,
-    .site-footer__grid > :nth-child(4) .site-footer__heading {
-      text-align: inherit;
-    }
-    .site-footer__grid > nav .site-footer__heading:after {
-      left: 0;
-      transform: none;
-    }
-    .site-footer__grid > :nth-child(4) .site-footer__heading:after {
-      left: auto;
-      right: 0;
-      transform: none;
-    }
-    .site-footer .site-footer__grid > nav ul,
     .site-footer .site-footer__grid > :nth-child(4) ul {
-      gap: 0.75rem;
-      font-size: 0.95rem;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem 0.75rem;
+      text-align: left;
+      font-size: 0.875rem;
+      background: #ffffff0d;
+      border: 1px solid #ffffff17;
+      border-radius: 1rem;
+      padding: 1rem 0.9rem;
     }
-    .site-footer__grid > nav a,
+    .site-footer__grid > :nth-child(4) li {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      white-space: nowrap;
+      min-width: 0;
+    }
+    .site-footer__grid > :nth-child(4) li:before {
+      content: '';
+      flex: none;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #8fe070;
+    }
     .site-footer__grid > :nth-child(4) a {
       color: #d5e0e8;
     }
@@ -470,6 +478,13 @@ const year = new Date().getFullYear();
     }
     .site-footer__base-inner p {
       margin: 0;
+    }
+  }
+
+  /* Very narrow phones: one column so no service name gets cut. */
+  @media (width<23.5rem) {
+    .site-footer .site-footer__grid > :nth-child(4) ul {
+      grid-template-columns: 1fr;
     }
   }
 
