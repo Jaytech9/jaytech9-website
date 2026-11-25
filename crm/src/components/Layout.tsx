@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Icon } from './Icon';
+import Notifier from './Notifier';
 import { Avatar, useNow } from './ui';
 import { useAuth } from '../lib/auth';
 import { useTable } from '../lib/store';
@@ -25,7 +26,6 @@ export default function Layout() {
     reviews: reviews.filter((r) => r.status === 'pending').length,
     orders: orders.filter((o) => ['requested', 'changes', 'approved'].includes(o.status) || (o.status === 'in_progress' && !o.materials_ready_at)).length,
   };
-  const alerts = counts.bookings + counts.enquiries + counts.reviews;
   useEffect(() => setOpen(false), [loc.pathname]);
 
   const item = (to: string, icon: string, label: string, count?: number, amber?: boolean) => (
@@ -82,9 +82,7 @@ export default function Layout() {
           <div className="topbar__right">
             <span className="topbar__date">{dateLong(now)}</span>
             <NavLink to="/messages" className="icon-btn" aria-label="Messages"><Icon name="chat" /></NavLink>
-            <NavLink to={counts.reviews ? '/reviews' : counts.enquiries ? '/enquiries' : '/bookings'} className="icon-btn" aria-label={`${alerts} items need attention`}>
-              <Icon name="bell" />{alerts > 0 && <span className="dot" />}
-            </NavLink>
+            <Notifier />
             <div className="me">
               <Avatar name={user?.name ?? 'User'} size={40} />
               <div><strong>{user?.name}</strong><small>{user?.role === 'admin' ? 'Admin' : 'Staff'}</small></div>

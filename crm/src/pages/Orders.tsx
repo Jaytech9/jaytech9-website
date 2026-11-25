@@ -1,7 +1,8 @@
 // Service orders: request → quote → deposit → work → preview → approval → balance → final files.
 // All changes go through /api/order (crm/functions/api/order.ts), which applies the money and deadline
 // rules shared with the website. Clients follow along on their private page: jaytech9.com/track/#…
-import { Fragment, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { load, putRow, updateRow, useTable } from '../lib/store';
 import { db } from '../lib/db';
 import { Button, Card, Empty, Field, Modal, PageHead, Pill, SearchBox, Segmented, Skeleton, useNow, useToast } from '../components/ui';
@@ -49,6 +50,9 @@ export default function Orders() {
   const [filter, setFilter] = useState<Filter>('active');
   const [q, setQ] = useState('');
   const [openId, setOpenId] = useState<string | null>(null);
+  // Opened from a notification: /orders?open=<id>
+  const [params, setParams] = useSearchParams();
+  useEffect(() => { const id = params.get('open'); if (id) { setOpenId(id); setParams({}, { replace: true }); } }, [params, setParams]);
   const [creating, setCreating] = useState(false);
   const list = useMemo(() => {
     let l = rows;
